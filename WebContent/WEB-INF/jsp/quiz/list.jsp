@@ -6,15 +6,27 @@
 	<title>试题列表</title>
 	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
+	<link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />
+	<style type="text/css">
+		body {overflow: auto}
+	</style>
 </head>
 <body>
 
 <div class="container">
-	<h2>试题列表</h2>
-	<c:forEach items="${quizlist}" var="quiz">
-	<div class="row">
-		<a href="${base}/quiz/test?id=${quiz.id}">${quiz.name}</a>
+	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
+	<div class="row quiz_card">
+		<div class="header">
+			<h2><img src="${base}/images/quiz/${quiz.icon}" />${quiz.name}</h2>
+			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-primary active" role="button">开始测试</a>
+		</div>
+		<p class="desc">${quiz.description}</p>
+		<p class="expire">有效期为yyyy-mm-dd - yyyy-mm-dd</p>
+		<c:if test="${!stat.last}">
+			<div class="quiz_card_seperator"></div>
+		</c:if>
 	</div>
+	
 	</c:forEach>
 
 </div>

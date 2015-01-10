@@ -25,6 +25,9 @@ public class Quiz {
 	private String description;
 	
 	@Column
+	private String icon;
+	
+	@Column
 	private long createBy;
 	
 	@Column
@@ -89,6 +92,12 @@ public class Quiz {
 	}
 	public void setUpdateAt(long updateAt) {
 		this.updateAt = updateAt;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 	
 	

@@ -19,6 +19,7 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 	public Quiz genSampleQuiz(){
 		Quiz quiz = new Quiz();
 		quiz.setId(1);
+		quiz.setIcon("default.png");
 		quiz.setName("员工情绪倾向测评");
 		quiz.setDescription("本测评主要帮助您了解自己在心理健康各个维度上的表现状况。"
 				+ "分为六个维度：积极心态维度、情绪管理维度、行为表现维度、生理症状维度、社会支持维度和自我防御维度");

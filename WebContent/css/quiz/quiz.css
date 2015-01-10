@@ -1,0 +1,43 @@
+.quiz_card{
+	padding : 20px 60px 10px 60px;
+	width: 900px;
+	margin: auto;
+}
+.quiz_card .header{
+	clear:both;
+	height: 30px;
+}
+.quiz_card h2{
+	padding-left : 10px;
+	color: #3141a3;
+	font-size: 24px;
+	float:left;
+	margin-top: 0
+}
+
+.quiz_card h2 img{
+	margin-right: 10px;
+	width: 24px;
+	height: 24px;
+}
+
+.quiz_card a{
+	float: right;
+	margin-right: 10px;
+}
+.quiz_card p{
+	clear:both;
+}
+.quiz_card .desc{
+	color: #505050;
+	font-size : 16px;
+	font-weight: 'bold'
+}
+
+.quiz_card .expire{
+	color : #959595;
+}
+.quiz_card_seperator {
+	height : 10px;
+	background-color: #e2e2e2;
+}
