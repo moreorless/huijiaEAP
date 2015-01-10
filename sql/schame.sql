@@ -36,7 +36,7 @@ CREATE TABLE auth_user (
 	lockedAt BIGINT(10) NULL DEFAULT NULL,
 	created BIGINT(10) NULL DEFAULT NULL,
 	modified BIGINT(10) NULL DEFAULT NULL,
-	dept VARCHAR(32) NULL DEFAULT NULL,
+	companyid INT(11) NULL DEFAULT NULL,
 	iprestrict VARCHAR(128) NULL DEFAULT NULL,
 	authedNavs VARCHAR(512) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -74,6 +74,104 @@ CREATE TABLE IF NOT EXISTS `sys_logs` (
   `cause` varchar(128) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `quiz`;
+CREATE TABLE `quiz` (
+	`id` INT(11) UNSIGNED NOT NULL,
+	`name` VARCHAR(256) NOT NULL,
+	`description` TEXT NULL,
+	`icon` VARCHAR(256),
+	`categories` VARCHAR(512) NULL,
+	`createBy` INT(11) UNSIGNED DEFAULT NULL,
+	`createAt` INT(11) UNSIGNED DEFAULT NULL,
+	`updateBy` INT(11) UNSIGNED DEFAULT NULL,
+	`updateAt` INT(11) UNSIGNED DEFAULT NULL,
+	`status` TINYINT(4) UNSIGNED NULL,
+	PRIMARY KEY (`id`),
+	INDEX `name` (`name`)
+)
+COMMENT='试卷'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `quiz_evaluation`;
+CREATE TABLE `quiz_evaluation` (
+	`id` INT(11) NOT NULL,
+	`quizid` INT(11) NOT NULL,
+	`categoryId` VARCHAR(50) NOT NULL,
+	`categoryName` VARCHAR(255) NOT NULL,
+	`minScore` INT(10) NOT NULL,
+	`maxScore` INT(10) NOT NULL,
+	`evaluation` TEXT NULL,
+	`suggest` TEXT NULL
+)
+COMMENT='试题评价标准'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `quiz_item`;
+CREATE TABLE `quiz_item` (
+	`id` INT(10) NOT NULL,
+	`question` TEXT NOT NULL,
+	`category` VARCHAR(256) NOT NULL,
+	`lieFlag` INT(1) NOT NULL,
+	`optionsJson` VARCHAR(512) NOT NULL,
+	`createBy` VARCHAR(512) NULL,
+	`createAt` VARCHAR(512) NULL,
+	`updateBy` VARCHAR(512) NULL,
+	`updateAt` VARCHAR(512) NULL
+)
+COMMENT='题目'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `quiz_item_relation`;
+CREATE TABLE `quiz_item_relation` (
+	`id` INT(11) NOT NULL,
+	`quizid` INT(11) NOT NULL,
+	`quizitemid` INT(11) NOT NULL
+)
+COMMENT='试卷-题目关联'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE `company` (
+	`id` INT(11) NOT NULL,
+	`name` VARCHAR(256) NOT NULL
+)
+COMMENT='企业'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `segment`;
+CREATE TABLE `segment` (
+	`id` INT(11) NOT NULL,
+	`companyId` INT(11) NOT NULL,
+	`startId` INT(11) NOT NULL COMMENT '起始值',
+	`size` INT(11) NOT NULL COMMENT '号段大小',
+	`status` INT(4) NOT NULL DEFAULT '1' COMMENT '0:已回收 1:正在使用'
+)
+COMMENT='号段'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `seg_quiz_relation`;
+CREATE TABLE `seg_quiz_relation` (
+	`id` INT(11) NOT NULL,
+	`segmentid` INT(11) NOT NULL,
+	`quizid` INT(11) NOT NULL,
+	`startDate` VARCHAR(20) NOT NULL COMMENT '开始日期',
+	`expireDate` VARCHAR(20) NOT NULL COMMENT '废止日期'
+)
+COMMENT='号段-试题关联'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `quiz_result`;
+CREATE TABLE `quiz_result` (
+	`id` INT(11) NOT NULL,
+	`userid` INT(11) NOT NULL,
+	`quizid` INT(11) NOT NULL,
+	`testDate` VARCHAR(20) NOT NULL,
+	`answer` VARCHAR(512) NOT NULL,
+	`score` INT(10) NOT NULL,
+	`scoreByCategory` VARCHAR(512) NOT NULL
+)
+COMMENT='测试结果'
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- admin / admin
 INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL);
