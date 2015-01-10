@@ -1,0 +1,46 @@
+/* the overlayed element */
+.overlays {
+	
+	/* must be initially hidden */
+	display:none;
+	
+	/* place overlay on top of other elements */
+	z-index:10000;
+	
+	/* styling */
+	/*background-color:#e9e9e9;*/
+	background-color: white;
+	
+	min-height:200px;
+	border:1px solid #bcbcbc;
+	
+	/* CSS3 styling for latest browsers */
+	-moz-box-shadow:0 0 90px 5px #000;
+	-webkit-box-shadow: 0 0 90px #000;	
+}
+
+*+html .overlays {
+	behavior: url(PIE.htc);
+	box-shadow: #000 0 0 5px;
+}
+
+/* close button positioned on upper right corner */
+.overlays .close {
+	background-image:url(../../../images/close.png);
+	position:absolute;
+	right:-15px;
+	top:-15px;
+	cursor:pointer;
+	height:35px;
+	width:35px;
+}
+
+.overlays .ok {
+	background-image:url(../../../images/ok.png);
+	position:absolute;
+	right:15px;
+	top:-15px;
+	cursor:pointer;
+	height:35px;
+	width:35px;
+}

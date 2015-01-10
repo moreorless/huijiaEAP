@@ -1,0 +1,182 @@
+.l-btn, a.l-btn {
+	color:#eee;
+	text-decoration: none;
+	height: 22px;
+	line-height: 22px;
+	cursor: pointer;
+	display: block;
+	float: left;
+	padding: 0 5px;
+	margin: 1px;
+}
+
+/* 受限于滚动时带来的显示问题，暂时对IE降级处理
+*+html .l-btn, *+html a.l-btn {
+	behavior: url(PIE.htc);
+	position: relative;
+}*/
+
+.l-btn:hover, .m-btn-active {
+	height: 20px;
+	padding: 0 3px 0 3px;
+	/*background: #4c94db;
+	color: #fff;*/
+	font-weight: bold;
+	background: url(../../../images/themes/dark/btn-bg.png) repeat-x;
+	border: 1px solid #999;
+	/*border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;*/
+}
+
+.l-btn img, .menu-text img {
+	vertical-align: text-bottom;
+	margin-right: 5px;
+}
+
+.l-btn-disabled, a.l-btn-disabled {
+	color: #999 !important;
+	opacity: 0.4;
+	border: 0 none !important;
+	background: transparent !important;
+	padding: 0 5px !important;
+	font-weight: normal !important;
+	cursor: default !important;
+}
+
+.l-btn-disabled img {
+	filter: alpha(opacity=40);
+}
+
+.l-btn.compact, .compact .l-btn {
+	height: 16px !important;
+	line-height: 16px;
+	padding: 2px 2px;
+	margin: 0 1px;
+	border: 0 none !important;
+	background: transparent !important;
+}
+
+.l-btn.compact > span, .compact .l-btn> span {float:left;}
+
+.l-btn.compact .l-btn-text {
+	display:block;
+	width:16px;
+	line-height:0;
+	font-size: 0;
+}
+
+.l-btn.compact:hover, .m-btn-active.compact, .compact .l-btn:hover {
+	padding: 3px 1px 1px 3px;
+}
+
+.l-btn-disabled.compact, .compact .l-btn-disabled {
+	padding: 2px 2px !important;
+}
+
+.l-btn.compact img, .compact .l-btn img {
+	margin-right: 0;
+}
+
+.menu, .menu-shadow {
+	position: absolute;
+	left: -1000px;
+	top: -1000px;
+}
+
+.menu .l-btn {
+	float: none;
+	margin: 0;
+	font-weight: normal !important;
+	border: 0 none;
+	height: 22px;
+}
+
+.menu-top, .menu {
+	color:#eee;
+	text-decoration: none;
+	border: 1px solid #eee;
+	background: #252525;
+	/*border-radius: 3px;*/
+	box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.3);
+	/*-moz-border-radius: 3px;*/
+	-moz-box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.3);
+	/*-webkit-border-radius: 3px;*/
+	-webkit-box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.3);
+}
+
+/*.menu-top.compact {
+	border: 1px solid #555;
+}*/
+
+.menu-item {
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	cursor: pointer;
+	white-space: nowrap;
+	position: relative;
+	font-weight: normal !important;
+}
+
+.menu-item:hover, .menu-item:hover a.menu-text {
+	background:#535353;
+}
+
+.menu-item .l-btn:hover, .menu-item .m-btn-active {
+	background: transparent;
+}
+
+a.menu-text {
+	text-decoration: none;
+	color:#eee;
+}
+
+.compact .menu-item {
+	height: 18px;
+	line-height: 18px;
+	padding-top: 1px;
+}
+.compact .menu-item:hover, .compact .l-btn:hover {
+	background: #999 !important;
+}
+
+.m-btn-downarrow {
+	font-size: 10px;
+}
+
+.menu-rightarrow {
+	position: absolute;
+	top: 0;
+	right:5px;
+	font-size: 10px;
+}
+
+/*.compact .m-btn-downarrow {margin-left:-5px;}*/
+.l-btn.compact:hover .m-btn-downarrow {color: #555;}
+.m-btn-active.compact .m-btn-downarrow {
+	position:relative;
+	top: 4px;
+	color: #555;
+}
+
+span.separator {
+	height: 22px;
+	width: 1px;
+	margin: 1px;
+	display: block;
+	float: left;
+	background-color: #555;
+	background: -moz-linear-gradient(top, #202020, #555, #202020);
+	background: -webkit-gradient(linear, left top, left bottom, from(#202020), color-stop(50%, #555), to(#202020));
+	filter: progid:DXImageTransform.Microsoft.Alpha(style=3, opacity:100, finishOpacity:10);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(style=3, opacity:100, finishOpacity:10)";
+}
+
+span.btn-container {
+	display:block;
+}
+
+span.btn-container.center {
+	display:inline-block;
+}

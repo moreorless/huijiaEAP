@@ -1,0 +1,16 @@
+.ui-progressbar {
+	height: 16px;
+	text-align: left;
+	border: 1px solid #cfcfcf;
+	background: url(../../../images/themes/dark/progressbar-bg.png) repeat-x;
+	min-width: 60px;
+}
+
+.ui-progressbar .ui-progressbar-value {
+	height: 100%;
+	font-size: 9px;
+	color: #fff;
+	background: url(../../../images/themes/dark/progressbar.png) repeat-x top left;
+	text-align: center;
+	word-wrap: normal !important;
+}

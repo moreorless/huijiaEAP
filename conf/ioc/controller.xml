@@ -1,0 +1,471 @@
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="nutz-ioc-0.1.xsd">
+
+
+	<obj name="$inner_ChartTheme_Default_Axis_Label_Style" type="jofc2.model.theme.StyleValue">
+		<field name="name"><str>colour</str></field>
+		<field name="value"><str>#666666</str></field>
+	</obj>
+
+	<obj name="$inner_ChartTheme_Default_Axis_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>colour</str></field>
+					<field name="value"><str>#999999</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>gridColour</str></field>
+					<field name="value"><str>#f0f0f0</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Default_Legend_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>bg_colour</str></field>
+					<field name="value"><str>#f0f0f0</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>border_color</str></field>
+					<field name="value"><str>#999999</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Default_Tooltip_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>colour</str></field>
+					<field name="value"><str>#79b6f1</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>backgroundColour</str></field>
+					<field name="value"><str>#ffffff</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>titleStyle</str></field>
+					<field name="value"><str>font-size:12px;color:#2d2d2d;</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>bodyStyle</str></field>
+					<field name="value"><str>font-size:10px;color:#2d2d2d;</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Dark_Axis_Label_Style" type="jofc2.model.theme.StyleValue">
+		<field name="name"><str>colour</str></field>
+		<field name="value"><str>#777777</str></field>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Dark_Axis_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>colour</str></field>
+					<field name="value"><str>#999999</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>gridColour</str></field>
+					<field name="value"><str>#3c3c3c</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Dark_Legend_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>bg_colour</str></field>
+					<field name="value"><str>#313131</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>border_color</str></field>
+					<field name="value"><str>#f0f0f0</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="$inner_ChartTheme_Dark_Tooltip_Style" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>colour</str></field>
+					<field name="value"><str>#ffffff</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>backgroundColour</str></field>
+					<field name="value"><str>#252525</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>titleStyle</str></field>
+					<field name="value"><str>font-size:12px;color:#e1e1e1;</str></field>
+				</obj>
+				<obj type="jofc2.model.theme.StyleValue">
+					<field name="name"><str>bodyStyle</str></field>
+					<field name="value"><str>font-size:10px;color:#e1e1e1;</str></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+
+	<obj name="$startup_ChartInit" type="com.huijia.eap.commons.ioc.StaticMethodSetterIocProxy">
+		<args>
+			<list>
+				<obj type="com.huijia.eap.commons.ioc.StaticMethodInvokingProxyBean">
+					<args>
+						<str>jofc2.model.theme.ThemeFactory</str>
+						<str>addTheme</str>
+						<array>
+							<java>java.lang.Class.forName("gauge.GaugeChart")</java>
+							<obj type="jofc2.model.theme.Theme">
+								<field name="name"><str>default</str></field>
+								<field name="styles">
+									<list>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>bgColor</str></field>
+											<field name="value"><int>0xffffff</int></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>faceColor</str></field>
+											<field name="value"><int>0x252525</int></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>bezelColor</str></field>
+											<field name="value"><int>0x666666</int></field>
+										</obj>
+									</list>
+								</field>
+							</obj>
+						</array>
+					</args>
+				</obj>
+				<obj type="com.huijia.eap.commons.ioc.StaticMethodInvokingProxyBean">
+					<args>
+						<str>jofc2.model.theme.ThemeFactory</str>
+						<str>addTheme</str>
+						<array>
+							<java>java.lang.Class.forName("jofc2.model.Chart")</java>
+							<obj type="jofc2.model.theme.Theme">
+								<field name="name"><str>default</str></field>
+								<field name="colour_palette">
+									<list>
+										<str>#3da4d8</str>
+										<str>#1E8C65</str>
+										<str>#F2931F</str>
+										<str>#590202</str>
+										<str>#91B221</str>
+										<str>#4994BF</str>
+										<str>#FF4D41</str>
+										<str>#4E508C</str>
+										<str>#E5CA21</str>
+										<str>#3B324C</str>
+									</list>
+								</field>
+								<field name="styles">
+									<list>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>backgroundColour</str></field>
+											<field name="value"><str>#ffffff</str></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>title</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:12px;color:#666666;text-align:center;font-weight:bold;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xLegend</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:11px;color:#999999;text-align:center;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yLegend</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:11px;color:#999999;text-align:center;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xAxis</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>labels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Default_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxis</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>yAxisLabels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Default_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxisRight</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxisRight</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>yAxisLabels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Default_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>radarAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>radarAxis</str></field>
+											<field name="styles">
+												<list>
+													<obj type="jofc2.model.theme.StyleValue">
+														<field name="name"><str>labels</str></field>
+														<field name="value"><refer>$inner_ChartTheme_Default_Axis_Label_Style</refer></field>
+													</obj>
+													<obj type="jofc2.model.theme.StyleValue">
+														<field name="name"><str>spokelabels</str></field>
+														<field name="value"><refer>$inner_ChartTheme_Default_Axis_Label_Style</refer></field>
+													</obj>
+												</list>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>legend</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Legend_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>tooltip</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Default_Tooltip_Style</refer></field>
+										</obj>
+									</list>
+								</field>
+							</obj>
+						</array>
+					</args>
+				</obj>
+				<obj type="com.huijia.eap.commons.ioc.StaticMethodInvokingProxyBean">
+					<args>
+						<str>jofc2.model.theme.ThemeFactory</str>
+						<str>addTheme</str>
+						<array>
+							<java>java.lang.Class.forName("gauge.GaugeChart")</java>
+							<obj type="jofc2.model.theme.Theme">
+								<field name="name"><str>dark</str></field>
+								<field name="styles">
+									<list>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>bgColor</str></field>
+											<field name="value"><int>0x252525</int></field>
+										</obj>
+									</list>
+								</field>
+							</obj>
+						</array>
+					</args>
+				</obj>
+				<obj type="com.huijia.eap.commons.ioc.StaticMethodInvokingProxyBean">
+					<args>
+						<str>jofc2.model.theme.ThemeFactory</str>
+						<str>addTheme</str>
+						<array>
+							<java>java.lang.Class.forName("jofc2.model.Chart")</java>
+							<obj type="jofc2.model.theme.Theme">
+								<field name="name"><str>dark</str></field>
+								<field name="colour_palette">
+									<list>
+										<str>#3da4d8</str>
+										<str>#ff8433</str>
+										<str>#fcd202</str>
+										<str>#590202</str>
+										<str>#91B221</str>
+										<str>#4994BF</str>
+										<str>#FF4D41</str>
+										<str>#4E508C</str>
+										<str>#E5CA21</str>
+										<str>#3B324C</str>
+									</list>
+								</field>
+								<field name="styles">
+									<list>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>backgroundColour</str></field>
+											<field name="value"><str>#252525</str></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>title</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:12px;color:#777777;text-align:center;font-weight:bold;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xLegend</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:11px;color:#777777;text-align:center;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yLegend</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>style</str></field>
+													<field name="value"><str>font-size:1`px;color:#777777;text-align:center;</str></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>elements</str></field>
+											<field name="value">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>alpha</str></field>
+													<field name="value"><float>1</float></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>xAxis</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>labels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Dark_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxis</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>yAxisLabels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Dark_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxisRight</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>yAxisRight</str></field>
+											<field name="styles">
+												<obj type="jofc2.model.theme.StyleValue">
+													<field name="name"><str>yAxisLabels</str></field>
+													<field name="value"><refer>$inner_ChartTheme_Dark_Axis_Label_Style</refer></field>
+												</obj>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>radarAxis</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Axis_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>radarAxis</str></field>
+											<field name="styles">
+												<list>
+													<obj type="jofc2.model.theme.StyleValue">
+														<field name="name"><str>labels</str></field>
+														<field name="value"><refer>$inner_ChartTheme_Dark_Axis_Label_Style</refer></field>
+													</obj>
+													<obj type="jofc2.model.theme.StyleValue">
+														<field name="name"><str>spokelabels</str></field>
+														<field name="value"><refer>$inner_ChartTheme_Dark_Axis_Label_Style</refer></field>
+													</obj>
+												</list>
+											</field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>legend</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Legend_Style</refer></field>
+										</obj>
+										<obj type="jofc2.model.theme.StyleValue">
+											<field name="name"><str>tooltip</str></field>
+											<field name="styles"><refer>$inner_ChartTheme_Dark_Tooltip_Style</refer></field>
+										</obj>
+									</list>
+								</field>
+							</obj>
+						</array>
+					</args>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+	<obj name="Theme_Warehouse" type="java.util.ArrayList">
+		<args>
+			<list>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>dark</str></field>
+					<field name="name"><i18n key="text.theme.dark" default="酷黑"/></field>
+				</obj>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>blue</str></field>
+					<field name="name"><i18n key="text.theme.blue" default="炫蓝"/></field>
+					<field name="thumbnail"><str>theme-thumbnail-default.png</str></field>
+				</obj>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>royal</str></field>
+					<field name="name"><i18n key="text.theme.royal" default="雅金"/></field>
+				</obj>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>green</str></field>
+					<field name="name"><i18n key="text.theme.green" default="翠绿"/></field>
+				</obj>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>yellow</str></field>
+					<field name="name"><i18n key="text.theme.yellow" default="褐黄"/></field>
+				</obj>
+				<obj type="com.huijia.eap.commons.data.ThemeInfo">
+					<field name="id"><str>cyan</str></field>
+					<field name="name"><i18n key="text.theme.cyan" default="致青"/></field>
+				</obj>
+			</list>
+		</args>
+	</obj>
+	
+</ioc>

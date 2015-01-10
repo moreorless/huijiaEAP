@@ -1,0 +1,52 @@
+div.dialog {
+	background-color: #252525;
+	min-width: 350px;
+	max-width: 90% !important;
+	max-height: 90% !important;
+	padding: 10px 10px 35px;
+	text-align: left;
+	border: 2px solid #eee;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	-moz-box-shadow: 0 0 50px #ccc;
+	-webkit-box-shadow: 0 0 50px #ccc;
+	box-shadow: 0 0 50px #ccc;
+	position:absolute !important;
+	left:0;
+	top:-10000px;
+}
+
+div.dialog h2 {
+	margin: 0 0 5px;
+	padding: 5px 0 3px;
+	border-bottom: 1px solid #333;
+	font-size: 16px;
+}
+
+div.dialog .buttons {
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	bottom: 10px;
+	height: 22px;
+	padding: 3px 0 0;
+	text-align: right;
+}
+
+div.dialog .buttons > .l-btn, div.dialog .buttons > a.l-btn {
+	display: inline-block;
+	float: none;
+}
+
+div.dialog .buttons:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+#exposeMask {
+	background: #535353 !important;
+}

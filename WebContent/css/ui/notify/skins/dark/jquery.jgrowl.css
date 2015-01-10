@@ -1,0 +1,192 @@
+
+div.jGrowl {
+	z-index: 			9999;
+	color: 				#fff;
+	font-size: 			12px;
+}
+
+/** Special IE6 Style Positioning **/
+div.ie6 {
+	position: 			absolute;
+}
+
+div.ie6.top-right {
+	right: 				auto;
+	bottom: 			auto;
+	left: 				expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: 				expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+div.ie6.top-left {
+	left: 				expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: 				expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+div.ie6.bottom-right {
+	left: 				expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: 				expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+div.ie6.bottom-left {
+	left: 				expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: 				expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+div.ie6.center {
+	left: 				expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: 				expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+	width: 				100%;
+}
+
+/** Normal Style Positions **/
+div.jGrowl {
+	position:			absolute;
+}
+
+body > div.jGrowl {
+	position:			fixed;
+}
+
+div.jGrowl.top-left {
+	left: 				0px;
+	top: 				0px;
+}
+
+div.jGrowl.top-right {
+	right: 				0px;
+	top: 				0px;
+}
+
+div.jGrowl.bottom-left {
+	left: 				0px;
+	bottom:				0px;
+}
+
+div.jGrowl.bottom-right {
+	right: 				0px;
+	bottom: 			0px;
+}
+
+div.jGrowl.center {
+	top: 				0px;
+	width: 				50%;
+	left: 				25%;
+}
+
+/** Cross Browser Styling **/
+div.center div.jGrowl-notification, div.center div.jGrowl-closer {
+	margin-left: 		auto;
+	margin-right: 		auto;
+}
+
+div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
+	/*background-color: 		#000;
+	opacity: 				.85;
+	-ms-filter: 			"progid:DXImageTransform.Microsoft.Alpha(Opacity=85)"; 
+	filter: 				progid:DXImageTransform.Microsoft.Alpha(Opacity=85); 
+	zoom: 					1;
+	width: 					235px;
+	padding: 				10px;
+	margin-top: 			5px;
+	margin-bottom: 			5px;
+	font-family: 			Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 				1em;
+	text-align: 			left;
+	display: 				none;
+	-moz-border-radius: 	5px;
+	-webkit-border-radius:	5px;*/
+	
+	background: #DDD;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #F9F9F9),
+		color-stop(1, #D5D5D5) );
+	background: -moz-linear-gradient(top, #F9F9F9, #D5D5D5);
+	background: -o-linear-gradient(#F9F9F9, #D5D5D5);
+	border: 1px solid #A8A8A8;
+	border-radius: 5px;
+	box-shadow: 0 0 7px rgba(255, 255, 190, .3);
+	color: #333;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#D5D5D5');
+	font-size: 11px;
+	margin: 0 0 10px 0;
+	-moz-border-radius: 5px;
+	-moz-box-shadow: 0 0 7px rgba(255, 255, 190, .3);
+	-moz-text-shadow: 0 0 1px #FFF;
+	-o-border-radius: 5px;
+	-o-box-shadow: 0 0 7px rgba(255, 255, 190, .3);
+	-o-text-shadow: 0 0 1px #FFF;
+	padding: 10px;
+	position: relative;
+	text-shadow: 0 0 1px #FFF;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 0 0 7px rgba(255, 255, 190, .3);
+	-webkit-text-shadow: 0 0 1px #FFF;
+	min-width: 300px;
+	display: none;
+}
+*+ html div.jGrowl div.jGrowl-notification, *+ html div.jGrowl div.jGrowl-closer {
+	width: 300px;
+}
+
+div.jGrowl div.jGrowl-notification a { color:#333; text-decoration:underline; }
+div.jGrowl div.jGrowl-notification a:hover { text-decoration:none; }
+
+div.jGrowl div.jGrowl-notification.error, div.jGrowl div.jGrowl-notification.info, div.jGrowl div.jGrowl-notification.success, div.jGrowl div.jGrowl-notification.warning { padding-left:50px; }
+div.jGrowl div.jGrowl-notification.error:after, div.jGrowl div.jGrowl-notification.info:after, 
+div.jGrowl div.jGrowl-notification.success:after, div.jGrowl div.jGrowl-notification.warning:after,
+*+ html div.jGrowl div.jGrowl-notification.error > .jGrowl-group-icon, *+ html div.jGrowl div.jGrowl-notification.info > .jGrowl-group-icon, 
+*+ html div.jGrowl div.jGrowl-notification.success > .jGrowl-group-icon, *+ html div.jGrowl div.jGrowl-notification.warning > .jGrowl-group-icon {
+	content:""; display:block; width:29px; height:29px; position:absolute; left:10px; top:13px;
+}
+div.jGrowl div.jGrowl-notification.error:after, *+ html div.jGrowl div.jGrowl-notification.error > .jGrowl-group-icon { background:url(img/growl_error.png) no-repeat; }
+div.jGrowl div.jGrowl-notification.info:after, *+ html div.jGrowl div.jGrowl-notification.info > .jGrowl-group-icon { background:url(img/growl_info.png) no-repeat; }
+div.jGrowl div.jGrowl-notification.success:after, *+ html div.jGrowl div.jGrowl-notification.success > .jGrowl-group-icon { background:url(img/growl_success.png) no-repeat; }
+div.jGrowl div.jGrowl-notification.warning:after, *+ html div.jGrowl div.jGrowl-notification.warning > .jGrowl-group-icon { background:url(img/growl_warning.png) no-repeat; }
+
+div.jGrowl div.jGrowl-notification {
+	min-height: 			40px;
+}
+
+div.jGrowl div.jGrowl-notification,
+div.jGrowl div.jGrowl-closer {
+	margin: 				10px;
+}
+
+div.jGrowl div.jGrowl-notification div.jGrowl-header {
+	font-weight: 			bold;
+	font-size:				.85em;
+	
+	font-size: 13px;
+	margin-bottom: .5em;
+	-moz-text-shadow: 0 0 1px #FFF;
+	-o-text-shadow: 0 0 1px #FFF;
+	text-shadow: 0 0 1px #FFF;
+	-webkit-text-shadow: 0 0 1px #FFF;
+}
+div.jGrowl div.jGrowl-notification.error div.jGrowl-header { color: #AF4434; }
+div.jGrowl div.jGrowl-notification.info div.jGrowl-header { color: #316AB7; }
+div.jGrowl div.jGrowl-notification.success div.jGrowl-header { color: #5B7027; }
+div.jGrowl div.jGrowl-notification.warning div.jGrowl-header { color: #B69201; }
+
+div.jGrowl div.jGrowl-notification div.jGrowl-close {
+	z-index:				99;
+	float: 					right;
+	font-weight: 			bold;
+	font-size: 				1em;
+	cursor:					pointer;
+}
+
+div.jGrowl div.jGrowl-closer {
+	padding-top: 			4px;
+	padding-bottom: 		4px;
+	cursor: 				pointer;
+	font-size:				.9em;
+	font-weight: 			bold;
+	text-align: 			center;
+}
+
+/** Hide jGrowl when printing **/
+@media print {
+	div.jGrowl {
+		display: 			none;
+	}
+}

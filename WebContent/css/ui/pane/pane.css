@@ -1,0 +1,31 @@
+div.pane {
+	border: 1px solid #D6D5D9;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+*+html div.pane {
+	behavior: url(PIE.htc);
+}
+
+div.pane>h3 {
+	color: #fff;
+	background-color:#4c94db;
+	font-weight: bold;
+	height: 26px;
+	line-height: 26px;
+	padding: 0 5px;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+*+html div.pane>h3 {
+	behavior: url(PIE.htc);
+}
+
+div.pane>div {
+	padding: 5px;
+}

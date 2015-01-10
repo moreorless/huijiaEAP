@@ -1,0 +1,14 @@
+html,body {height:100%;overflow:hidden;padding:0;margin:0;}
+body{font-size : 12px;}
+.btn{font-size : 12px;}
+label, input, button, select, textarea{font-size:12px;}
+.navbar .nav{font-size:14px;}
+.nav{margin-bottom:0px;}
+
+/* 自定义进度条样式 */
+.progress{margin-bottom:0px;height:16px;line-height:16px;}
+.progress .bar{color:#333;}
+.progress-success {border:1px solid #5eb95e}
+.progress-danger {border:1px solid #ee5f5b}
+.progress-warning {border:1px solid #faa732}
+.progress-info {border:1px solid #4bb1cf}

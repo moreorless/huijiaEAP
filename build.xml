@@ -1,0 +1,24 @@
+<project name="huijiaEAP" default="deploy-debug" basedir="." xmlns:prop="antlib:it.haefelinger.flaka.prop">
+
+	<property file="build.properties" />
+	
+	<property name="appName" value="eap"/>
+
+	
+	<!-- 发布任务 -->
+	<target name="deploy-debug">
+		<echo>创建${catalina.home}/webapps/${appName}</echo>
+		<mkdir dir="${catalina.home}/webapps/${appName}"/>
+		<copy todir="${catalina.home}/webapps/${appName}/" preservelastmodified="true">
+			<fileset dir="${basedir}/WebContent/"></fileset>
+		</copy>
+		<copy todir="${catalina.home}/webapps/${appName}/WEB-INF/classes" preservelastmodified="true">
+			<fileset dir="${basedir}/build/classes"></fileset>
+		</copy>
+	</target>
+	
+	<!-- 清理任务 -->
+	<target name="clean">
+		<delete dir="${catalina.home}/webapps/${appName}"></delete>
+	</target>
+</project>

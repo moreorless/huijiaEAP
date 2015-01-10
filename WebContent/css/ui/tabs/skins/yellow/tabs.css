@@ -1,0 +1,239 @@
+.ui-tabs-nav {
+	height: 26px;
+}
+.ui-tabs-nav li {
+	height: 24px;
+	line-height: 24px;
+	display:block;
+	float: left;
+	border: 1px solid #e1e1e1;
+	border-bottom: 0 none;
+	margin: 1px 1px 0;
+	padding: 0 8px;
+	background: url(../../../images/tab-bg.png) repeat-x 0 -127px !important;
+	border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+}
+.ui-tabs-nav li:hover {
+	background: url(../../../images/tab-bg.png) repeat-x 0 -64px !important;
+}
+.light .ui-tabs-nav li {
+	border: 1px solid #bcd2e6;
+	background: url(../../../images/tab-light-bg.png) repeat-x !important;
+}
+*+html .ui-tabs-nav li {
+	behavior: url(../web/css/htc/PIE.htc);
+	position: relative;
+}
+li.ui-tabs-selected, li.ui-tabs-selected:hover {
+	background: url(../../../images/tab-bg.png) repeat-x 0 0 !important;
+	font-weight: bold;
+	height: 25px;
+}
+.light li.ui-tabs-selected {
+	background: url(../../../images/tab-light-selected-bg.png) repeat-x 0 1px !important;
+	border-bottom: 0 none !important;
+	height: 25px;
+}
+.ui-tabs-nav li a {
+	display: block;
+	float: left;
+	text-decoration: none;
+	color: #000;
+}
+.light .ui-tabs-nav li a {
+	color: #627eb7;
+}
+
+.ui-tabs .ui-tabs-hide, .ui-tabs .ui-tabs-hide * { /* FF hack: avoid Flash reload when tabs switch, IE hack: avoid Flash interface added by ExternalInterface missing when tabs switch */
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0 !important;
+  /*width: 0 !important;*/ /* 暂时注释掉，避免在IE9上导致切换时CPU持续占用假死。如发现FF中出现异常再做hack */
+  border: 0 none !important;
+	line-height: 0 !important;
+}
+
+.ui-tabs .ui-tabs-hide {
+	display: block !important;
+  visibility: hidden !important;
+}
+
+.ui-tabs .ui-tabs-hide * {
+  /*max-width: 0 !important;*/
+  max-height: 0 !important;
+  /*min-width: 0 !important;*/
+  min-height: 0 !important;
+  font-size: 0 !important;
+}
+
+.ui-tabs .ui-tabs-hide input {display:none;}
+
+.ui-tabs-nav:after {
+	display: block;
+	clear: both;
+	content: " ";  
+} 
+.ui-tabs-nav li span.ui-icon {
+	text-indent: -99999px;
+	overflow: hidden;
+	display: block;
+	float: left;
+	width: 15px;
+	margin: 0 0 0 3px;
+	background: url(../../../images/tab-close.png) no-repeat 0 center;
+	cursor: pointer;
+}
+.ui-tabs-nav li span.ui-icon:hover {
+	background-position: -15px center;
+}
+
+.ui-tabs-panel {
+	border: 1px solid #e1e1e1;
+}
+
+.portal-container.ui-tabs {
+	background: #fff;
+}
+.portal-container .ui-tabs-nav {
+	border-bottom: 1px solid #bdc9d6;
+	height: 25px;
+	background: url(../../../images/themes/yellow/main-bg.png) repeat-x;
+}
+.portal-container .ui-tabs-nav li {
+	background: url(../../../images/themes/yellow/portal-tab-partition.gif) repeat-y left center transparent !important;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border: 0 none;
+	margin: 0;
+	padding: 0 20px;
+	height: 25px;
+	line-height: 25px;
+}
+.portal-container .ui-tabs-nav li a { color: #503A00; }
+.portal-container .ui-tabs-nav li:first-child {background-image: none !important;}
+.portal-container li.ui-tabs-selected {
+	margin: 1px 0 0;
+/*	background: none transparent !important;*/
+}
+.portal-container li.ui-tabs-selected a {
+	background: url(../../../images/portal-tab-pyramid.png) no-repeat center bottom !important;
+}
+.portal-container .ui-tabs-panel {border: 0 none;}
+
+@-moz-document url-prefix() {
+.portal-container-hide li { /* FF hack: avoid Flash reload when tabs switch */
+	display: none !important;
+}
+}
+
+.ui-tabs-panel .ui-tabs-frame {
+	width: 100%;
+	height: 100%;
+	border: 0 none;
+}
+/*.tabs {
+	background-color: white;
+	border:0px;
+	border-bottom: 1px solid #ccc;
+	list-style: none;
+	margin: 0 5px;
+	padding: 10px 5px 1px 5px;
+	zoom:1;  
+} 
+.tabs:after {
+	display: block;
+	clear: both;
+	content: " ";  
+}  
+.tabs li {
+	float: left;
+	margin: 0 1px 0 0;
+	padding-left: 5px;
+} 
+.tabs a {
+	display: block;
+	position: relative;
+	top: 1px;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	z-index: 2;
+	padding: 2px 9px 3px;
+	color: #444;
+	text-decoration: none;
+	white-space: nowrap;
+} 
+.tabs a:focus, .tabs a:active {
+	outline: none;
+} 
+.tabs a:hover, .tabs a:focus, .tabs a:active {
+	background: #fff;
+	cursor: pointer;  
+}
+.ui-tabs-nav li {
+	height: 22px;
+	overflow:hidden;
+}
+.ui-tabs-selected a {
+	background-color: #fff;
+	color: #000;
+	font-weight: bold;
+	height: 15px;
+	padding: 2px 8px 1px;
+	border-top: 3px solid #fabd23;
+	border-left: 1px solid #fabd23;
+	border-right: 1px solid #fabd23;
+} 
+.ui-tabs-hide {
+	display: none;
+	background-color: #fff;
+} 
+.ui-tabs-panel {
+	padding: 0.5em; 
+	border:1px solid #ccc;
+	border-top: 0px solid gray;
+	margin: 0 5px 5px 5px;
+	background-color:white;
+} */
+.ui-tabs-paging-prev, .ui-tabs-paging-next {
+	padding: 0 !important;
+	width: 25px !important;
+	cursor: pointer; 
+	border: 0 none !important;
+	margin-top: 2px !important
+}
+.ui-tabs-paging-next {
+	float: right !important; 
+}
+.ui-tabs-paging-prev a, .ui-tabs-paging-next a {
+
+	display: block;
+	width: 100%;
+	text-indent: -20000em;
+	/*position: relative;
+	top: 1px;
+	border: 0;
+	z-index: 2;
+	padding: 0px;
+	color: #444;
+	text-decoration: none;
+	background: #eee;*/
+	cursor: pointer; 
+} 
+.ui-tabs-paging-prev a{
+	background: url(../../../images/tab-scroll-left.png) no-repeat !important;
+}
+.ui-tabs-paging-prev a:hover {
+	background-position: -25px 0 !important;
+}
+.ui-tabs-paging-next a {
+	background: url(../../../images/tab-scroll-right.png) no-repeat -25px 0 !important;
+}
+.ui-tabs-paging-next a:hover {
+	background-position: 0 0 !important;
+}
+.ui-tabs-paging-disabled {
+	visibility: hidden; 
+} 

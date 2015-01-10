@@ -1,0 +1,58 @@
+.node-wrapper
+{
+	position:absolute;
+	overflow:visible;
+}
+/*
+*+html .node-wrapper {
+	width: 180px;
+}
+
+*+html .node-wrapper.vertical {
+	width: auto;
+}
+
+.node-wrapper.vertical {
+	height: 137px;
+}
+*/
+.node-wrapper.vertical > * {
+	float: left;
+}
+
+.node-wrapper .node-line
+{
+	position: relative;
+	border-color: #000;
+	border-width: 2px;
+	height: 20px;
+	z-index: 0;
+}
+
+.node-wrapper.vertical .node-line {
+	width: 20px !important;
+	height: 100%;
+}
+
+.node-wrapper.root .header { border: 0 none; }
+.node-wrapper.horizon.left .header { left: -50%; width:100%; border-right-style: solid; }
+.node-wrapper.horizon.crosslevel.left .header { border-right-style: dashed; }
+.node-wrapper.horizon.right .header { right: 50%; border-right-style: solid; border-top-style: solid; height:18px !important; }
+.node-wrapper.horizon.crosslevel.right .header {border-right-style:dashed; border-top-style:dashed; }
+.node-wrapper.horizon.mid .header { right:50%; border-top-style: solid; border-right-style:solid; height:18px !important; }
+.node-wrapper.horizon.crosslevel.mid .header { border-top-style:dashed; border-right-style:dashed; }
+
+.node-wrapper .footer { left:-50%; width:100%; border-top-style:none; border-left-style:none; border-right-style:solid; }
+.node-wrapper.crosslevel .footer, .node-wrapper.crosslevel.left.single-pass .header { border-right-style:dashed; }
+.node-wrapper.leaf .footer { border:0 none; }
+
+.node-wrapper.vertical.left .header { left:0; top:-50%; border-right-style: none; border-bottom-style:solid; }
+.node-wrapper.vertical.crosslevel.left .header { border-style:none none dashed none; }
+.node-wrapper.vertical.right .header { bottom:50%; border-style:none none solid solid; width:18px !important; }
+.node-wrapper.vertical.crosslevel.right .header { border-style:none none dashed dashed; }
+.node-wrapper.vertical.mid .header { bottom:50%; border-style:none none solid solid; width:18px !important; }
+.node-wrapper.vertical.crosslevel.mid .header { border-style:none none dashed dashed; }
+
+.node-wrapper.vertical .footer { left:0; top:-50%; border-style:none none solid; }
+.node-wrapper.vertical.crosslevel .footer, .node-wrapper.vertial.crosslevel.left.single-pass .header { border-style: none none dashed; }
+
