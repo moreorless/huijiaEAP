@@ -13,7 +13,7 @@
 	<h2>试题列表</h2>
 	<c:forEach items="${quizlist}" var="quiz">
 	<div class="row">
-		${quiz.name}
+		<a href="${base}/quiz/test?id=${quiz.id}">${quiz.name}</a>
 	</div>
 	</c:forEach>
 
