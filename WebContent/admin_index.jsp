@@ -25,7 +25,9 @@
     </div>
 	<%@ include file="/includes/footer.jsp" %>
 
-<div id="user-dialog" class="modal hide fade">
+<div id="user-dialog" class="modal fade bs-example-modal-lg" role="dialog">
+	<div class="modal-dialog modal-lg">
+	 <div class="modal-content">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     	<h3>个人信息</h3>
@@ -81,6 +83,8 @@
 		</form>
 		</div>
   	</div>
+  	</div>
+  	</div>
 </div>
 
 
@@ -101,7 +105,7 @@
 	<script type="text/javascript">
 		var UserDialog = {
 			show : function(){
-				$("#user-dialog").modal({width:'70%', modalOverflow:true});	
+				$("#user-dialog").modal('show');	
 			}
 		}
 		$(document).ready(function(){
