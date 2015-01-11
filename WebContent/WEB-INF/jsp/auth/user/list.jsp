@@ -15,9 +15,9 @@
 
 <div id="wrap" class="container">
 	<div id="toolbar">
-			<a href="${base}/user/prepare?operation=add" class="btn" >
-				<img src="${base}/images/add_default.gif" />&nbsp;添加用户</a>
-		</div>
+		<a href="${base}/user/prepare?operation=add" class="btn" >
+			<img src="${base}/images/add_default.gif" />&nbsp;添加用户</a>
+	</div>
 	<table class="table table-striped table-bordered table-hover">
 		<thead>
 			<tr>

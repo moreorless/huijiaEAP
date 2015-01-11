@@ -37,6 +37,7 @@ CREATE TABLE auth_user (
 	created BIGINT(10) NULL DEFAULT NULL,
 	modified BIGINT(10) NULL DEFAULT NULL,
 	companyid INT(11) NULL DEFAULT NULL,
+	dept VARCHAR(128) NULL DEFAULT NULL,
 	iprestrict VARCHAR(128) NULL DEFAULT NULL,
 	authedNavs VARCHAR(512) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -48,16 +49,6 @@ CREATE TABLE IF NOT EXISTS auth_userrole_relation (
   relationId bigint(10) NOT NULL,
   userId bigint(10) NOT NULL,
   roleId bigint(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-# Dumping structure for table sys_tblids
-DROP TABLE IF EXISTS `sys_tblids`;
-CREATE TABLE IF NOT EXISTS `sys_tblids` (
-  `name` varchar(32) NOT NULL,
-  `maxid` bigint(20) NOT NULL,
-  PRIMARY KEY (`name`),
-  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # Dumping structure for table sys_logs
@@ -133,7 +124,8 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
 	`id` INT(11) NOT NULL,
-	`name` VARCHAR(256) NOT NULL
+	`name` VARCHAR(256) NOT NULL,
+	`description` VARCHAR(2048),
 )
 COMMENT='企业'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -173,6 +165,16 @@ CREATE TABLE `quiz_result` (
 COMMENT='测试结果'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# Dumping structure for table sys_tblids
+DROP TABLE IF EXISTS `sys_tblids`;
+CREATE TABLE IF NOT EXISTS `sys_tblids` (
+  `name` varchar(32) NOT NULL,
+  `maxid` bigint(20) NOT NULL,
+  PRIMARY KEY (`name`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- admin / admin
 INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL);
-
+INSERT INTO sys_tblids VALUES ('auth_user', 1);
