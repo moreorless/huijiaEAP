@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 系统菜单配置 -->
 <Navigators>
-	<Navigator id="nav_device" name="企业管理" url="/asset/main" icon="nav_imac.png"></Navigator>
-	<Navigator id="nav_link" name="试题管理" url="/link/main" icon="nav_link.png"></Navigator>
-	<Navigator id="nav_user" name="测试报告" url="/user/list" icon="nav_user.png"></Navigator>
-	<Navigator id="nav_user" name="号段管理" url="/user/list" icon="nav_user.png"></Navigator>
+	<Navigator id="nav_company" name="企业管理" url="/company/list" icon="nav_group.png"></Navigator>
+	<Navigator id="nav_quiz" name="试题管理" url="/quiz/admin" icon="nav_quiz.png"></Navigator>
+	<Navigator id="nav_report" name="测试报告" url="/report/main" icon="nav_report.png"></Navigator>
+	<Navigator id="nav_user" name="用户管理" url="/user/list" icon="nav_user.png"></Navigator>
 	<!-- 
 	<Navigator id="nav_sysconfig" name="系统配置" url="/sysconfig/main" icon="nav_config.png"></Navigator>
  	-->	

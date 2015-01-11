@@ -20,7 +20,7 @@
 			<h2><img src="${base}/images/quiz/${quiz.icon}" />${quiz.name}</h2>
 			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-primary active" role="button">开始测试</a>
 		</div>
-		<p class="desc">${quiz.description}</p>
+		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>
 		<p class="expire">有效期为yyyy-mm-dd - yyyy-mm-dd</p>
 		<c:if test="${!stat.last}">
 			<div class="quiz_card_seperator"></div>

@@ -13,12 +13,12 @@
   </head>
   <body>
 
-<div id="wrap">
+<div id="wrap" class="container">
 	<div id="toolbar">
 			<a href="${base}/user/prepare?operation=add" class="btn" >
 				<img src="${base}/images/add_default.gif" />&nbsp;添加用户</a>
 		</div>
-	<table class="table">
+	<table class="table table-striped table-bordered table-hover">
 		<thead>
 			<tr>
 				<th>用户名</th>
