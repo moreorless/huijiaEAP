@@ -13,6 +13,8 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import com.huijia.eap.annotation.AuthBy;
+import com.huijia.eap.commons.mvc.Pager;
+import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.service.QuizService;
 
@@ -27,8 +29,8 @@ public class QuizModule {
 	
 	@At
 	@Ok("jsp:jsp.quiz.admin")
-	public void admin(){
-		
+	public Pager<Quiz> admin(HttpServletRequest request, @Param("..") Pager<Quiz> pager){
+		return quizService.paging(null, pager);
 	}
 	
 	@At

@@ -26,7 +26,7 @@ public class CompanyModule {
 	
 	@At
 	@Ok("jsp:jsp.company.list")
-	public Pager<Company> list(HttpServletRequest request, Ioc ioc,	@Param("..") Pager<Company> pager) {
+	public Pager<Company> list(HttpServletRequest request, @Param("..") Pager<Company> pager) {
 		return companyService.paging(null, pager);
 	}
 }
