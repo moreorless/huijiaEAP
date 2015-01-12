@@ -5,17 +5,24 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import com.huijia.eap.commons.mvc.validate.annotation.ValidateType;
+import com.huijia.eap.commons.mvc.validate.annotation.Validations;
+import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
+
 @Table("quiz")
 public class Quiz {
 
 	@Column
-	@Id
+	@Id(auto=false)
 	private long id;
 	
 	/**
 	 * 名称
 	 */
 	@Column
+	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="quiz.add.name.span", resource=true, bundle="auth"),
+			@ValidateType(type=Type.minlength, parameters={ "1" }, errorMsg="quiz.add.name.span", resource=true, bundle="auth"),
+			@ValidateType(type=Type.maxlength, parameters={ "512" }, errorMsg="quiz.add.name.span", resource=true, bundle="auth")})
 	private String name;
 	
 	/**

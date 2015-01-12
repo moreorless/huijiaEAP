@@ -17,7 +17,7 @@
   <body>
     <c:import url="/includes/header.jsp"></c:import>
     <div id="wrap" class="container auto-spread">
-    	<iframe id="main-iframe" src="${base}/quiz/list" frameBorder="0" border="0" width="100%" height="100%"></iframe>
+    	<iframe id="main-iframe" src="${base}/quiz/showtest" frameBorder="0" border="0" width="100%" height="100%"></iframe>
     </div>
 	<%@ include file="/includes/footer.jsp" %>
 

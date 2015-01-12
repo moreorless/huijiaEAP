@@ -2,16 +2,19 @@ package com.huijia.eap.quiz.service;
 
 import java.util.List;
 
+import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
+import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.util.DigestUtil;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
@@ -21,8 +24,21 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 		setDao(dao);
 	}
 	
+	public Quiz insert(Quiz quiz) {
+		quiz.setId(getTblMaxIdWithUpdate());
+		return this.dao().insert(quiz);
+	}
+	
+	public void update(Quiz quiz) {
+		this.dao().update(quiz);
+	}
+	
+	public List<Quiz> fetchAll(){
+		return super.query(null, null);
+	}
+	
 	/**
-	 * 分页返回所有用户列表
+	 * 分页返回所有列表
 	 */
 	public Pager<Quiz> paging(Condition condition, Pager<Quiz> pager) {
 		List<Quiz> users = query(condition, this.dao().createPager(pager.getPage(), pager.getPageSize()));

@@ -2,7 +2,7 @@
 <!-- 系统菜单配置 -->
 <Navigators>
 	<Navigator id="nav_company" name="企业管理" url="/company/list" icon="nav_group.png"></Navigator>
-	<Navigator id="nav_quiz" name="试题管理" url="/quiz/admin" icon="nav_quiz.png"></Navigator>
+	<Navigator id="nav_quiz" name="试题管理" url="/quiz/list" icon="nav_quiz.png"></Navigator>
 	<Navigator id="nav_report" name="测试报告" url="/report/main" icon="nav_report.png"></Navigator>
 	<Navigator id="nav_user" name="用户管理" url="/user/list" icon="nav_user.png"></Navigator>
 	<!-- 
