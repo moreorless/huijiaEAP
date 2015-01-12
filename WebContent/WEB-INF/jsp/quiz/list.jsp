@@ -66,7 +66,7 @@
 			return false;
 		}
 
-	    window.location = '${base}/quiz/admin?page=' + (page_index + 1);
+	    window.location = '${base}/quiz/list?page=' + (page_index + 1);
 	    return false;
 	}
 	function initPagination() {
