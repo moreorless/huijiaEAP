@@ -54,3 +54,4 @@ conf/log4j.properties
 WebContent/WEB-INF/cupid.tld
 conf/db.properties
 .classpath
+build.properties

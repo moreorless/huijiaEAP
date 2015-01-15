@@ -56,9 +56,7 @@ em {
 					<label class="col-sm-2 control-label">描述</label>
 					<div class="col-sm-10">
 						<textarea class="form-control" rows="3" name="description"
-							id="description">
-				    ${company.description}
-				    </textarea>
+							id="description">${company.description}</textarea>
 					</div>
 				</div>
 
