@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.module;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,10 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Chain;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.mvc.upload.UploadAdaptor;
 
 import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.bean.User;
@@ -57,10 +60,13 @@ public class QuizModule {
 	}
 	
 	@At
-	@Ok("forward:/quiz/list")
+	@Ok("forward:/quiz/viewquiz?id=${obj.id}")
 	@Chain("validate")
-	public void add(@Param("..") Quiz quiz){
-		quizService.insert(quiz);
+	@AdaptBy(type = UploadAdaptor.class)
+	public Quiz add(@Param("..") Quiz quiz, @Param("quiz_file") File quizFile){
+		
+		
+		return quizService.insert(quiz);
 	}
 	
 	@At

@@ -44,13 +44,7 @@
 					<input type="hidden" name="icon" id="quiz_icon" value="default.png"/>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">试题文件</label>
-				<div class="col-sm-10">
-				    <input type="file" class="form-control" name="quiz_file" id="quiz_file" />
-				    <p class="help-block">上传试题文件</p>
-				</div>
-			</div>
+			
 			<div class="form-group">
 			  <div class="col-sm-offset-2 col-sm-10">
 			    <button class="btn btn-primary">保存</button>
