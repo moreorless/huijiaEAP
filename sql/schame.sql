@@ -125,7 +125,8 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
 	`id` INT(11) NOT NULL,
 	`name` VARCHAR(256) NOT NULL,
-	`description` VARCHAR(2048),
+	`code` VARCHAR(4) NOT NULL,
+	`description` VARCHAR(2048)
 )
 COMMENT='企业'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;

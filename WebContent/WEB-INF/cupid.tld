@@ -9,24 +9,24 @@
 	<uri>http://www.huijia.eap/cupid</uri>
 
 	<description><![CDATA[Custom tag library for this application]]></description>
-	
+
 	<tag>
 		<name>setBundle</name>
 		<tag-class>com.huijia.eap.commons.mvc.taglib.SetBundleTag</tag-class>
-		
+
 		<attribute>
 			<name>var</name>
 			<required>true</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
-		
+
 		<attribute>
 			<name>value</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<name>ifNotLogin</name>
 		<tag-class>com.huijia.eap.commons.mvc.taglib.IfNotLogin</tag-class>
@@ -36,7 +36,7 @@
 		<name>ifLogin</name>
 		<tag-class>com.huijia.eap.commons.mvc.taglib.IfLogin</tag-class>
 	</tag>
-	
+
 	<tag>
 		<name>formatDate</name>
 		<tag-class>com.huijia.eap.commons.mvc.taglib.FormatDateTag</tag-class>
@@ -82,26 +82,27 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<name>setEscape</name>
 		<tag-class>com.huijia.eap.commons.mvc.taglib.SetEscapeTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-		  <name>escapeXml</name>
-		  <required>false</required>
-		  <rtexprvalue>true</rtexprvalue>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
-	
+
+
 	<function>
-        <name>hasProperty</name>
-        <function-class>com.huijia.eap.commons.mvc.taglib.FunctionTag</function-class>
-        <function-signature>boolean hasProperty(java.lang.Object, java.lang.String)</function-signature>
-    </function>
-	
-	
+		<name>hasProperty</name>
+		<function-class>com.huijia.eap.commons.mvc.taglib.FunctionTag</function-class>
+		<function-signature>boolean hasProperty(java.lang.Object,
+			java.lang.String)</function-signature>
+	</function>
+
+
 	<function>
 		<name>isNumber</name>
 		<function-class>com.huijia.eap.commons.mvc.taglib.FunctionTag</function-class>

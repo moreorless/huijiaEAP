@@ -24,6 +24,7 @@
 		<thead>
 			<tr>
 		      <th id="name">企业名称</th>
+		      <th id="code">企业编码</th>
 		      <th id="description">备注</th>
 		      <th id="operation">操作</th>
 		    </tr>
@@ -32,8 +33,10 @@
 			<c:forEach items="${obj.data }" var="company">
 		      <tr>
 		        <td data-id="${company.id }">${company.name }</td>
+		        <td>${company.code }</td>
 		        <td>${company.description }</td>
 		        <td>
+		        	<a href="${base}/company/prepare?operation=edit&id=${company.id}">修改</a> &nbsp;|&nbsp;
 		        	<a href="${base}/company/segment">号段</a> &nbsp;|&nbsp;
 		        	<a href="${base}/company/report">报表</a>
 				</td>

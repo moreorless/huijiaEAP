@@ -11,6 +11,7 @@ import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.data.Company;
+import com.huijia.eap.quiz.data.Quiz;
 
 @IocBean
 public class CompanyService extends TblIdsEntityService<Company>{
@@ -18,6 +19,15 @@ public class CompanyService extends TblIdsEntityService<Company>{
 	@Inject("refer:companyDao")
 	public void setCompanyDao(Dao dao) {
 		setDao(dao);
+	}
+	
+	public Company insert(Company company) {
+		company.setId(getTblMaxIdWithUpdate());
+		return this.dao().insert(company);
+	}
+	
+	public void update(Company company) {
+		this.dao().update(company);
 	}
 	
 	/**
