@@ -50,7 +50,12 @@ public class Quiz {
 	/**
 	 * 题目
 	 */
-	private List<Quiz> items;
+	private List<QuizItem> items;
+	
+	/**
+	 * 评价体系
+	 */
+	private List<QuizEvaluation> evaluations;
 	
 	public long getId() {
 		return id;
@@ -70,10 +75,10 @@ public class Quiz {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<Quiz> getItems() {
+	public List<QuizItem> getItems() {
 		return items;
 	}
-	public void setItems(List<Quiz> items) {
+	public void setItems(List<QuizItem> items) {
 		this.items = items;
 	}
 	public long getCreateBy() {
@@ -105,6 +110,12 @@ public class Quiz {
 	}
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+	public List<QuizEvaluation> getEvaluations() {
+		return evaluations;
+	}
+	public void setEvaluations(List<QuizEvaluation> evaluations) {
+		this.evaluations = evaluations;
 	}
 	
 	

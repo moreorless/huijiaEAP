@@ -8,7 +8,7 @@ import org.nutz.dao.entity.annotation.Table;
 public class QuizEvaluation {
 
 	@Column
-	@Id
+	@Id(auto=false)
 	private long id;
 	@Column
 	private long quizId;
