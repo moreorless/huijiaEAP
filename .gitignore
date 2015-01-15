@@ -49,9 +49,4 @@ build/
 conf/db.properties
 conf/log4j.properties
 .externalToolBuilders/org.eclipse.wst.jsdt.core.javascriptValidator.launch
-.classpath
-.project
-WebContent/WEB-INF/cupid.tld
-conf/db.properties
-.classpath
 build.properties
