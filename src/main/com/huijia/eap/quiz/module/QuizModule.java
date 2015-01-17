@@ -162,6 +162,16 @@ public class QuizModule {
 		Quiz quiz = quizService.genSampleQuiz();
 		request.setAttribute("quiz", quiz);
 	}
+
+	/**
+	 * 提交答案
+	 * @param request
+	 */
+	@At
+	@Ok("jsp:jsp.quiz.test.report")
+	public void answer(HttpServletRequest request){
+		
+	}
 	
 	/**
 	 * 报表页面
