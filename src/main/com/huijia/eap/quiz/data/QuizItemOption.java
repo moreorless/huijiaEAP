@@ -5,7 +5,13 @@ public class QuizItemOption {
 	 * 序号：ABCDE
 	 */
 	private String index;
+	/**
+	 * 符合/非常符合
+	 */
 	private String name;
+	/**
+	 * 分数
+	 */
 	private int value;
 	
 	public QuizItemOption(String index, String name, int value){

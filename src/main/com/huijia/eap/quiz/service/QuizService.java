@@ -1,8 +1,8 @@
 package com.huijia.eap.quiz.service;
 
-import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -12,11 +12,12 @@ import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizItem;
-import com.huijia.eap.util.excel.ExcelParser;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
 
+	private Logger logger = Logger.getLogger(this.getClass());
+	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
 		setDao(dao);
