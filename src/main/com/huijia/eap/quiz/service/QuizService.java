@@ -1,20 +1,18 @@
 package com.huijia.eap.quiz.service;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
-import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
-import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizItem;
-import com.huijia.eap.util.DigestUtil;
+import com.huijia.eap.util.excel.ExcelParser;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
@@ -83,4 +81,6 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 		
 		return quiz;
 	}
+	
+	
 }

@@ -65,9 +65,13 @@ public class QuizModule {
 	@AdaptBy(type = UploadAdaptor.class)
 	public Quiz add(@Param("..") Quiz quiz, @Param("quiz_file") File quizFile){
 		
+		//excel operation test
+		quizService.excelTest();
 		
 		return quizService.insert(quiz);
 	}
+	
+	
 	
 	@At
 	@Ok("forward:/quiz/list")

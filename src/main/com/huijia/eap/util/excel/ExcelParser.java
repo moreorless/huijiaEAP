@@ -76,7 +76,6 @@ public class ExcelParser {
 	 */
 	public HSSFCell getCell(int sheetIndex, int rowIndex, String columnIndex) throws IOException {
 
-		double value = 0;
 		
 		HSSFSheet sheet = wb.getSheetAt(sheetIndex); // 读取excel的sheet，0表示读取第一个、1表示第二个.....
 
@@ -91,6 +90,40 @@ public class ExcelParser {
 	}
 	
 	
+	public String getCellStringValue(int sheetIndex, int rowIndex, String columnIndex) throws IOException {
+
+		String value = "";
+		
+		HSSFSheet sheet = wb.getSheetAt(sheetIndex); // 读取excel的sheet，0表示读取第一个、1表示第二个.....
+
+		HSSFRow row = sheet.getRow(rowIndex-1); // 取出sheet中的某一行数据
+
+		if (row != null) {
+			HSSFCell cell = row.getCell(columnIndex.toLowerCase().toCharArray()[0] - 'a'); // 获取该行中的一个单元格对象
+			if(cell == null){
+				return "";
+			}
+				
+			switch(cell.getCellType()){
+			case HSSFCell.CELL_TYPE_FORMULA:
+				value = cell.getStringCellValue();		
+				break;
+			case HSSFCell.CELL_TYPE_NUMERIC:					
+				value = Double.toString(cell.getNumericCellValue()).split("\\.")[0];// 一般的数据类型在excel中读出来都为float型
+				break;
+			case HSSFCell.CELL_TYPE_STRING:
+				value = cell.getStringCellValue();
+				break;
+			case HSSFCell.CELL_TYPE_BLANK:
+				value = cell.getStringCellValue();
+				break;
+			default:
+				value = cell.getStringCellValue();				
+			}
+		}
+		return value;
+	}
+	
 	/**
 	 * @param sheetIndex (表单)
 	 * @param columnIndex （栏）
@@ -102,7 +135,7 @@ public class ExcelParser {
 	 * @throws IOException 
 	 * 
 	 */
-	public double getCellValue(int sheetIndex, int rowIndex, String columnIndex) throws IOException {
+	public double getCellDoubleValue(int sheetIndex, int rowIndex, String columnIndex) throws IOException {
 
 		double value = 0;
 		
@@ -219,21 +252,21 @@ public class ExcelParser {
 			
 			excelReader.setAutoCommit(false);
 			
-			double value = excelReader.getCellValue(0, 3, "d");
-			System.out.println("\tBefore modify:\t D3=" + excelReader.getCellValue(0, 3, "d"));
-			System.out.println("\tBefore modify:\t D4=" + excelReader.getCellValue(0, 4, "d"));
-			System.out.println("\tBefore modify:\t G6=" + excelReader.getCellValue(0, 6, "g"));
+			double value = excelReader.getCellDoubleValue(0, 3, "d");
+			System.out.println("\tBefore modify:\t D3=" + excelReader.getCellStringValue(0, 3, "d"));
+			System.out.println("\tBefore modify:\t D4=" + excelReader.getCellStringValue(0, 4, "d"));
+			System.out.println("\tBefore modify:\t G6=" + excelReader.getCellStringValue(0, 6, "g"));
 			
 			excelReader.setCellValue(0, 3, "d", 200.3);
 			excelReader.setCellValue(0, 4, "d", 10001.2);
 			
 			excelReader.updateBatch();
 			
-			value = excelReader.getCellValue(0, 3, "d");
+			value = excelReader.getCellDoubleValue(0, 3, "d");
 			
 			System.out.println("\tAfter modify:\t" + value);
-			System.out.println("\tAfter modify:\t D4=" + excelReader.getCellValue(0, 4, "d"));
-			System.out.println("\tAfter modify:\t G6=" + excelReader.getCellValue(0, 6, "g"));
+			System.out.println("\tAfter modify:\t D4=" + excelReader.getCellStringValue(0, 4, "d"));
+			System.out.println("\tAfter modify:\t G6=" + excelReader.getCellStringValue(0, 6, "g"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
