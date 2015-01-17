@@ -35,7 +35,7 @@ public class ExcelParser {
 	/**
 	 * 批量提交的队列
 	 */
-	private Queue<WritableCell> commitQueue = new LinkedList<>();
+	//private Queue<WritableCell> commitQueue = new LinkedList<>();
 	
 	public ExcelParser(String path) {
 		this.filepath = path;
@@ -174,77 +174,9 @@ public class ExcelParser {
 		this.autoCommit = autoCommit;
 	}
 	
-	/**
-	 * 写入单元格
-	 * @param sheetIndex
-	 * @param rowIndex
-	 * @param columnIndex
-	 * @param value
-	 * @throws IOException
-	 */
-	public void setCellValue(int sheetIndex, int row, String column,
-			double value) throws IOException {
-		
-		synchronized (commitQueue) {
-			commitQueue.offer(new WritableCell(sheetIndex, column, row, value));
-			
-			if(autoCommit){
-				updateBatch();
-			}
-		}
-	}
-	
-	/**
-	 * 提交修改
-	 * @return
-	 */
-	public boolean updateBatch(){
 
-		synchronized (commitQueue) {
-			WritableCell writeEle = commitQueue.poll();
-			while(writeEle != null){
-				
-				int sheetIndex = writeEle.getSheetIndex();
-				int rowIndex = writeEle.getRow();
-				String columnIndex = writeEle.getColumn();
-				Object value = writeEle.getValue();
-				
-				HSSFSheet sheet = wb.getSheetAt(sheetIndex);
-				HSSFRow row = sheet.getRow(rowIndex - 1);
-				
-				if(row != null){
-					HSSFCell cell = row.getCell(columnIndex.toLowerCase().toCharArray()[0] - 'a');
-					switch (cell.getCellType()) {
-					
-					case HSSFCell.CELL_TYPE_NUMERIC:
-						cell.setCellValue((double)value);
-						break;
-					case HSSFCell.CELL_TYPE_BLANK:
-						cell.setCellValue(0);
-						break;
-					default:
-						
-					}
-			}
-				
-			writeEle = commitQueue.poll();
-		}
-			
-		try{
-			
-			// 写入后重新计算公式
-			HSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
-			FileOutputStream fileOut = new FileOutputStream(this.filepath);
-			wb.write(fileOut);
-			fileOut.close();
-		}catch (Exception e) {
-			logger.error("写入excel文件错误, " + filepath, e);
-			return false;
-		}
-		
-		}
-		return true;
-	}
+	
+
 
 	public static void main(String[] args) {
 		try {
@@ -257,10 +189,10 @@ public class ExcelParser {
 			System.out.println("\tBefore modify:\t D4=" + excelReader.getCellStringValue(0, 4, "d"));
 			System.out.println("\tBefore modify:\t G6=" + excelReader.getCellStringValue(0, 6, "g"));
 			
-			excelReader.setCellValue(0, 3, "d", 200.3);
-			excelReader.setCellValue(0, 4, "d", 10001.2);
+			//excelReader.setCellValue(0, 3, "d", 200.3);
+			//excelReader.setCellValue(0, 4, "d", 10001.2);
 			
-			excelReader.updateBatch();
+			//excelReader.updateBatch();
 			
 			value = excelReader.getCellDoubleValue(0, 3, "d");
 			
