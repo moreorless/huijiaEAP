@@ -6,8 +6,6 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
-import com.huijia.eap.quiz.QuizImportService.QuizItemOption;
-
 @Table("quiz_item")
 public class QuizItem {
 
