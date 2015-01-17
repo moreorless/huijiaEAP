@@ -24,6 +24,7 @@
 		<thead>
 			<tr>
 		      <th id="name">试题名称</th>
+		      <th id="name">图标</th>
 		      <th id="description">描述</th>
 		      <th id="usedcount">使用次数</th>
 		      <th id="createat">创建时间</th>
@@ -34,6 +35,7 @@
 			<c:forEach items="${obj.data }" var="quiz">
 		      <tr>
 		        <td data-id="${company.id }">${quiz.name }</td>
+		        <td><img src="${base}/images/quiz/icons/${quiz.icon}"></img></td>
 		        <td>${quiz.description }</td>
 		        <td></td>
 		        <td></td>

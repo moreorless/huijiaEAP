@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.service;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
@@ -19,6 +20,8 @@ import com.huijia.eap.util.DigestUtil;
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
 
+	private Logger logger = Logger.getLogger(this.getClass());
+	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
 		setDao(dao);

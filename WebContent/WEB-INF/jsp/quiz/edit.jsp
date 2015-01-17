@@ -11,12 +11,21 @@
   <style type="text/css">
   	#wrap {padding:10px;}
   	em{color:red}
+  	.icon-selector {
+  		padding : 5px; border: dashed 1px #ccc;
+  	}
+  	.icon-selector a{
+  		width: 50px; height:50px; display:inline-block;line-height: 50px;text-align: center;padding-top: 2px;
+  	}
+  	.icon-selector a.active{
+  		border:2px solid #428bca;
+  	}
   </style>
 </head>
 <body>
 	<div class="container" id="wrap">
 	<%@ include file="/error/inline.jsp" %>
-	<form class="form-horizontal" role="form" action="${base}/quiz/${param.operation}" method="post">
+	<form class="form-horizontal" role="form" action="${base}/quiz/${param.operation}" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="${quiz.id}"/>
 		<fieldset>
   			<legend>
@@ -38,8 +47,17 @@
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">图标</label>
-				<div class="col-sm-10">
-					<input type="hidden" name="icon" id="quiz_icon" value="default.png"/>
+				<input type="hidden" name="icon" id="quiz_icon" value="default.png"/>
+				<div class="col-sm-2">
+					<img id="quiz_icon_repl" src="${base}/images/quiz/icons/default.png" alt="" />
+					&nbsp;&nbsp;<a href="javascript://" id="btn-icon-selector">选择</a>
+				</div>
+				<div id="icon-selector" class="col-sm-offset-2 col-sm-10 icon-selector" style="display: none">
+					<c:forEach items="${iconNames}" var="iconName">
+						<a href="javascript://" data="${iconName}">
+						<img src="${base}/images/quiz/icons/${iconName}" alt="${iconName}" width="36" height="36"/>
+						</a>
+					</c:forEach>
 				</div>
 			</div>
 			<div class="form-group">
@@ -62,11 +80,34 @@
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/cupid/core.js"></script>
 <!--验证脚本 -->
+<%-- 
 <script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js" ></script>
 <script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js" ></script>
 <script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js" ></script>
+--%>
 <script type="text/javascript">
-	
+	var IconPicker = {
+		init : function(){
+			$('#btn-icon-selector').click(function(){
+				IconPicker.show();
+			});
+			
+			$('#icon-selector').find('a').click(function(){
+				$('#icon-selector').find('a').removeClass('active');
+				$(this).addClass('active');
+				$('#quiz_icon_repl').attr('src', '${base}/images/quiz/icons/' + $(this).attr('data'));
+				$('#quiz_icon').val($(this).attr('data'));
+				$('#icon-selector').hide();
+			});
+		},
+		show : function(){
+			$('#icon-selector').show();
+		}
+	}
+	$(document).ready(function(){
+		IconPicker.init();
+		
+	});
 </script>
 </body>
 </html>
