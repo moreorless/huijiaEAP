@@ -42,7 +42,7 @@ public class QuizItem {
 	/**
 	 * 评价标准
 	 */
-	private QuizEvaluation evaluation;
+	//private QuizEvaluation evaluation;
 	
 	public long getId() {
 		return id;

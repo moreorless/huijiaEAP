@@ -8,26 +8,66 @@ import org.nutz.dao.entity.annotation.Table;
 public class QuizEvaluation {
 
 	@Column
-	@Id(auto=false)
+	@Id(auto = false)
 	private long id;
 	@Column
 	private long quizId;
 	@Column
 	private long categoryId;
 	@Column
-	private long categoryName;
+	private String categoryName;
 	
+	//团体报告还是个人报告
+	@Column
+	private String type;
+	
+	//健康状况
+	@Column
+	private String healthStatus;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getHealthStatus() {
+		return healthStatus;
+	}
+
+	public void setHealthStatus(String healthStatus) {
+		this.healthStatus = healthStatus;
+	}
+
+	public int getMinScore() {
+		return minScore;
+	}
+
+	public void setMinScore(int minScore) {
+		this.minScore = minScore;
+	}
+
+	public int getMaxScore() {
+		return maxScore;
+	}
+
+	public void setMaxScore(int maxScore) {
+		this.maxScore = maxScore;
+	}
+
 	/**
 	 * 下限(含)
 	 */
 	@Column
-	private int min;
-	
+	private int minScore;
+
 	/**
 	 * 上限(含)
 	 */
 	@Column
-	private int max;
+	private int maxScore;
 	/**
 	 * 评语
 	 */
@@ -38,54 +78,55 @@ public class QuizEvaluation {
 	 */
 	@Column
 	private String suggestion;
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public long getQuizId() {
 		return quizId;
 	}
+
 	public void setQuizId(long quizId) {
 		this.quizId = quizId;
 	}
+
 	public long getCategoryId() {
 		return categoryId;
 	}
+
 	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
-	public long getCategoryName() {
+
+
+
+	public String getCategoryName() {
 		return categoryName;
 	}
-	public void setCategoryName(long categoryName) {
+
+	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	public int getMin() {
-		return min;
-	}
-	public void setMin(int min) {
-		this.min = min;
-	}
-	public int getMax() {
-		return max;
-	}
-	public void setMax(int max) {
-		this.max = max;
-	}
+
 	public String getEvaluation() {
 		return evaluation;
 	}
+
 	public void setEvaluation(String evaluation) {
 		this.evaluation = evaluation;
 	}
+
 	public String getSuggestion() {
 		return suggestion;
 	}
+
 	public void setSuggestion(String suggestion) {
 		this.suggestion = suggestion;
 	}
-	
-	
+
 }
