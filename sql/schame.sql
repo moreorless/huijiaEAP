@@ -67,50 +67,47 @@ CREATE TABLE IF NOT EXISTS `sys_logs` (
 
 DROP TABLE IF EXISTS `quiz`;
 CREATE TABLE `quiz` (
-	`id` INT(11) UNSIGNED NOT NULL,
-	`name` VARCHAR(256) NOT NULL,
-	`description` TEXT NULL,
-	`icon` VARCHAR(256),
-	`categories` VARCHAR(512) NULL,
-	`createBy` INT(11) UNSIGNED DEFAULT NULL,
-	`createAt` INT(11) UNSIGNED DEFAULT NULL,
-	`updateBy` INT(11) UNSIGNED DEFAULT NULL,
-	`updateAt` INT(11) UNSIGNED DEFAULT NULL,
-	`status` TINYINT(4) UNSIGNED NULL,
-	PRIMARY KEY (`id`),
-	INDEX `name` (`name`)
-)
-COMMENT='试卷'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(11) unsigned NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `description` text,
+  `icon` varchar(256) default NULL,
+  `categoryJson` varchar(512) default NULL COMMENT '{维度ID,维度名称}的Json对象',
+  `createBy` int(11) unsigned default NULL,
+  `createAt` int(11) unsigned default NULL,
+  `updateBy` int(11) unsigned default NULL,
+  `updateAt` int(11) unsigned default NULL,
+  `status` tinyint(4) unsigned default NULL,
+  `categoryNum` int(8) default '0' COMMENT '维度个数',
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
 
 DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (
-	`id` INT(11) NOT NULL,
-	`quizid` INT(11) NOT NULL,
-	`categoryId` VARCHAR(50) NOT NULL,
-	`categoryName` VARCHAR(255) NOT NULL,
-	`minScore` INT(10) NOT NULL,
-	`maxScore` INT(10) NOT NULL,
-	`evaluation` TEXT NULL,
-	`suggest` TEXT NULL
-)
-COMMENT='试题评价标准'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(11) NOT NULL,
+  `quizid` int(11) NOT NULL,
+  `categoryId` int(8) NOT NULL COMMENT '维度ID',
+  `categoryName` varchar(255) NOT NULL default '' COMMENT '维度名称',
+  `minScore` int(10) NOT NULL,
+  `maxScore` int(10) NOT NULL,
+  `evaluation` text,
+  `suggestion` text,
+  `type` varchar(16) default '' COMMENT '个人报告还是团体报告,single or team?',
+  `healthStatus` varchar(16) default '' COMMENT '健康状况'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准'
 
 DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
-	`id` INT(10) NOT NULL,
-	`question` TEXT NOT NULL,
-	`category` VARCHAR(256) NOT NULL,
-	`lieFlag` INT(1) NOT NULL,
-	`optionsJson` VARCHAR(512) NOT NULL,
-	`createBy` VARCHAR(512) NULL,
-	`createAt` VARCHAR(512) NULL,
-	`updateBy` VARCHAR(512) NULL,
-	`updateAt` VARCHAR(512) NULL
-)
-COMMENT='题目'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(10) NOT NULL,
+  `question` text NOT NULL,
+  `categoryId` int(8) NOT NULL,
+  `lieFlag` int(1) NOT NULL,
+  `optionsJson` varchar(512) NOT NULL,
+  `createBy` varchar(512) default NULL,
+  `createAt` varchar(512) default NULL,
+  `updateBy` varchar(512) default NULL,
+  `updateAt` varchar(512) default NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目'
 
 DROP TABLE IF EXISTS `quiz_item_relation`;
 CREATE TABLE `quiz_item_relation` (
