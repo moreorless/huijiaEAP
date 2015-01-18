@@ -5,13 +5,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
+import org.nutz.json.Json;
+
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.quiz.data.QuizItemOption;
 import com.huijia.eap.util.excel.ExcelParser;
 
 public class QuizImportHandler {
 
-	// private Logger logger = Logger.getLogger(this.getClass());
+	private Logger logger = Logger.getLogger(this.getClass());
 	/**
 	 * 第0个表单：存放具体的题目 第1个表单：存放个人报告评语 第2个表单：存放团体报告评语
 	 */
@@ -47,34 +51,41 @@ public class QuizImportHandler {
 	}
 
 	class Option {
-		public String index;
-		public String name;
-		public int value;
+		public String index; 	//ABCDE
+		public String name;		//符合/不太符合...
+		public String value;	// 5/10/15
 	}
 
 	class Category {
-		public int id;
-		public String name;
+		public int id;			//维度编号，从1开始
+		public String name;		//维度名称
 	}
-
+	
+	
+	//需要返回的数据
 	private LinkedList<Option> options = new LinkedList<Option>();
 	private LinkedList<Category> categories = new LinkedList<Category>();
 	private LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
 	private LinkedList<QuizEvaluation> quizEvaluations = new LinkedList<QuizEvaluation>();
 
-	// Sheet0（题目列表）的初始元素存放位置：“题目编号”的位置
-	private CellPosition initPostionSheetItem = new CellPosition();
-	// Sheet1（个人报告评语）的初始元素存放位置：“类别”的位置
-	private CellPosition initPostionSheetSingle = new CellPosition();
-	// Sheet2（团体报告评语）的初始元素存放位置：“类别”的位置
-	private CellPosition initPostionSheetTeam = new CellPosition();
+
 
 	private int itemNum = 0; // 题目个数
 	private int optionNum = 0; // 选项个数
-	private int cateryNum = 0;// 维度个数
+	private int categoryNum = 0;// 维度个数
 
-	private String lieIndex; // 测谎题所在列号
-	private String categoryIndex; // 维度所在列号
+	// Sheet0（题目列表）的初始元素存放位置：“题目编号”的位置
+	private CellPosition initPostionSheetItem = new CellPosition();
+	private String lieColumnIndexOfSheetItem; // 测谎题所在列号
+	private String categoryColumnIndexOfSheetItem; // 维度所在列号
+	private String questionColumnIndexOfSheetItem; // 题目所在列号
+	private int optionAColumnIndexOfSheetItem; // 选项A所在列号（整数型）
+	
+	// Sheet1（个人报告评语）的初始元素存放位置：“类别”的位置
+	private CellPosition initPostionSheetSingle = new CellPosition();
+	
+	// Sheet2（团体报告评语）的初始元素存放位置：“类别”的位置
+	private CellPosition initPostionSheetTeam = new CellPosition();
 
 	/**
 	 * // 初始化表单0的定位元素
@@ -100,6 +111,7 @@ public class QuizImportHandler {
 		}
 		// 执行到这里，说明初始化表单0失败
 		this.initPostionSheetItem = null;
+		logger.error("错误：在题目表单中找不到<题目编号>单元格。");
 		return;
 	}
 
@@ -124,6 +136,7 @@ public class QuizImportHandler {
 		}
 		// 执行到这里，说明初始化表单1失败
 		this.initPostionSheetSingle = null;
+		logger.error("错误：在个人评估表单中找不到<类别>单元格。");
 		return;
 	}
 
@@ -148,26 +161,15 @@ public class QuizImportHandler {
 		}
 		// 执行到这里，说明初始化表单1失败
 		this.initPostionSheetTeam = null;
+		logger.error("错误：在团体评估表单中找不到<类别>单元格。");
 		return;
 	}
 
-	private int getItemNum() {
-
-		int i = 0;
-		String value;
-		for (i = 0;; i++) {
-			value = getCellValue(this.initPostionSheetItem.sheetIndex,
-					this.initPostionSheetItem.rowIndex + i + 1,
-					initPostionSheetItem.columnIndex);
-			if (i == ITEMMAX)// 循环一直没有停止，出错
-				return 0;
-			if (value.equals(""))
-				break;
-		}
-		return i;
-	}
-
-	private int getOptionNum() {
+	/**
+	 * 
+	 * @return 选项个数
+	 */
+	private int initOptions() {
 		int i = 0;
 		String columnChar = this.initPostionSheetItem.columnIndex;
 		int columnIndex = columnChar.toLowerCase().toCharArray()[0] - 'a';
@@ -179,15 +181,29 @@ public class QuizImportHandler {
 			value = getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex, COLUMNARRAY[columnIndex
 							+ i]);
-			if (i == ITEMMAX)// 循环一直没有停止，出错
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("表单0中初始化题目选项失败：循环超过最大次数。");
 				return 0;
-
+			}
+			Option option = new Option();
 			if (num > 0 && value.equals("") == false
 					&& value.equals("A") == false) {
 				num++;
+				option.index = value;
+				option.name = this.getCellValue(SHEETINDEXFORITEM,
+						this.initPostionSheetItem.rowIndex - 1,
+						COLUMNARRAY[columnIndex + i]);
+
+				options.add(option);
 			}
 			if (value.equals("A")) {
 				num = 1;
+				option.index = value;
+				option.name = this.getCellValue(SHEETINDEXFORITEM,
+						this.initPostionSheetItem.rowIndex - 1,
+						COLUMNARRAY[columnIndex + i]);
+				options.add(option);
 			}
 			if (value.equals(""))
 				break;
@@ -195,7 +211,7 @@ public class QuizImportHandler {
 		return num;
 	}
 
-	private int getCategoryNum() {
+	private int initCategories() {
 		int i = 0;
 		String columnChar = this.initPostionSheetItem.columnIndex;
 		int columnIndex = columnChar.toLowerCase().toCharArray()[0] - 'a';
@@ -206,10 +222,13 @@ public class QuizImportHandler {
 			value = getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex, COLUMNARRAY[columnIndex
 							+ i]);
-			if (i == ITEMMAX)// 循环一直没有停止，出错
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("获取维度个数失败：表单0中找不到<是否测谎题>单元格，循环超过最大次数。");
 				return 0;
+			}
 			if (value.equals("是否测谎题")) {
-				lieIndex = COLUMNARRAY[columnIndex + i];
+				lieColumnIndexOfSheetItem = COLUMNARRAY[columnIndex + i];
 				break;
 			}
 			if (value.equals("")) // 没有找到测谎列
@@ -220,10 +239,47 @@ public class QuizImportHandler {
 			value = getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex, COLUMNARRAY[columnIndex
 							+ i]);
-			if (i == ITEMMAX)// 循环一直没有停止，出错
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("获取维度个数失败：表单0中找不到<维度>单元格，循环超过最大次数。");
 				return 0;
+			}
 			if (value.equals("维度")) {
-				categoryIndex = COLUMNARRAY[columnIndex + i];
+				categoryColumnIndexOfSheetItem = COLUMNARRAY[columnIndex + i];
+				break;
+			}
+			if (value.equals("")) // 没有找到维度列
+				return 0;
+		}
+
+		for (i = 0;; i++) {
+			value = getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex, COLUMNARRAY[columnIndex
+							+ i]);
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("获取维度个数失败：表单0中找不到<题目>单元格，循环超过最大次数。");
+				return 0;
+			}
+			if (value.equals("题目")) {
+				questionColumnIndexOfSheetItem = COLUMNARRAY[columnIndex + i];
+				break;
+			}
+			if (value.equals("")) // 没有找到维度列
+				return 0;
+		}
+
+		for (i = 0;; i++) {
+			value = getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex, COLUMNARRAY[columnIndex
+							+ i]);
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("获取维度个数失败：表单0中找不到<A>单元格，循环超过最大次数。");
+				return 0;
+			}
+			if (value.equals("A")) {
+				optionAColumnIndexOfSheetItem = columnIndex + i;
 				break;
 			}
 			if (value.equals("")) // 没有找到维度列
@@ -235,27 +291,100 @@ public class QuizImportHandler {
 		HashSet<String> categorySet = new HashSet<String>();
 		for (i = 0; i < this.itemNum; i++) {
 			lieValue = getCellValue(this.initPostionSheetItem.sheetIndex,
-					this.initPostionSheetItem.rowIndex + i+1, lieIndex);
+					this.initPostionSheetItem.rowIndex + i + 1, lieColumnIndexOfSheetItem);
 			categoryValue = getCellValue(this.initPostionSheetItem.sheetIndex,
-					this.initPostionSheetItem.rowIndex + i+1, categoryIndex);
+					this.initPostionSheetItem.rowIndex + i + 1, categoryColumnIndexOfSheetItem);
 
 			if (lieValue.equals("是")) {
 				continue;
 			} else if (lieValue.equals("否")) {
-				if (categoryValue.equals(""))
+				if (categoryValue.equals("")) {
+					logger.error("获取维度个数失败：格式错误，非测谎题但未标明维度。题目编号为: " + (i + 1));
 					return 0; // 不是测谎提，但是没有存放维度名称，错误
+				}
 				if (categorySet.contains(categoryValue))
 					continue;
 				categorySet.add(categoryValue);
-			} else
+			} else {
+				logger.error("获取维度个数失败：格式错误，不能判断是否测谎题。题目编号为: " + (i + 1));
 				return 0; // 出错
+			}
 		}
 
+		i = 0;
 		for (Iterator<String> it = categorySet.iterator(); it.hasNext();) {
-			System.out.println(it.next());
+			Category category = new Category();
+			category.id = categories.size() + 1;
+			category.name = it.next();
+			categories.add(category);
 		}
 
 		return categorySet.size();
+	}
+
+	/**
+	 * 
+	 * @return 题目个数
+	 */
+	private int initItems() {
+
+		int i = 0;
+		String value;
+		for (i = 0;; i++) {
+			value = getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.initPostionSheetItem.columnIndex);
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("表单0中初始化题目失败：循环超过最大次数。");
+				return 0;
+			}
+			if (value.equals(""))
+				break;
+			QuizItem item = new QuizItem();
+			item.setCategory(getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.categoryColumnIndexOfSheetItem));
+			item.setQuestion(getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.questionColumnIndexOfSheetItem));
+			if (getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1, this.lieColumnIndexOfSheetItem)
+					.equals("是"))
+				item.setLieFlag(true);
+			else if (getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1, this.lieColumnIndexOfSheetItem)
+					.equals("否"))
+				item.setLieFlag(false);
+			else {
+				logger.error("表单0中初始化题目失败：无法判断题目" + i + 1 + "是否为测谎题。");
+				return 0;
+			}
+			item.setId(Integer.parseInt(getCellValue(
+					this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.initPostionSheetItem.columnIndex)));
+			// item.setOptions(this.options);
+			LinkedList<QuizItemOption> optionList = new LinkedList<QuizItemOption>();
+
+			for (Iterator<Option> it = options.iterator(); it.hasNext();) {
+
+				Option option = it.next();
+				QuizItemOption quizItemOption = new QuizItemOption(
+						option.index, option.name,
+						Integer.parseInt(getCellValue(
+								this.initPostionSheetItem.sheetIndex,
+								this.initPostionSheetItem.rowIndex + i + 1,
+								COLUMNARRAY[this.optionAColumnIndexOfSheetItem
+										+ option.index.toLowerCase()
+												.toCharArray()[0] - 'a'])));
+				optionList.add(quizItemOption);
+			}
+			item.setOptions(optionList);
+			item.setOptionsJson(Json.toJson(optionList));
+			this.quizItems.add(item);
+		}
+		return i;
 	}
 
 	/**
@@ -263,10 +392,26 @@ public class QuizImportHandler {
 	 */
 	public void initSheetPositions() {
 		this.initSheet0Position();
+		logger.debug("成功获取表单0定位元素<题目编号>位置:("
+				+ this.initPostionSheetItem.sheetIndex + ", "
+				+ this.initPostionSheetItem.rowIndex + ", "
+				+ this.initPostionSheetItem.columnIndex + ")");
 		this.initSheet1Position();
+		logger.debug("成功获取表单1定位元素<类别>位置:("
+				+ this.initPostionSheetSingle.sheetIndex + ", "
+				+ this.initPostionSheetSingle.rowIndex + ", "
+				+ this.initPostionSheetSingle.columnIndex + ")");
 		this.initSheet2Position();
-		this.itemNum = getItemNum();
-		this.optionNum = getOptionNum();
+		logger.debug("成功获取表单2定位元素<类别>位置:("
+				+ this.initPostionSheetTeam.sheetIndex + ", "
+				+ this.initPostionSheetTeam.rowIndex + ", "
+				+ this.initPostionSheetTeam.columnIndex + ")");
+		this.optionNum = initOptions();
+		this.categoryNum = initCategories();
+		this.itemNum = initItems(); // 必须先initCategory
+
+		logger.debug("初始化表单成功: 题目个数=" + this.itemNum + ", 选项个数="
+				+ this.optionNum + ", 维度个数=" + this.categoryNum);
 	}
 
 	private String getCellValue(int sheetIndex, int rowIndex, String columnIndex) {
@@ -274,8 +419,8 @@ public class QuizImportHandler {
 		try {
 			return excel.getCellStringValue(sheetIndex, rowIndex, columnIndex);
 		} catch (IOException e) {
-			System.out.println("Error: cannot Get Excel Cell of (" + sheetIndex
-					+ ", " + rowIndex + ", " + columnIndex + ")");
+			logger.error("Cannot Get Excel Cell of (" + sheetIndex + ", "
+					+ rowIndex + ", " + columnIndex + ")");
 			return null;
 		}
 	}
@@ -286,7 +431,7 @@ public class QuizImportHandler {
 			return excel.getCellStringValue(position.sheetIndex,
 					position.rowIndex, position.columnIndex);
 		} catch (IOException e) {
-			System.out.println("Error: cannot Get Excel Cell of ("
+			logger.error("Error: cannot Get Excel Cell of ("
 					+ position.sheetIndex + ", " + position.rowIndex + ", "
 					+ position.columnIndex + ")");
 			return null;
@@ -320,14 +465,25 @@ public class QuizImportHandler {
 		return this.quizEvaluations;
 	}
 
+	public LinkedList<Option> getOptions() {
+
+		return this.options;
+	}
+
+	public LinkedList<Category> getCategories() {
+
+		return this.categories;
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		// QuizItemOption quizItemOption = new QuizItemOption();
 		QuizImportHandler quizImportHandler = new QuizImportHandler(
 				"D:\\quiz.xls");
 		quizImportHandler.initSheetPositions();
-		System.out.println(quizImportHandler.getOptionNum());
-		System.out.println(quizImportHandler.getCategoryNum());
+		// quizImportHandler.initSheetPositions
+		// System.out.println(quizImportHandler.getOptionNum());
+		// System.out.println(quizImportHandler.getCategoryNum());
 		return;
 
 		// ExcelParser excelParser = new ExcelParser("D:\\quiz.xls");
