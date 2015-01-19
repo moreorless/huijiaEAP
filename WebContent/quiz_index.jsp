@@ -10,18 +10,20 @@
     <title><fmt:message key="index.product.name" bundle="${i18n_main}"/></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
-    <link type="text/css" rel="stylesheet" href="${base}/css/index.css"/>
+    <link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
     <link type="text/css" rel="stylesheet" href="${base }/css/ui/validate/jquery.validate.css" />
     
   </head>
   <body>
-    <c:import url="/includes/header.jsp"></c:import>
+    <c:import url="/includes/header_huijia.jsp"></c:import>
     <div id="wrap" class="container auto-spread">
     	<iframe id="main-iframe" src="${base}/quiz/showtest" frameBorder="0" border="0" width="100%" height="100%"></iframe>
     </div>
 	<%@ include file="/includes/footer.jsp" %>
 
-<div id="user-dialog" class="modal hide fade">
+<div id="user-dialog" class="modal fade bs-example-modal-lg" role="dialog">
+	<div class="modal-dialog modal-lg">
+	 <div class="modal-content">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     	<h3>个人信息</h3>
@@ -33,49 +35,58 @@
 		</div>
 		<div>
 		<c:import url="/error/inline.jsp" />
-		<form class="form-horizontal" id="userForm" action="${base}/user/editAjax" method="post">
+		<form class="form-horizontal" id="userForm" action="${base}/user/editAjax" method="post" role="form">
 			<input type="hidden" name="userId" value="${current_user.userId }"/>
 			<input type="hidden" name="name" value="${current_user.name }"/>
 			<input type="hidden" name="type" value="${current_user.type }"/>
 			
-			<div class="control-group">
-			    <label class="control-label">真实姓名</label>
-			    <div class="controls">
-			      <input type="text" name="realname" value="${current_user.realname}"  />
+			<div class="form-group">
+			    <label class="control-label col-sm-2">真实姓名</label>
+			    <div class="col-sm-4">
+			      <input type="text" name="realname" class="form-control" value="${current_user.realname}"  />
+			    </div>
+			    <div class="col-sm-6">
 			      <span><fmt:message key="user.add.realname.span" bundle="${i18n_auth}"/></span>
 			    </div>
 			  </div>
-			  <div class="control-group">
-			  <label class="control-label">密码</label>
-			  <div class="controls">
-			    <input type="password" name="password" value="${current_user.password}" />
+			  <div class="form-group">
+			  <label class="control-label col-sm-2">密码</label>
+			  <div class="col-sm-4">
+			    <input type="password" name="password" class="form-control" value="${current_user.password}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.password.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
 			
-			<div class="control-group">
-			  <label class="control-label">邮箱</label>
-			  <div class="controls">
-			    <input type="text" name="email" value="${current_user.email}" />
+			<div class="form-group">
+			  <label class="control-label col-sm-2">邮箱</label>
+			  <div class="col-sm-4">
+			    <input type="text" name="email" class="form-control" value="${current_user.email}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.email.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
 			
-			<div class="control-group">
-			  <label class="control-label"><fmt:message key="user.add.mobile" bundle="${i18n_auth}"/></label>
-			  <div class="controls">
-			    <input type="text" name="mobile" value="${current_user.mobile}" />
+			<div class="form-group">
+			  <label class="control-label col-sm-2"><fmt:message key="user.add.mobile" bundle="${i18n_auth}"/></label>
+			  <div class="col-sm-4">
+			    <input type="text" name="mobile" class="form-control" value="${current_user.mobile}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.mobile.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
-			<div class="control-group">
-			  <label class="control-label"></label>
-			  <div class="controls">
+			<div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-10">
 			    <a href="javascript://" class="btn btn-primary" id="btn-save">保存</a>
 			  </div>
 			</div>
 		</form>
 		</div>
+  	</div>
+  	</div>
   	</div>
 </div>
 
@@ -97,7 +108,7 @@
 	<script type="text/javascript">
 		var UserDialog = {
 			show : function(){
-				$("#user-dialog").modal({width:'70%', modalOverflow:true});	
+				$("#user-dialog").modal('show');
 			}
 		}
 		$(document).ready(function(){

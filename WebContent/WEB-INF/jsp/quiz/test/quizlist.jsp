@@ -17,7 +17,7 @@
 	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
 	<div class="row quiz_card">
 		<div class="header">
-			<h2><img src="${base}/images/quiz/${quiz.icon}" />${quiz.name}</h2>
+			<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
 			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-primary active" role="button">开始测试</a>
 		</div>
 		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>

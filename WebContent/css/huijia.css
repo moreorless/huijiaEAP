@@ -1,0 +1,82 @@
+html,
+body {
+  height: 100%;
+  overflow:hidden;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+#nav {
+	/*height:40px;*/
+	width: 1000px;
+	margin: 0 auto 0 auto;
+	border-bottom: 2px solid #e7e7e7;
+}
+
+.huijia-header-bg {
+	height: 232px;
+	background-image: url(../images/header.jpg);
+}
+.huijia-header-nav {
+	height: 48px;
+	line-height:48px;
+	background-color: #fff;
+}
+
+.huijia-header-nav .brand h4{
+	font-size: 14px;
+	font-weight : bold;
+	margin-left: 20px;
+	margin-top: 20px;
+	color: #505050;
+}
+.huijia-header-nav .brand-right label{
+	margin-right: 10px;
+	color: #505050;
+}
+
+#logo_bar{
+	color : #005580;
+	font-weight : bold;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  	
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+	position: fixed;
+	height: 25px;
+	left : 0;
+	bottom: 0;
+	width:100%;
+	background-color: #eee;
+	/*background: url(../images/footer-bg.png) repeat-x;*/
+	color: #48545b;
+	border-top: 1px solid #c3c3c3;
+}
+#footer > div{
+	width : 980px;
+	margin : 0 auto;	
+	padding-left:10px;
+	color: #48545b;
+}
+#footer p{
+	height:24px;
+	line-height:24px;
+	font-size:12px;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+/*
+@media (max-width: 767px) {
+  #footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  */
+}
+

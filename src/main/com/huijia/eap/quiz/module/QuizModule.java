@@ -23,7 +23,9 @@ import org.nutz.mvc.upload.UploadAdaptor;
 
 import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.annotation.AuthBy;
+import com.huijia.eap.auth.Auths;
 import com.huijia.eap.auth.bean.User;
+import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
@@ -62,6 +64,9 @@ public class QuizModule {
 	public void showtest(HttpServletRequest request){
 		List<Quiz> list = quizService.fetchAll();
 		request.setAttribute("quizlist", list);
+		
+		User currentUser = Auths.getUser(request);
+		request.setAttribute("user", currentUser);
 	}
 
 	/**

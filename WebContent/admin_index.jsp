@@ -39,44 +39,51 @@
 		</div>
 		<div>
 		<c:import url="/error/inline.jsp" />
-		<form class="form-horizontal" id="userForm" action="${base}/user/editAjax" method="post">
+		<form class="form-horizontal" id="userForm" action="${base}/user/editAjax" method="post" role="form">
 			<input type="hidden" name="userId" value="${current_user.userId }"/>
 			<input type="hidden" name="name" value="${current_user.name }"/>
 			<input type="hidden" name="type" value="${current_user.type }"/>
 			
-			<div class="control-group">
-			    <label class="control-label">真实姓名</label>
-			    <div class="controls">
-			      <input type="text" name="realname" value="${current_user.realname}"  />
+			<div class="form-group">
+			    <label class="control-label col-sm-2">真实姓名</label>
+			    <div class="col-sm-4">
+			      <input type="text" name="realname" class="form-control" value="${current_user.realname}"  />
+			    </div>
+			    <div class="col-sm-6">
 			      <span><fmt:message key="user.add.realname.span" bundle="${i18n_auth}"/></span>
 			    </div>
 			  </div>
-			  <div class="control-group">
-			  <label class="control-label">密码</label>
-			  <div class="controls">
-			    <input type="password" name="password" value="${current_user.password}" />
+			  <div class="form-group">
+			  <label class="control-label col-sm-2">密码</label>
+			  <div class="col-sm-4">
+			    <input type="password" name="password" class="form-control" value="${current_user.password}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.password.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
 			
-			<div class="control-group">
-			  <label class="control-label">邮箱</label>
-			  <div class="controls">
-			    <input type="text" name="email" value="${current_user.email}" />
+			<div class="form-group">
+			  <label class="control-label col-sm-2">邮箱</label>
+			  <div class="col-sm-4">
+			    <input type="text" name="email" class="form-control" value="${current_user.email}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.email.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
 			
-			<div class="control-group">
-			  <label class="control-label"><fmt:message key="user.add.mobile" bundle="${i18n_auth}"/></label>
-			  <div class="controls">
-			    <input type="text" name="mobile" value="${current_user.mobile}" />
+			<div class="form-group">
+			  <label class="control-label col-sm-2"><fmt:message key="user.add.mobile" bundle="${i18n_auth}"/></label>
+			  <div class="col-sm-4">
+			    <input type="text" name="mobile" class="form-control" value="${current_user.mobile}" />
+			  </div>
+			  <div class="col-sm-6">
 			    <span><fmt:message key="user.add.mobile.span" bundle="${i18n_auth}"/></span>
 			  </div>
 			</div>
-			<div class="control-group">
-			  <label class="control-label"></label>
-			  <div class="controls">
+			<div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-10">
 			    <a href="javascript://" class="btn btn-primary" id="btn-save">保存</a>
 			  </div>
 			</div>
