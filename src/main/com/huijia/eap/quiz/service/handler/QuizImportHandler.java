@@ -1,4 +1,4 @@
-package com.huijia.eap.quiz.service.excel;
+package com.huijia.eap.quiz.service.handler;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,9 +16,7 @@ import com.huijia.eap.util.excel.ExcelParser;
 public class QuizImportHandler {
 
 	private Logger logger = Logger.getLogger(this.getClass());
-	/**
-	 * 第0个表单：存放具体的题目 第1个表单：存放个人报告评语 第2个表单：存放团体报告评语
-	 */
+
 	private ExcelParser excel;
 	private static int rowIndexForSearch = 36;
 	private static String columnIndexForSearch[] = { "A", "B", "C", "D", "E",
@@ -32,8 +30,7 @@ public class QuizImportHandler {
 	private static int SHEETINDEXFORTEAM = 2;
 	private static int ITEMMAX = 65536; // 最多题目个数
 
-	QuizImportHandler(String path) {
-		this.excel = new ExcelParser(path);
+	public QuizImportHandler() {
 	}
 
 	/**
@@ -64,6 +61,7 @@ public class QuizImportHandler {
 	// 需要返回的数据
 	private LinkedList<Option> options = new LinkedList<Option>();
 	private LinkedList<Category> categories = new LinkedList<Category>();
+	private String categoryJson;
 	private LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
 	private LinkedList<QuizEvaluation> quizEvaluations = new LinkedList<QuizEvaluation>();
 
@@ -137,6 +135,13 @@ public class QuizImportHandler {
 		return this.categories;
 	}
 
+	public String getCategoryJson(){
+		return Json.toJson(this.categories);
+	}
+	
+	public int getCategoryNum(){
+		return this.categoryNum;
+	}
 	/**
 	 * 初始化表单0的定位元素
 	 */
@@ -889,7 +894,13 @@ public class QuizImportHandler {
 	/**
 	 * 主处理流程
 	 */
-	public int process() {
+	public int process(String path) {
+		this.excel = new ExcelParser(path);
+		if (excel.initSuccess() == false) {
+			logger.error("导入问卷失败：非法的Excel文件格式。");
+			return -1;
+		}
+
 		// Step1 : 定位各个表单的表头元素
 
 		if (this.preprocessSheetItem() == -1) {
@@ -943,9 +954,8 @@ public class QuizImportHandler {
 		// String s = "13-100";
 		// System.out.println(s.matches("[0-9]+-[0-9]+"));
 
-		QuizImportHandler quizImportHandler = new QuizImportHandler(
-				"D:\\quiz.xls");
-		quizImportHandler.process();
+		QuizImportHandler quizImportHandler = new QuizImportHandler();
+		quizImportHandler.process("D:\\quiz.xls");
 		// quizImportHandler.initSheetPositions
 		// System.out.println(quizImportHandler.getOptionNum());
 		// System.out.println(quizImportHandler.getCategoryNum());

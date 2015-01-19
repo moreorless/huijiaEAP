@@ -16,7 +16,7 @@
 <body>
 	<div class="container" id="wrap">
 	<%@ include file="/error/inline.jsp" %>
-	<form class="form-horizontal" role="form" action="${base}/quiz/${param.operation}" method="post">
+	<form class="form-horizontal" role="form" method="post">
 		<input type="hidden" name="id" value="${quiz.id}"/>
 		<fieldset>
   			<legend>
