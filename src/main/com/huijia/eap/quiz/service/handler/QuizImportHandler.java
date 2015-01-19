@@ -1,4 +1,4 @@
-package com.huijia.eap.quiz.service.excel;
+package com.huijia.eap.quiz.service.handler;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,9 +16,7 @@ import com.huijia.eap.util.excel.ExcelParser;
 public class QuizImportHandler {
 
 	private Logger logger = Logger.getLogger(this.getClass());
-	/**
-	 * 第0个表单：存放具体的题目 第1个表单：存放个人报告评语 第2个表单：存放团体报告评语
-	 */
+
 	private ExcelParser excel;
 	private static int rowIndexForSearch = 36;
 	private static String columnIndexForSearch[] = { "A", "B", "C", "D", "E",
@@ -32,8 +30,7 @@ public class QuizImportHandler {
 	private static int SHEETINDEXFORTEAM = 2;
 	private static int ITEMMAX = 65536; // 最多题目个数
 
-	QuizImportHandler(String path) {
-		this.excel = new ExcelParser(path);
+	public QuizImportHandler() {
 	}
 
 	/**
@@ -135,6 +132,14 @@ public class QuizImportHandler {
 	public LinkedList<Category> getCategories() {
 
 		return this.categories;
+	}
+
+	public String getCategoryJson() {
+		return Json.toJson(this.categories);
+	}
+
+	public int getCategoryNum() {
+		return this.categoryNum;
 	}
 
 	/**
@@ -584,7 +589,18 @@ public class QuizImportHandler {
 		String lieValue;
 		String categoryValue;
 		HashSet<String> categorySet = new HashSet<String>();
-		for (i = 0; i < this.itemNum; i++) {
+		for (i = 0;; i++) {
+			if (getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.initPostionSheetItem.columnIndex).equals(""))
+				break;
+			
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("表单0中初始化维度失败：循环超过最大次数。");
+				return -1;
+			}
+
 			lieValue = getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
 					lieColumnIndexOfSheetItem);
@@ -616,7 +632,7 @@ public class QuizImportHandler {
 
 		for (Iterator<String> it = categorySet.iterator(); it.hasNext();) {
 			Category category = new Category();
-			category.id = categories.size() + 1;
+			category.id = categories.size();
 			category.name = it.next();
 			categories.add(category);
 		}
@@ -646,9 +662,11 @@ public class QuizImportHandler {
 			if (value.equals(""))
 				break;
 			QuizItem item = new QuizItem();
-			item.setCategory(getCellValue(this.initPostionSheetItem.sheetIndex,
+			
+			item.setCategoryId(this.getCategoryIdByCategoryName(getCellValue(
+					this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
-					this.categoryColumnIndexOfSheetItem));
+					this.categoryColumnIndexOfSheetItem)));
 			item.setQuestion(getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
 					this.questionColumnIndexOfSheetItem));
@@ -696,20 +714,20 @@ public class QuizImportHandler {
 	 */
 	private int processSheetItem() {
 
-		// 下面三行有依赖关系，必须先确定Option，再确定题目个数，再确定维度个数
+		// 下面三行有依赖关系，必须先确定Option，再确定题目个数
 		this.optionNum = initOptions();
 		if (this.optionNum == -1) {
 			logger.error("解析题目表单失败：无效的选项信息.");
 			return -1;
 		}
-		this.itemNum = initItems();
-		if (this.itemNum == -1) {
-			logger.error("解析题目表单失败：无效的题目信息.");
-			return -1;
-		}
 		this.categoryNum = initCategories();
 		if (this.categoryNum == -1) {
 			logger.error("解析题目表单失败：无效的维度信息.");
+			return -1;
+		}
+		this.itemNum = initItems();
+		if (this.itemNum == -1) {
+			logger.error("解析题目表单失败：无效的题目信息.");
 			return -1;
 		}
 
@@ -829,7 +847,7 @@ public class QuizImportHandler {
 				break;
 			}
 			QuizEvaluation evaluation = new QuizEvaluation();
-			evaluation.setType("Team");
+			evaluation.setType("team");
 			if (getCategoryIdByCategoryName(value) < 0) {
 				// 出错，该行维度不在第一页的维度列表中
 				logger.error("解析团体评估表单出错：维度<" + value + ">未在题目表单中出现过.");
@@ -889,7 +907,13 @@ public class QuizImportHandler {
 	/**
 	 * 主处理流程
 	 */
-	public int process() {
+	public int process(String path) {
+		this.excel = new ExcelParser(path);
+		if (excel.initSuccess() == false) {
+			logger.error("导入问卷失败：非法的Excel文件格式。");
+			return -1;
+		}
+
 		// Step1 : 定位各个表单的表头元素
 
 		if (this.preprocessSheetItem() == -1) {
@@ -943,9 +967,8 @@ public class QuizImportHandler {
 		// String s = "13-100";
 		// System.out.println(s.matches("[0-9]+-[0-9]+"));
 
-		QuizImportHandler quizImportHandler = new QuizImportHandler(
-				"D:\\quiz.xls");
-		quizImportHandler.process();
+		QuizImportHandler quizImportHandler = new QuizImportHandler();
+		quizImportHandler.process("D:\\quiz.xls");
 		// quizImportHandler.initSheetPositions
 		// System.out.println(quizImportHandler.getOptionNum());
 		// System.out.println(quizImportHandler.getCategoryNum());

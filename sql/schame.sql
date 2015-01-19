@@ -111,12 +111,9 @@ CREATE TABLE `quiz_item` (
 
 DROP TABLE IF EXISTS `quiz_item_relation`;
 CREATE TABLE `quiz_item_relation` (
-	`id` INT(11) NOT NULL,
-	`quizid` INT(11) NOT NULL,
-	`quizitemid` INT(11) NOT NULL
-)
-COMMENT='试卷-题目关联'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `quizid` int(11) NOT NULL,
+  `quizitemid` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷-题目关联';
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
@@ -141,7 +138,6 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `seg_quiz_relation`;
 CREATE TABLE `seg_quiz_relation` (
-	`id` INT(11) NOT NULL,
 	`segmentid` INT(11) NOT NULL,
 	`quizid` INT(11) NOT NULL,
 	`startDate` VARCHAR(20) NOT NULL COMMENT '开始日期',
