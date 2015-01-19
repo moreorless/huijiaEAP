@@ -82,6 +82,9 @@ public class User extends BaseTimedObject implements Serializable {
 	@Column
 	private String authedNavs;		// 授权的模块id集合
 	
+	@Column
+	private long companyid;
+	
 	/**
 	 * 保存额外信息，不进行持久化，仅作为内存中的保存
 	 */
@@ -181,13 +184,17 @@ public class User extends BaseTimedObject implements Serializable {
 		this.userId = userId;
 	}
 	
-	
-	
 	public String getAuthedNavs() {
 		return authedNavs;
 	}
 	public void setAuthedNavs(String authedNavs) {
 		this.authedNavs = authedNavs;
+	}
+	public long getCompanyid() {
+		return companyid;
+	}
+	public void setCompanyid(long companyid) {
+		this.companyid = companyid;
 	}
 	@Override
 	public int hashCode() {

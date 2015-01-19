@@ -18,6 +18,8 @@ import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.nav.Navigator;
 import com.huijia.eap.commons.nav.NavigatorHelper;
+import com.huijia.eap.quiz.data.Company;
+import com.huijia.eap.quiz.service.CompanyService;
 
 /**
  * 用户管理
@@ -35,6 +37,10 @@ public class UserModule {
 	
 	@Inject
 	private UserService userService;
+	
+	@Inject
+	private CompanyService companyService;
+	
 	@At
 	@Ok("jsp:jsp.auth.user.list")
 	public void list(HttpServletRequest request){
@@ -63,6 +69,8 @@ public class UserModule {
 		List<Navigator> navigators = NavigatorHelper.loadNavigator();
 		request.setAttribute("navigators", navigators);
 		
+		List<Company> companyList = companyService.query(null, null);
+		request.setAttribute("companyList", companyList);
 	}
 	
 	@At

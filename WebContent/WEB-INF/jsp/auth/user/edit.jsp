@@ -51,6 +51,22 @@
 			  </div>
 			</div>
 			
+			<c:if test="${user.type > 0 }">
+			<div class="form-group">
+			  <label class="col-sm-2 control-label">所属企业<em>*</em></label>
+			  <div class="col-sm-4">
+			    <select class="form-control" name="companyid" id="sel-company">
+			    	<c:forEach items="${companyList}" var="company">
+			    		<option value="${company.id}"<c:if test="${user.companyid == company.id}"> selected</c:if>>${company.name}</option>
+			    	</c:forEach>
+			    </select>
+			  </div>
+			  <div class="col-sm-6">
+			    <span><fmt:message key="user.add.company.span" bundle="${i18n_auth}"/></span>
+			  </div>
+			</div>
+			</c:if>
+			
 			<div class="form-group">
 			  <label class="col-sm-2 control-label">密码<em>*</em></label>
 			  <div class="col-sm-4">
@@ -93,6 +109,7 @@
 			  </div>
 			</div>
 			
+			<%-- 
 			<div class="form-group">
 			  <label class="col-sm-2 control-label">授权模块</label>
 			  <div class="col-sm-10">
@@ -103,7 +120,8 @@
 			    </c:forEach>
 			  </div>
 			</div>
-			
+			 --%>
+			 
 			<div class="form-group">
 			  <div class="col-sm-offset-2 col-sm-10">
 			    <button class="btn btn-primary">保存</button>

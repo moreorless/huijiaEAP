@@ -80,7 +80,7 @@ CREATE TABLE `quiz` (
   `categoryNum` int(8) default '0' COMMENT '维度个数',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷';
 
 DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (
@@ -94,7 +94,7 @@ CREATE TABLE `quiz_evaluation` (
   `suggestion` text,
   `type` varchar(16) default '' COMMENT '个人报告还是团体报告,single or team?',
   `healthStatus` varchar(16) default '' COMMENT '健康状况'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准';
 
 DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
@@ -107,7 +107,7 @@ CREATE TABLE `quiz_item` (
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,
   `updateAt` varchar(512) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目';
 
 DROP TABLE IF EXISTS `quiz_item_relation`;
 CREATE TABLE `quiz_item_relation` (
@@ -174,5 +174,5 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 
 
 -- admin / admin
-INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL);
-INSERT INTO sys_tblids VALUES ('auth_user', 1);
+INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,NULL,NULL,NULL);
+INSERT INTO sys_tblids VALUES ('auth_user', 2);
