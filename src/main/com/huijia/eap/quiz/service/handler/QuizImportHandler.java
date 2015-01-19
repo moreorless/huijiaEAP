@@ -61,7 +61,6 @@ public class QuizImportHandler {
 	// 需要返回的数据
 	private LinkedList<Option> options = new LinkedList<Option>();
 	private LinkedList<Category> categories = new LinkedList<Category>();
-	private String categoryJson;
 	private LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
 	private LinkedList<QuizEvaluation> quizEvaluations = new LinkedList<QuizEvaluation>();
 
@@ -135,13 +134,14 @@ public class QuizImportHandler {
 		return this.categories;
 	}
 
-	public String getCategoryJson(){
+	public String getCategoryJson() {
 		return Json.toJson(this.categories);
 	}
-	
-	public int getCategoryNum(){
+
+	public int getCategoryNum() {
 		return this.categoryNum;
 	}
+
 	/**
 	 * 初始化表单0的定位元素
 	 */
@@ -589,7 +589,18 @@ public class QuizImportHandler {
 		String lieValue;
 		String categoryValue;
 		HashSet<String> categorySet = new HashSet<String>();
-		for (i = 0; i < this.itemNum; i++) {
+		for (i = 0;; i++) {
+			if (getCellValue(this.initPostionSheetItem.sheetIndex,
+					this.initPostionSheetItem.rowIndex + i + 1,
+					this.initPostionSheetItem.columnIndex).equals(""))
+				break;
+			
+			if (i == ITEMMAX) {
+				// 循环一直没有停止，出错
+				logger.error("表单0中初始化维度失败：循环超过最大次数。");
+				return -1;
+			}
+
 			lieValue = getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
 					lieColumnIndexOfSheetItem);
@@ -621,7 +632,7 @@ public class QuizImportHandler {
 
 		for (Iterator<String> it = categorySet.iterator(); it.hasNext();) {
 			Category category = new Category();
-			category.id = categories.size() + 1;
+			category.id = categories.size();
 			category.name = it.next();
 			categories.add(category);
 		}
@@ -651,9 +662,11 @@ public class QuizImportHandler {
 			if (value.equals(""))
 				break;
 			QuizItem item = new QuizItem();
-			item.setCategory(getCellValue(this.initPostionSheetItem.sheetIndex,
+			
+			item.setCategoryId(this.getCategoryIdByCategoryName(getCellValue(
+					this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
-					this.categoryColumnIndexOfSheetItem));
+					this.categoryColumnIndexOfSheetItem)));
 			item.setQuestion(getCellValue(this.initPostionSheetItem.sheetIndex,
 					this.initPostionSheetItem.rowIndex + i + 1,
 					this.questionColumnIndexOfSheetItem));
@@ -701,20 +714,20 @@ public class QuizImportHandler {
 	 */
 	private int processSheetItem() {
 
-		// 下面三行有依赖关系，必须先确定Option，再确定题目个数，再确定维度个数
+		// 下面三行有依赖关系，必须先确定Option，再确定题目个数
 		this.optionNum = initOptions();
 		if (this.optionNum == -1) {
 			logger.error("解析题目表单失败：无效的选项信息.");
 			return -1;
 		}
-		this.itemNum = initItems();
-		if (this.itemNum == -1) {
-			logger.error("解析题目表单失败：无效的题目信息.");
-			return -1;
-		}
 		this.categoryNum = initCategories();
 		if (this.categoryNum == -1) {
 			logger.error("解析题目表单失败：无效的维度信息.");
+			return -1;
+		}
+		this.itemNum = initItems();
+		if (this.itemNum == -1) {
+			logger.error("解析题目表单失败：无效的题目信息.");
 			return -1;
 		}
 
@@ -834,7 +847,7 @@ public class QuizImportHandler {
 				break;
 			}
 			QuizEvaluation evaluation = new QuizEvaluation();
-			evaluation.setType("Team");
+			evaluation.setType("team");
 			if (getCategoryIdByCategoryName(value) < 0) {
 				// 出错，该行维度不在第一页的维度列表中
 				logger.error("解析团体评估表单出错：维度<" + value + ">未在题目表单中出现过.");

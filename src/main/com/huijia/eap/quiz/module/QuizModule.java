@@ -1,8 +1,8 @@
 package com.huijia.eap.quiz.module;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +30,10 @@ import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.quiz.data.QuizItemRelation;
+import com.huijia.eap.quiz.service.QuizEvaluationService;
+import com.huijia.eap.quiz.service.QuizItemRelationService;
+import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 
@@ -44,6 +48,16 @@ public class QuizModule {
 
 	@Inject
 	private QuizService quizService;
+	
+	@Inject
+	private QuizItemService quizItemService;
+	
+	@Inject
+	private QuizItemRelationService quizItemRelationService;
+	
+	@Inject
+	private QuizEvaluationService quizEvaluationService;
+
 
 	Bundle bundle = new Bundle("quiz");
 
@@ -127,16 +141,28 @@ public class QuizModule {
 			QuizImportHandler quizImportHandler = new QuizImportHandler();
 			if (quizImportHandler.process(path) == 0) {
 
-				
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 				quiz = quizService.insert(quiz);
 				request.setAttribute("quiz", quiz);
-				
+
 				LinkedList<QuizItem> quizItems = quizImportHandler
 						.getQuizItems();
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
+
+				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
+					QuizItem quizItem = it.next();
+					quizItemService.insert(quizItem);
+					QuizItemRelation quizItemRelation = new QuizItemRelation();
+					quizItemRelation.setQuizId(quiz.getId());
+					quizItemRelation.setQuizItemId(quizItem.getId());
+					quizItemRelationService.insert(quizItemRelation);
+				}
+				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it.hasNext();) {
+					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluationService.insert(quizEvaluation, quiz.getId());
+				}
 
 			} else {
 				// 向页面返回错误信息

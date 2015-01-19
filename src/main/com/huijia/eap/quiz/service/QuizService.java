@@ -14,7 +14,6 @@ import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
-
 	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -68,7 +67,7 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 		for(int i = 0; i < 40; i++){
 			QuizItem quizItem = new QuizItem();
 			quizItem.setId(i);
-			quizItem.setCategory(categorys[i%6]);
+			//quizItem.setCategory(categorys[i%6]);
 			quizItem.setLieFlag(false);
 			quizItem.setQuestion("命格相同的人不一定会有同样的结果，因为环境和自我改进的差异。");
 			quizItem.addOption("A", "非常不符合", 6);
