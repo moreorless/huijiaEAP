@@ -50,16 +50,15 @@ public class QuizModule {
 
 	@Inject
 	private QuizService quizService;
-	
+
 	@Inject
 	private QuizItemService quizItemService;
-	
+
 	@Inject
 	private QuizItemRelationService quizItemRelationService;
-	
+
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
-
 
 	Bundle bundle = new Bundle("quiz");
 
@@ -164,7 +163,8 @@ public class QuizModule {
 					quizItemRelation.setQuizItemId(quizItem.getId());
 					quizItemRelationService.insert(quizItemRelation);
 				}
-				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it.hasNext();) {
+				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
+						.hasNext();) {
 					QuizEvaluation quizEvaluation = it.next();
 					quizEvaluationService.insert(quizEvaluation, quiz.getId());
 				}
@@ -213,7 +213,25 @@ public class QuizModule {
 	@At
 	@Ok("forward:/quiz/list")
 	public void delete(@Param("id") long id) {
+
+		List<QuizItemRelation> quizItemRelationList = quizItemRelationService
+				.fetchListByQuizId(id);
+
+		// Table: quiz
 		quizService.delete(id);
+
+		// Table: quiz_item_relation
+		quizItemRelationService.deleteByQuizId(id);
+
+		// Table: quiz_item
+		for (Iterator<QuizItemRelation> it = quizItemRelationList.iterator(); it
+				.hasNext();) {
+			QuizItemRelation quizItemRelation = it.next();
+			quizItemService.delete(quizItemRelation.getQuizItemId());
+		}
+
+		// Table: quiz_evaluation
+		quizEvaluationService.deleteByQuizId(id);
 	}
 
 	/**

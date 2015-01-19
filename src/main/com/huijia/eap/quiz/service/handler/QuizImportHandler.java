@@ -639,7 +639,7 @@ public class QuizImportHandler {
 
 		// System.out.println(Categories[0]);
 
-		return categorySet.size();
+		return categories.size();
 	}
 
 	/**

@@ -9,6 +9,8 @@ import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.dao.QuizEvaluationDao;
+import com.huijia.eap.quiz.dao.QuizItemRelationDao;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 
 
@@ -33,6 +35,10 @@ public class QuizEvaluationService extends TblIdsEntityService<QuizEvaluation>{
 	
 	public List<QuizEvaluation> fetchAll(){
 		return super.query(null, null);
+	}
+	
+	public void deleteByQuizId(long quizId) {
+		((QuizEvaluationDao) this.dao()).deleteByQuizId(quizId);
 	}
 	
 	/**
