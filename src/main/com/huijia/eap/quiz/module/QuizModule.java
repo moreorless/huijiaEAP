@@ -84,7 +84,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.quizlist")
-	public void showtest(HttpServletRequest request) {
+	public void enquizlist(HttpServletRequest request) {
 		List<Quiz> list = quizService.fetchAll();
 		request.setAttribute("quizlist", list);
 
@@ -373,7 +373,7 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.test")
 	public void test(HttpServletRequest request, @Param("id") long id) {
-		Quiz quiz = quizService.genSampleQuiz();
+		Quiz quiz = quizService.fetch(id);
 		request.setAttribute("quiz", quiz);
 	}
 

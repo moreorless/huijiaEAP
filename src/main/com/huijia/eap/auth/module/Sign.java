@@ -163,6 +163,11 @@ public class Sign {
 				
 				user.setPassword(User.PASSWORD_FADE);
 				session.setAttribute(Auths.USER_SESSION_KEY, user);
+				
+				if(user.getType() > 0){
+					// 普通用户，跳转至测试页面
+					return new ServerRedirectView("/quiz/enquizlist");
+				}
 			}
 		} else {//用户名或密码错误
 			authenticator.fail(username, infos);
