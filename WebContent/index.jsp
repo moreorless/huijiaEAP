@@ -8,5 +8,5 @@
 	<c:import url="admin_index.jsp" />
 </c:if>
 <c:if test="${current_user.type == 2}">
-	<c:import url="quiz_index.jsp" />
+	<c:redirect url="${base}/quiz/enquizlist" />
 </c:if>

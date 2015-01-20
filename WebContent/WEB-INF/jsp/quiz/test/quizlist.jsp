@@ -7,12 +7,15 @@
 	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />
+	<link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
+    <link type="text/css" rel="stylesheet" href="${base }/css/ui/validate/jquery.validate.css" />
 	<style type="text/css">
 		body {overflow: auto}
 	</style>
 </head>
 <body>
 
+<c:import url="/includes/header_huijia.jsp"></c:import>
 <div class="container">
 	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
 	<div class="row quiz_card">
@@ -30,9 +33,7 @@
 	</c:forEach>
 
 </div>
-
-<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
+<%@ include file="/includes/footer_huijia.jsp" %>
 
   </body>
 </html>
