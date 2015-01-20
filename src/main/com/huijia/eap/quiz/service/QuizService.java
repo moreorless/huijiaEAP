@@ -9,11 +9,15 @@ import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.dao.QuizItemDao;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz>{
+	
+	@Inject
+	private QuizItemDao quizItemDao;
 	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -42,6 +46,18 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 		pager.setData(users);
 		
 		return pager;
+	}
+	
+	/**
+	 * 获取试卷的全部信息，包含题目、题目的选项
+	 * @param id
+	 * @return
+	 */
+	public Quiz fetchFullQuiz(long id){
+		Quiz quiz = this.fetch(id);
+		
+		
+		return quiz;
 	}
 	
 	/**
