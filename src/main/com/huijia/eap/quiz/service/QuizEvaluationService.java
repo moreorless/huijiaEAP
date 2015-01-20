@@ -12,6 +12,7 @@ import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.dao.QuizEvaluationDao;
 import com.huijia.eap.quiz.dao.QuizItemRelationDao;
 import com.huijia.eap.quiz.data.QuizEvaluation;
+import com.huijia.eap.quiz.data.QuizItemRelation;
 
 
 @IocBean
@@ -39,6 +40,10 @@ public class QuizEvaluationService extends TblIdsEntityService<QuizEvaluation>{
 	
 	public void deleteByQuizId(long quizId) {
 		((QuizEvaluationDao) this.dao()).deleteByQuizId(quizId);
+	}
+	
+	public List<QuizEvaluation> fetchListByQuizId(long quizId) {
+		return ((QuizEvaluationDao) this.dao()).fetchListByQuizId(quizId);
 	}
 	
 	/**

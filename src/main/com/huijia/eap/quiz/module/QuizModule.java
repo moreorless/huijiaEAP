@@ -156,6 +156,12 @@ public class QuizModule {
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
 
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingle",
+						quizImportHandler.getQuizEvaluationsSingle());
+				request.setAttribute("quizEvaluationsTeam",
+						quizImportHandler.getQuizEvaluationsTeam());
+
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
 					quizItemService.insert(quizItem);
@@ -191,6 +197,33 @@ public class QuizModule {
 	public void viewquiz(HttpServletRequest request, @Param("id") long id) {
 		Quiz quiz = quizService.fetch(id);
 		request.setAttribute("quiz", quiz);
+		
+		List<QuizItemRelation> quizItemRelationList = quizItemRelationService
+				.fetchListByQuizId(quiz.getId());
+		LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
+		for (Iterator<QuizItemRelation> it = quizItemRelationList
+				.iterator(); it.hasNext();) {
+			QuizItemRelation quizItemRelation = it.next();
+			QuizItem quizItem = quizItemService.fetch(quizItemRelation
+					.getQuizItemId());
+			quizItems.add(quizItem);
+		}
+		LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
+		LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
+
+		for (Iterator<QuizEvaluation> it = this.quizEvaluationService
+				.fetchListByQuizId(quiz.getId()).iterator(); it.hasNext();) {
+			QuizEvaluation quizEvaluation = it.next();
+			if (quizEvaluation.getType().equals("single"))
+				quizEvaluationsSingle.add(quizEvaluation);
+			if (quizEvaluation.getType().equals("team"))
+				quizEvaluationsTeam.add(quizEvaluation);
+		}
+		// this.quizEvaluationService.
+
+		request.setAttribute("quizItems", quizItems);
+		request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
+		request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
 	}
 
 	/**
@@ -244,6 +277,12 @@ public class QuizModule {
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
 
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingle",
+						quizImportHandler.getQuizEvaluationsSingle());
+				request.setAttribute("quizEvaluationsTeam",
+						quizImportHandler.getQuizEvaluationsTeam());
+
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
 					quizItemService.insert(quizItem);
@@ -264,8 +303,35 @@ public class QuizModule {
 				throw ExceptionWrapper.wrapError(error);
 			}
 
+		} else {
+			request.setAttribute("quiz", quiz);
+			List<QuizItemRelation> quizItemRelationList = quizItemRelationService
+					.fetchListByQuizId(quiz.getId());
+			LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
+			for (Iterator<QuizItemRelation> it = quizItemRelationList
+					.iterator(); it.hasNext();) {
+				QuizItemRelation quizItemRelation = it.next();
+				QuizItem quizItem = quizItemService.fetch(quizItemRelation
+						.getQuizItemId());
+				quizItems.add(quizItem);
+			}
+			LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
+			LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
+
+			for (Iterator<QuizEvaluation> it = this.quizEvaluationService
+					.fetchListByQuizId(quiz.getId()).iterator(); it.hasNext();) {
+				QuizEvaluation quizEvaluation = it.next();
+				if (quizEvaluation.getType().equals("single"))
+					quizEvaluationsSingle.add(quizEvaluation);
+				if (quizEvaluation.getType().equals("team"))
+					quizEvaluationsTeam.add(quizEvaluation);
+			}
+			// this.quizEvaluationService.
+
+			request.setAttribute("quizItems", quizItems);
+			request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
+			request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
 		}
-		request.setAttribute("quiz", quiz);
 
 	}
 

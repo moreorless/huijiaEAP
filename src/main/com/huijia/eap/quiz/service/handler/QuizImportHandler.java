@@ -63,6 +63,8 @@ public class QuizImportHandler {
 	private LinkedList<Category> categories = new LinkedList<Category>();
 	private LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
 	private LinkedList<QuizEvaluation> quizEvaluations = new LinkedList<QuizEvaluation>();
+	private LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
+	private LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
 
 	private int itemNum = 0; // 题目个数
 	private int optionNum = 0; // 选项个数
@@ -122,6 +124,16 @@ public class QuizImportHandler {
 	public LinkedList<QuizEvaluation> getQuizEvaluations() {
 
 		return this.quizEvaluations;
+	}
+	
+	public LinkedList<QuizEvaluation> getQuizEvaluationsSingle() {
+
+		return this.quizEvaluationsSingle;
+	}
+	
+	public LinkedList<QuizEvaluation> getQuizEvaluationsTeam() {
+
+		return this.quizEvaluationsTeam;
 	}
 
 	public LinkedList<Option> getOptions() {
@@ -935,26 +947,26 @@ public class QuizImportHandler {
 			return -1;
 		}
 
-		LinkedList<QuizEvaluation> evaluationsSingle = processSheetSingle();
-		if (evaluationsSingle == null) {
+		this.quizEvaluationsSingle = processSheetSingle();
+		if (this.quizEvaluationsSingle == null) {
 			logger.error("导入问卷失败：未能成功解析个人评估表单");
 			return -1;
 		}
-		LinkedList<QuizEvaluation> evaluationsTeam = processSheetTeam();
-		if (evaluationsTeam == null) {
+		this.quizEvaluationsTeam = processSheetTeam();
+		if (this.quizEvaluationsTeam == null) {
 			logger.error("导入问卷失败：未能成功解析团体评估表单");
 			return -1;
 		}
 
-		for (Iterator<QuizEvaluation> it = evaluationsSingle.iterator(); it
+		for (Iterator<QuizEvaluation> it = this.quizEvaluationsSingle.iterator(); it
 				.hasNext();)
 			this.quizEvaluations.add(it.next());
-		for (Iterator<QuizEvaluation> it = evaluationsTeam.iterator(); it
+		for (Iterator<QuizEvaluation> it = this.quizEvaluationsTeam.iterator(); it
 				.hasNext();)
 			this.quizEvaluations.add(it.next());
 		logger.info("导入问卷成功: 导入题目" + this.quizItems.size() + "个；导入个人报告评语"
-				+ evaluationsSingle.size() + "条；导入团体评语"
-				+ evaluationsTeam.size() + "条；导入评语总数" + quizEvaluations.size()
+				+ this.quizEvaluationsSingle.size() + "条；导入团体评语"
+				+ this.quizEvaluationsTeam.size() + "条；导入评语总数" + quizEvaluations.size()
 				+ "条");
 		return 0;
 

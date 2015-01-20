@@ -1,60 +1,72 @@
-<%@ page contentType="text/html;charset=utf-8" language="java" %>
-<%@ include file="/includes/taglibs.jsp" %>
+<%@ page contentType="text/html;charset=utf-8" language="java"%>
+<%@ include file="/includes/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>试题列表</title>
-	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
-	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
-	<link type="text/css" rel="stylesheet" href="${base}/css/pagination.css" />
-	
-	<style type="text/css">
-		body {overflow: auto}
-		#toolbar{height:30px; line-height:30px; margin-top:10px;}
-		.pagination {margin:0}
-	</style>
+<title>试题列表</title>
+<link type="text/css" rel="stylesheet"
+	href="${base}/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
+<link type="text/css" rel="stylesheet" href="${base}/css/pagination.css" />
+
+<style type="text/css">
+body {
+	overflow: auto
+}
+
+#toolbar {
+	height: 30px;
+	line-height: 30px;
+	margin-top: 10px;
+}
+
+.pagination {
+	margin: 0
+}
+</style>
 </head>
 <body>
-<div class="container">
-	<div id="toolbar">
-		<a href="${base}/quiz/prepare?operation=add" class="btn" >
-			<img src="${base}/images/add_default.gif" />&nbsp;添加</a>
-	</div>	
-	<table id="quiz-table" class="table table-striped table-bordered table-hover">
-		<thead>
-			<tr>
-		      <th id="name">试题名称</th>
-		      <th id="name">图标</th>
-		      <th id="description">描述</th>
-		      <th id="usedcount">使用次数</th>
-		      <th id="createat">创建时间</th>
-		      <th id="operation">操作</th>
-		    </tr>
-	    </thead>      
-		<tbody>
-			<c:forEach items="${obj.data }" var="quiz">
-		      <tr>
-		        <td data-id="${company.id }">${quiz.name }</td>
-		        <td><img src="${base}/images/quiz/icons/${quiz.icon}"></img></td>
-		        <td>${quiz.description }</td>
-		        <td></td>
-		        <td></td>
-		        <td>
-		        	<a href="${base}/quiz/prepare?operation=edit&id=${quiz.id}">修改</a> &nbsp;|&nbsp;
-		        	<a href="${base}/quiz/delete?id=${quiz.id}">删除</a>
-				</td>
-		      </tr>
-		    </c:forEach>
-		</tbody>
-	</table>
-	<div id="pager">
-    </div>
-</div>
+	<div class="container">
+		<div id="toolbar">
+			<a href="${base}/quiz/prepare?operation=add" class="btn"> <img
+				src="${base}/images/add_default.gif" />&nbsp;添加
+			</a>
+		</div>
+		<table id="quiz-table"
+			class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th id="name">试题名称</th>
+					<th id="name">图标</th>
+					<th id="description">描述</th>
+					<th id="usedcount">使用次数</th>
+					<th id="createat">创建时间</th>
+					<th id="operation">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${obj.data }" var="quiz">
+					<tr>
+						<td data-id="${company.id }">${quiz.name }</td>
+						<td><img src="${base}/images/quiz/icons/${quiz.icon}"></img></td>
+						<td>${quiz.description }</td>
+						<td></td>
+						<td></td>
+						<td><a href="${base}/quiz/viewquiz?id=${quiz.id}">查看</a>&nbsp;|&nbsp;
+							<a href="${base}/quiz/prepare?operation=edit&id=${quiz.id}">修改</a>
+							&nbsp;|&nbsp; <a href="${base}/quiz/delete?id=${quiz.id}">删除</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div id="pager"></div>
+	</div>
 
-<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${base}/js/jquery.pagination.js"></script>
-<script type="text/javascript">
+	<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${base}/js/jquery.pagination.js"></script>
+	<script type="text/javascript">
 	/**
 	 * Callback function that displays the content.
 	 *
@@ -85,5 +97,5 @@
 		initPagination();
 	});
 </script>
-  </body>
+</body>
 </html>
