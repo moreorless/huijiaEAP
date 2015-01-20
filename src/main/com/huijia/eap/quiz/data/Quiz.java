@@ -22,9 +22,9 @@ public class Quiz {
 	 */
 	@Column
 	@Validations(rules = {
-			@ValidateType(type = Type.required, errorMsg = "quiz.add.name.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.minlength, parameters = { "1" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.maxlength, parameters = { "512" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "auth") })
+			@ValidateType(type = Type.required, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz"),
+			@ValidateType(type = Type.minlength, parameters = { "1" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz"),
+			@ValidateType(type = Type.maxlength, parameters = { "512" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz") })
 	private String name;
 
 	/**

@@ -29,6 +29,7 @@ import com.huijia.eap.commons.i18n.Bundle;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
+import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
@@ -86,7 +87,7 @@ public class QuizModule {
 	public void showtest(HttpServletRequest request) {
 		List<Quiz> list = quizService.fetchAll();
 		request.setAttribute("quizlist", list);
-		
+
 		User currentUser = Auths.getUser(request);
 		request.setAttribute("user", currentUser);
 	}
@@ -197,12 +198,75 @@ public class QuizModule {
 	 * 
 	 * @param quiz
 	 */
-
 	@At
-	@Ok("forward:/quiz/list")
+	@Ok("jsp:jsp.quiz.viewquiz")
+	@Fail("forward:/quiz/prepare")
+	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
-	public void edit(@Param("..") Quiz quiz) {
-		quizService.update(quiz);
+	public void edit(HttpServletRequest request, @Param("..") Quiz quiz,
+			@Param("quiz_file") TempFile tempFile) {
+
+		quiz.setCategoryJson(quizService.fetch(quiz.getId()).getCategoryJson());
+		quiz.setCategoryNum(quizService.fetch(quiz.getId()).getCategoryNum());
+
+		if (tempFile != null) {
+
+			File quizFile = tempFile.getFile();
+			String path = quizFile.getAbsolutePath();
+
+			QuizImportHandler quizImportHandler = new QuizImportHandler();
+			if (quizImportHandler.process(path) == 0) {
+
+				// 清空item表、evaluation、关联表
+				long quizId = quiz.getId();
+				// Table: quiz_item
+				List<QuizItemRelation> quizItemRelationList = quizItemRelationService
+						.fetchListByQuizId(quizId);
+				for (Iterator<QuizItemRelation> it = quizItemRelationList
+						.iterator(); it.hasNext();) {
+					QuizItemRelation quizItemRelation = it.next();
+					quizItemService.delete(quizItemRelation.getQuizItemId());
+				}
+				// Table: quiz_evaluation
+				quizEvaluationService.deleteByQuizId(quizId);
+
+				// Table: quiz_item_relation
+				quizItemRelationService.deleteByQuizId(quizId);
+
+				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
+				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
+
+				quizService.update(quiz);
+				request.setAttribute("quiz", quiz);
+
+				LinkedList<QuizItem> quizItems = quizImportHandler
+						.getQuizItems();
+				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
+						.getQuizEvaluations();
+
+				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
+					QuizItem quizItem = it.next();
+					quizItemService.insert(quizItem);
+					QuizItemRelation quizItemRelation = new QuizItemRelation();
+					quizItemRelation.setQuizId(quiz.getId());
+					quizItemRelation.setQuizItemId(quizItem.getId());
+					quizItemRelationService.insert(quizItemRelation);
+				}
+				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
+						.hasNext();) {
+					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluationService.insert(quizEvaluation, quiz.getId());
+				}
+
+			} else {
+				// 向页面返回错误信息
+				EC error = new EC("quiz.add.import.invalid.error", bundle);
+				throw ExceptionWrapper.wrapError(error);
+			}
+
+		}
+		request.setAttribute("quiz", quiz);
+
 	}
 
 	/**
