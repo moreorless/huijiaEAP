@@ -29,13 +29,10 @@ import com.huijia.eap.commons.i18n.Bundle;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
-import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
-import com.huijia.eap.quiz.data.QuizItemRelation;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
-import com.huijia.eap.quiz.service.QuizItemRelationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
@@ -54,9 +51,6 @@ public class QuizModule {
 
 	@Inject
 	private QuizItemService quizItemService;
-
-	@Inject
-	private QuizItemRelationService quizItemRelationService;
 
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
@@ -145,7 +139,8 @@ public class QuizModule {
 
 			QuizImportHandler quizImportHandler = new QuizImportHandler();
 			if (quizImportHandler.process(path) == 0) {
-
+				quiz.setItemNum(quizImportHandler.getItemNum());
+				quiz.setLieBorder(quizImportHandler.getLieBorder());
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 				quiz = quizService.insert(quiz);
@@ -164,11 +159,8 @@ public class QuizModule {
 
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
+					quizItem.setQuizId(quiz.getId());
 					quizItemService.insert(quizItem);
-					QuizItemRelation quizItemRelation = new QuizItemRelation();
-					quizItemRelation.setQuizId(quiz.getId());
-					quizItemRelation.setQuizItemId(quizItem.getId());
-					quizItemRelationService.insert(quizItemRelation);
 				}
 				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
 						.hasNext();) {
@@ -197,17 +189,9 @@ public class QuizModule {
 	public void viewquiz(HttpServletRequest request, @Param("id") long id) {
 		Quiz quiz = quizService.fetch(id);
 		request.setAttribute("quiz", quiz);
-		
-		List<QuizItemRelation> quizItemRelationList = quizItemRelationService
-				.fetchListByQuizId(quiz.getId());
-		LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
-		for (Iterator<QuizItemRelation> it = quizItemRelationList
-				.iterator(); it.hasNext();) {
-			QuizItemRelation quizItemRelation = it.next();
-			QuizItem quizItem = quizItemService.fetch(quizItemRelation
-					.getQuizItemId());
-			quizItems.add(quizItem);
-		}
+
+		LinkedList<QuizItem> quizItems = (LinkedList<QuizItem>) quizItemService
+				.fetchListByQuizId(id);
 		LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
 		LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
 
@@ -250,22 +234,17 @@ public class QuizModule {
 			QuizImportHandler quizImportHandler = new QuizImportHandler();
 			if (quizImportHandler.process(path) == 0) {
 
-				// 清空item表、evaluation、关联表
+				// 清空item表、evaluation
 				long quizId = quiz.getId();
+
 				// Table: quiz_item
-				List<QuizItemRelation> quizItemRelationList = quizItemRelationService
-						.fetchListByQuizId(quizId);
-				for (Iterator<QuizItemRelation> it = quizItemRelationList
-						.iterator(); it.hasNext();) {
-					QuizItemRelation quizItemRelation = it.next();
-					quizItemService.delete(quizItemRelation.getQuizItemId());
-				}
+				quizItemService.deleteByQuizId(quizId);
+
 				// Table: quiz_evaluation
 				quizEvaluationService.deleteByQuizId(quizId);
 
-				// Table: quiz_item_relation
-				quizItemRelationService.deleteByQuizId(quizId);
-
+				quiz.setItemNum(quizImportHandler.getItemNum());
+				quiz.setLieBorder(quizImportHandler.getLieBorder());
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 
@@ -285,11 +264,9 @@ public class QuizModule {
 
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
+					quizItem.setQuizId(quizId);
 					quizItemService.insert(quizItem);
-					QuizItemRelation quizItemRelation = new QuizItemRelation();
-					quizItemRelation.setQuizId(quiz.getId());
-					quizItemRelation.setQuizItemId(quizItem.getId());
-					quizItemRelationService.insert(quizItemRelation);
+
 				}
 				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
 						.hasNext();) {
@@ -304,17 +281,11 @@ public class QuizModule {
 			}
 
 		} else {
+			quizService.update(quiz);
 			request.setAttribute("quiz", quiz);
-			List<QuizItemRelation> quizItemRelationList = quizItemRelationService
+
+			LinkedList<QuizItem> quizItems = (LinkedList<QuizItem>) quizItemService
 					.fetchListByQuizId(quiz.getId());
-			LinkedList<QuizItem> quizItems = new LinkedList<QuizItem>();
-			for (Iterator<QuizItemRelation> it = quizItemRelationList
-					.iterator(); it.hasNext();) {
-				QuizItemRelation quizItemRelation = it.next();
-				QuizItem quizItem = quizItemService.fetch(quizItemRelation
-						.getQuizItemId());
-				quizItems.add(quizItem);
-			}
 			LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
 			LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
 
@@ -326,7 +297,6 @@ public class QuizModule {
 				if (quizEvaluation.getType().equals("team"))
 					quizEvaluationsTeam.add(quizEvaluation);
 			}
-			// this.quizEvaluationService.
 
 			request.setAttribute("quizItems", quizItems);
 			request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
@@ -344,21 +314,11 @@ public class QuizModule {
 	@Ok("forward:/quiz/list")
 	public void delete(@Param("id") long id) {
 
-		List<QuizItemRelation> quizItemRelationList = quizItemRelationService
-				.fetchListByQuizId(id);
-
 		// Table: quiz
 		quizService.delete(id);
 
-		// Table: quiz_item_relation
-		quizItemRelationService.deleteByQuizId(id);
-
 		// Table: quiz_item
-		for (Iterator<QuizItemRelation> it = quizItemRelationList.iterator(); it
-				.hasNext();) {
-			QuizItemRelation quizItemRelation = it.next();
-			quizItemService.delete(quizItemRelation.getQuizItemId());
-		}
+		quizItemService.deleteByQuizId(id);
 
 		// Table: quiz_evaluation
 		quizEvaluationService.deleteByQuizId(id);

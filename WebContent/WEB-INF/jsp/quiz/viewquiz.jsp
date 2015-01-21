@@ -46,6 +46,14 @@ em {
 					<td>${quiz.description}</td>
 				</tr>
 				<tr>
+					<td style="width: 15%">题目个数</td>
+					<td>${quiz.itemNum}</td>
+				</tr>
+				<tr>
+					<td style="width: 15%">测谎总分分界线</td>
+					<td>${quiz.lieBorder}</td>
+				</tr>
+				<tr>
 					<td style="width: 15%">维度Json</td>
 					<td>${quiz.categoryJson}</td>
 				</tr>
@@ -66,17 +74,17 @@ em {
 			<table class="table table-striped table-hover table-bordered">
 				<thead>
 					<tr>
-						<th id="question" style="width: 15%">问题</th>
-						
+						<th id="question" style="width: 5%">id</th>
+						<th id="question" style="width: 20%">问题</th>
 						<th id="isLie" style="width: 5%">测谎</th>
-						<th id="optionJson" style="width: 75%">选项Json</th>
+						<th id="optionJson" style="width: 70%">选项Json</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${quizItems}" var="item">
 						<tr>
+							<td>${item.id}</td>
 							<td>${item.question}</td>
-							
 							<td>${item.lieFlag }</td>
 							<td>${item.optionJson}</td>
 						</tr>
@@ -96,22 +104,24 @@ em {
 				<thead>
 					<tr>
 						<th style="width: 8%">维度</th>
-						<th style="width: 8%">最低分</th>
-						<th style="width: 8%">最高分</th>
+						<th style="width: 8%">分数区间</th>
 						<th style="width: 8%">健康度</th>
-						<th style="width: 34%">评语</th>
-						<th style="width: 34%">建议</th>
+						<th style="width: 20%">评语</th>
+						<th style="width: 20%">建议</th>
+						<th style="width: 18%">解释</th>
+						<th style="width: 18%">特征</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${quizEvaluationsSingle}" var="item">
 						<tr>
 							<td>${item.categoryName}</td>
-							<td>${item.minScore}</td>
-							<td>${item.maxScore}</td>
+							<td>${item.minScore}-${item.maxScore}</td>
 							<td>${item.healthStatus}</td>
 							<td>${item.evaluation}</td>
 							<td>${item.suggestion}</td>
+							<td>${item.explanation}</td>
+							<td>${item.feature}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -129,22 +139,24 @@ em {
 				<thead>
 					<tr>
 						<th style="width: 8%">维度</th>
-						<th style="width: 8%">最低分</th>
-						<th style="width: 8%">最高分</th>
+						<th style="width: 8%">分数区间</th>
 						<th style="width: 8%">健康度</th>
-						<th style="width: 34%">评语</th>
-						<th style="width: 34%">解释</th>
+						<th style="width: 20%">评语</th>
+						<th style="width: 20%">建议</th>
+						<th style="width: 18%">解释</th>
+						<th style="width: 18%">特征</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${quizEvaluationsTeam}" var="item">
 						<tr>
 							<td>${item.categoryName}</td>
-							<td>${item.minScore}</td>
-							<td>${item.maxScore}</td>
+							<td>${item.minScore}-${item.maxScore}</td>
 							<td>${item.healthStatus}</td>
 							<td>${item.evaluation}</td>
 							<td>${item.suggestion}</td>
+							<td>${item.explanation}</td>
+							<td>${item.feature}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

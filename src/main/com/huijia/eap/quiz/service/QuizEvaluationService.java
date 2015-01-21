@@ -10,9 +10,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.dao.QuizEvaluationDao;
-import com.huijia.eap.quiz.dao.QuizItemRelationDao;
 import com.huijia.eap.quiz.data.QuizEvaluation;
-import com.huijia.eap.quiz.data.QuizItemRelation;
 
 
 @IocBean

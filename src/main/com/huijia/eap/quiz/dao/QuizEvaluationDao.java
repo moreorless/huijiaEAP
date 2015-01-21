@@ -7,7 +7,6 @@ import org.nutz.dao.impl.NutDao;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.quiz.data.QuizEvaluation;
-import com.huijia.eap.quiz.data.QuizItemRelation;
 
 @IocBean(name = "quizEvaluationDao", fields = { "dataSource" })
 public class QuizEvaluationDao extends NutDao {

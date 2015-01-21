@@ -160,6 +160,10 @@ public class QuizImportHandler {
 	public int getItemNum() {
 		return this.meta.itemNum;
 	}
+	
+	public int getLieBorder() {
+		return this.meta.lieBorder;
+	}
 
 	/***************************************** 公共函数区 *****************************************/
 
