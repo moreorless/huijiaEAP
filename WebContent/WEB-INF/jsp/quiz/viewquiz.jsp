@@ -67,7 +67,7 @@ em {
 				<thead>
 					<tr>
 						<th id="question" style="width: 15%">问题</th>
-						<th id="categoryId" style="width: 5%">维度</th>
+						
 						<th id="isLie" style="width: 5%">测谎</th>
 						<th id="optionJson" style="width: 75%">选项Json</th>
 					</tr>
@@ -76,9 +76,9 @@ em {
 					<c:forEach items="${quizItems}" var="item">
 						<tr>
 							<td>${item.question}</td>
-							<td>${item.categoryId}</td>
+							
 							<td>${item.lieFlag }</td>
-							<td>${item.optionsJson}</td>
+							<td>${item.optionJson}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

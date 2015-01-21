@@ -32,7 +32,7 @@ public class QuizItem {
 	 * 数据库中存放的文本选项
 	 */
 	@Column
-	private String optionsJson;
+	private String optionJson;
 
 	private LinkedList<QuizItemOption> options = new LinkedList<QuizItemOption>();
 
@@ -60,12 +60,12 @@ public class QuizItem {
 		this.question = question;
 	}
 
-	public String getOptionsJson() {
-		return optionsJson;
+	public String getOptionJson() {
+		return optionJson;
 	}
 
-	public void setOptionsJson(String optionsJson) {
-		this.optionsJson = optionsJson;
+	public void setOptionJson(String optionJson) {
+		this.optionJson = optionJson;
 	}
 
 	public LinkedList<QuizItemOption> getOptions() {
