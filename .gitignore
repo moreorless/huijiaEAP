@@ -48,5 +48,5 @@ build/
 .classpath
 conf/db.properties
 conf/log4j.properties
-.externalToolBuilders/org.eclipse.wst.jsdt.core.javascriptValidator.launch
+.externalToolBuilders/
 build.properties
