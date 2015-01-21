@@ -13,35 +13,43 @@ import com.huijia.eap.quiz.dao.QuizItemDao;
 import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean
-public class QuizItemService extends TblIdsEntityService<QuizItem>{
+public class QuizItemService extends TblIdsEntityService<QuizItem> {
 
-	
 	@Inject("refer:quizItemDao")
 	public void setQuizItemDao(Dao dao) {
 		setDao(dao);
 	}
-	
+
 	public QuizItem insert(QuizItem quizItem) {
 		quizItem.setId(getTblMaxIdWithUpdate());
 		return this.dao().insert(quizItem);
 	}
-	
+
 	public void update(QuizItem quizItem) {
 		this.dao().update(quizItem);
 	}
-	
-	public List<QuizItem> fetchAll(){
+
+	public List<QuizItem> fetchAll() {
 		return super.query(null, null);
 	}
+
+	public List<QuizItem> fetchListByQuizId(long quizId) {
+		return ((QuizItemDao) this.dao()).fetchListByQuizId(quizId);
+	}
 	
+	public void deleteByQuizId(long quizId) {
+		((QuizItemDao) this.dao()).deleteByQuizId(quizId);
+	}
+
 	/**
 	 * 分页返回所有列表
 	 */
 	public Pager<QuizItem> paging(Condition condition, Pager<QuizItem> pager) {
-		List<QuizItem> users = query(condition, this.dao().createPager(pager.getPage(), pager.getPageSize()));
+		List<QuizItem> users = query(condition,
+				this.dao().createPager(pager.getPage(), pager.getPageSize()));
 		pager.setRecords(this.count(condition));
 		pager.setData(users);
-		
+
 		return pager;
 	}
 	
@@ -51,11 +59,11 @@ public class QuizItemService extends TblIdsEntityService<QuizItem>{
 	 * @return
 	 */
 	public List<QuizItem> getItemsByQuizId(long quizId){
-		List<QuizItem> itemList = ((QuizItemDao)this.dao()).getItemsByQuizId(quizId);
+		List<QuizItem> itemList = ((QuizItemDao)this.dao()).fetchListByQuizId(quizId);
 		for(QuizItem quizItem : itemList){
 			quizItem.convertOptions();
 		}
 		return itemList;
 	}
-	
+
 }
