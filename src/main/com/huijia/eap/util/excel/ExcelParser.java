@@ -127,6 +127,42 @@ public class ExcelParser {
 		return value;
 	}
 
+	public String getCellStringValue(int sheetIndex, int rowIndex,
+			int columnIndex) throws IOException {
+
+		String value = "";
+
+		HSSFSheet sheet = wb.getSheetAt(sheetIndex); // 读取excel的sheet，0表示读取第一个、1表示第二个.....
+
+		HSSFRow row = sheet.getRow(rowIndex - 1); // 取出sheet中的某一行数据
+
+		if (row != null) {
+			HSSFCell cell = row.getCell(columnIndex); // 获取该行中的一个单元格对象
+			if (cell == null) {
+				return "";
+			}
+
+			switch (cell.getCellType()) {
+			case HSSFCell.CELL_TYPE_FORMULA:
+				value = cell.getStringCellValue();
+				break;
+			case HSSFCell.CELL_TYPE_NUMERIC:
+				value = Double.toString(cell.getNumericCellValue())
+						.split("\\.")[0];// 一般的数据类型在excel中读出来都为float型
+				break;
+			case HSSFCell.CELL_TYPE_STRING:
+				value = cell.getStringCellValue();
+				break;
+			case HSSFCell.CELL_TYPE_BLANK:
+				value = cell.getStringCellValue();
+				break;
+			default:
+				value = cell.getStringCellValue();
+			}
+		}
+		return value;
+	}
+
 	/**
 	 * @param sheetIndex
 	 *            (表单)

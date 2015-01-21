@@ -103,7 +103,6 @@ DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
   `id` int(10) NOT NULL,
   `question` text NOT NULL,
-  `categoryId` int(8) NOT NULL,
   `lieFlag` int(1) NOT NULL,
   `optionJson` varchar(512) NOT NULL default '' COMMENT '{选项内容;选项维度;选项分值}',
   `createBy` varchar(512) default NULL,

@@ -16,33 +16,11 @@ public class QuizItem {
 	@Column
 	private long quizId;
 
-	public long getQuizId() {
-		return quizId;
-	}
-
-	public void setQuizId(long quizId) {
-		this.quizId = quizId;
-	}
-
 	/**
 	 * 题目内容
 	 */
 	@Column
 	private String question;
-
-	/**
-	 * 维度id
-	 */
-	@Column
-	private long categoryId;
-
-	public long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(long categoryId) {
-		this.categoryId = categoryId;
-	}
 
 	/**
 	 * 是否是测谎题
@@ -58,10 +36,13 @@ public class QuizItem {
 
 	private LinkedList<QuizItemOption> options = new LinkedList<QuizItemOption>();
 
-	/**
-	 * 评价标准
-	 */
-	// private QuizEvaluation evaluation;
+	public long getQuizId() {
+		return quizId;
+	}
+
+	public void setQuizId(long quizId) {
+		this.quizId = quizId;
+	}
 
 	public long getId() {
 		return id;
