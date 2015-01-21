@@ -95,8 +95,10 @@ public class QuizItem {
 		this.options = options;
 	}
 
-	public void addOption(String index, String name, int value) {
-		QuizItemOption option = new QuizItemOption(index, name, value);
+	public void addOption(String index, String content, String categoryName,
+			int value) {
+		QuizItemOption option = new QuizItemOption(index, content,
+				categoryName, value);
 		this.options.add(option);
 	}
 

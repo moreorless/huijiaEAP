@@ -105,7 +105,7 @@ CREATE TABLE `quiz_item` (
   `question` text NOT NULL,
   `categoryId` int(8) NOT NULL,
   `lieFlag` int(1) NOT NULL,
-  `optionsJson` varchar(512) NOT NULL default '' COMMENT '{选项内容;选项维度;选项分值}',
+  `optionJson` varchar(512) NOT NULL default '' COMMENT '{选项内容;选项维度;选项分值}',
   `createBy` varchar(512) default NULL,
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,
