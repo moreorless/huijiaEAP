@@ -54,6 +54,12 @@ public class Quiz {
 	@Column
 	private long categoryNum;
 
+	@Column
+	private long itemNum;
+
+	@Column
+	private long lieBorder;
+
 	public String getCategoryJson() {
 		return categoryJson;
 	}
@@ -74,6 +80,22 @@ public class Quiz {
 	 * 题目
 	 */
 	private List<QuizItem> items;
+
+	public long getItemNum() {
+		return itemNum;
+	}
+
+	public void setItemNum(long itemNum) {
+		this.itemNum = itemNum;
+	}
+
+	public long getLieBorder() {
+		return lieBorder;
+	}
+
+	public void setLieBorder(long lieBorder) {
+		this.lieBorder = lieBorder;
+	}
 
 	/**
 	 * 评价体系

@@ -78,11 +78,12 @@ CREATE TABLE `quiz` (
   `updateAt` int(11) unsigned default NULL,
   `status` tinyint(4) unsigned default NULL,
   `categoryNum` int(8) default '0' COMMENT '维度个数',
+  `itemNum` int(8) default '0' COMMENT '题目个数',
+  `lieBorder` int(8) default '0' COMMENT '测谎题分数分割线',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
 
-DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (
   `id` int(11) NOT NULL,
   `quizid` int(11) NOT NULL,
@@ -90,11 +91,13 @@ CREATE TABLE `quiz_evaluation` (
   `categoryName` varchar(255) NOT NULL default '' COMMENT '维度名称',
   `minScore` int(10) NOT NULL,
   `maxScore` int(10) NOT NULL,
-  `evaluation` text,
-  `suggestion` text,
+  `evaluation` text COMMENT '结果评价',
+  `suggestion` text COMMENT '建议',
   `type` varchar(16) default '' COMMENT '个人报告还是团体报告,single or team?',
-  `healthStatus` varchar(16) default '' COMMENT '健康状况'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准';
+  `healthStatus` varchar(16) default '' COMMENT '健康状况',
+  `explanation` text COMMENT '解释',
+  `feature` text COMMENT '特征（关键词）'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准'
 
 DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
@@ -102,12 +105,13 @@ CREATE TABLE `quiz_item` (
   `question` text NOT NULL,
   `categoryId` int(8) NOT NULL,
   `lieFlag` int(1) NOT NULL,
-  `optionsJson` varchar(512) NOT NULL,
+  `optionsJson` varchar(512) NOT NULL default '' COMMENT '{选项内容;选项维度;选项分值}',
   `createBy` varchar(512) default NULL,
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,
-  `updateAt` varchar(512) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目';
+  `updateAt` varchar(512) default NULL,
+  `quizId` int(10) default NULL COMMENT '对应的问卷ID'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目'
 
 DROP TABLE IF EXISTS `quiz_item_relation`;
 CREATE TABLE `quiz_item_relation` (

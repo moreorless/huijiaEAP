@@ -13,6 +13,17 @@ public class QuizItem {
 	@Id(auto = false)
 	private long id;
 
+	@Column
+	private long quizId;
+
+	public long getQuizId() {
+		return quizId;
+	}
+
+	public void setQuizId(long quizId) {
+		this.quizId = quizId;
+	}
+
 	/**
 	 * 题目内容
 	 */

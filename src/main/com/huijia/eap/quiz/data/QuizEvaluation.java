@@ -16,14 +16,38 @@ public class QuizEvaluation {
 	private long categoryId;
 	@Column
 	private String categoryName;
-	
-	//团体报告还是个人报告
+
+	// 团体报告还是个人报告
 	@Column
 	private String type;
-	
-	//健康状况
+
+	// 健康状况
 	@Column
 	private String healthStatus;
+
+	// 解释
+	@Column
+	private String explanation;
+
+	// 特征(关键词)
+	@Column
+	private String feature;
+
+	public String getExplanation() {
+		return explanation;
+	}
+
+	public void setExplanation(String explanation) {
+		this.explanation = explanation;
+	}
+
+	public String getFeature() {
+		return feature;
+	}
+
+	public void setFeature(String feature) {
+		this.feature = feature;
+	}
 
 	public String getType() {
 		return type;
@@ -102,8 +126,6 @@ public class QuizEvaluation {
 	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
-
-
 
 	public String getCategoryName() {
 		return categoryName;
