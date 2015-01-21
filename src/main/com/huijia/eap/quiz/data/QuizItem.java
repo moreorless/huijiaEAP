@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
+import org.nutz.json.Json;
 
 @Table("quiz_item")
 public class QuizItem {
@@ -76,18 +77,17 @@ public class QuizItem {
 		this.options = options;
 	}
 
-	public void addOption(String index, String content, String categoryName,
-			int value) {
-		QuizItemOption option = new QuizItemOption(index, content,
-				categoryName, value);
-		this.options.add(option);
-	}
-
 	public boolean isLieFlag() {
 		return lieFlag;
 	}
 
 	public void setLieFlag(boolean lieFlag) {
 		this.lieFlag = lieFlag;
+	}
+	/**
+	 * 转换选项
+	 */
+	public void convertOptions(){
+		this.options = (LinkedList<QuizItemOption>)Json.fromJson(optionJson);
 	}
 }

@@ -1,7 +1,10 @@
+.quiz_wrapper{
+	width: 1000px;
+	margin: auto;
+}
+
 .quiz_card{
 	padding : 20px 60px 10px 60px;
-	width: 900px;
-	margin: auto;
 }
 .quiz_card .header{
 	clear:both;

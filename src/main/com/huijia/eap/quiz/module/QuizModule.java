@@ -373,7 +373,7 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.test")
 	public void test(HttpServletRequest request, @Param("id") long id) {
-		Quiz quiz = quizService.fetch(id);
+		Quiz quiz = quizService.fetchFullQuiz(id);
 		request.setAttribute("quiz", quiz);
 	}
 

@@ -9,6 +9,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.dao.QuizItemDao;
 import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean
@@ -42,6 +43,19 @@ public class QuizItemService extends TblIdsEntityService<QuizItem>{
 		pager.setData(users);
 		
 		return pager;
+	}
+	
+	/**
+	 * 根据试卷id获取所有题目
+	 * @param quizId
+	 * @return
+	 */
+	public List<QuizItem> getItemsByQuizId(long quizId){
+		List<QuizItem> itemList = ((QuizItemDao)this.dao()).getItemsByQuizId(quizId);
+		for(QuizItem quizItem : itemList){
+			quizItem.convertOptions();
+		}
+		return itemList;
 	}
 	
 }

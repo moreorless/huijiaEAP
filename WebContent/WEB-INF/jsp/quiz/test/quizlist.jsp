@@ -16,7 +16,7 @@
 <body>
 
 <c:import url="/includes/header_huijia.jsp"></c:import>
-<div class="container">
+<div class="container quiz_wrapper">
 	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
 	<div class="row quiz_card">
 		<div class="header">
@@ -35,5 +35,16 @@
 </div>
 <%@ include file="/includes/footer_huijia.jsp" %>
 
-  </body>
+<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${base}/js/bootstrap-modalmanager.js"></script>
+<script type="text/javascript" src="${base}/js/bootstrap-modal.js"></script>
+
+<script type="text/javascript" src="${base }/js/cupid/core.js"></script>
+<!--验证脚本 -->
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js" ></script>
+<script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js" ></script>
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js" ></script>
+<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
+</body>
 </html>

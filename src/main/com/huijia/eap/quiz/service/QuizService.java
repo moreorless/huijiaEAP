@@ -17,7 +17,10 @@ import com.huijia.eap.quiz.data.QuizItem;
 public class QuizService extends TblIdsEntityService<Quiz>{
 	
 	@Inject
-	private QuizItemDao quizItemDao;
+	private QuizItemService quizItemService;
+	
+	@Inject
+	private QuizEvaluationService quizEvaluationService;
 	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -56,45 +59,18 @@ public class QuizService extends TblIdsEntityService<Quiz>{
 	public Quiz fetchFullQuiz(long id){
 		Quiz quiz = this.fetch(id);
 		
+		/**
+		 * 获取题目
+		 */
+		List<QuizItem> itemList = quizItemService.getItemsByQuizId(id);
+		quiz.setItems(itemList);
+		
+		/**
+		 * 获取评分标准
+		 */
+		quiz.setEvaluations(quizEvaluationService.fetchListByQuizId(id));
 		
 		return quiz;
 	}
-	
-	/**
-	 * 生成模拟数据
-	 * @return
-	 */
-	public Quiz genSampleQuiz(){
-		Quiz quiz = new Quiz();
-		quiz.setId(1);
-		quiz.setIcon("default.png");
-		quiz.setName("员工情绪倾向测评");
-		quiz.setDescription("本测评主要帮助您了解自己在心理健康各个维度上的表现状况。"
-				+ "分为六个维度：积极心态维度、情绪管理维度、行为表现维度、生理症状维度、社会支持维度和自我防御维度");
-
-		// 维度
-		String[] categorys = new String[]{
-				"积极心态维度", "情绪管理维度", "行为表现维度", "生理症状维度", "社会支持维度", "自我防御维度"
-		};
-		
-		// TODO: 添加评分体系
-		
-		// 添加题目
-		for(int i = 0; i < 40; i++){
-			QuizItem quizItem = new QuizItem();
-			quizItem.setId(i);
-			//quizItem.setCategory(categorys[i%6]);
-			quizItem.setLieFlag(false);
-			quizItem.setQuestion("命格相同的人不一定会有同样的结果，因为环境和自我改进的差异。");
-			quizItem.addOption("A", "非常不符合", "", 6);
-			quizItem.addOption("B", "有点不符合", "", 7);
-			quizItem.addOption("C", "不确定", "", 8);
-			quizItem.addOption("D", "比较符合", "", 9);
-			quizItem.addOption("E", "非常符合", "", 10);
-		}
-		
-		return quiz;
-	}
-	
 	
 }
