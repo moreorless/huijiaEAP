@@ -82,8 +82,9 @@ CREATE TABLE `quiz` (
   `lieBorder` int(8) default '0' COMMENT '测谎题分数分割线',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷';
 
+DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (
   `id` int(11) NOT NULL,
   `quizid` int(11) NOT NULL,
@@ -97,7 +98,7 @@ CREATE TABLE `quiz_evaluation` (
   `healthStatus` varchar(16) default '' COMMENT '健康状况',
   `explanation` text COMMENT '解释',
   `feature` text COMMENT '特征（关键词）'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准';
 
 DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
@@ -111,13 +112,8 @@ CREATE TABLE `quiz_item` (
   `updateBy` varchar(512) default NULL,
   `updateAt` varchar(512) default NULL,
   `quizId` int(10) default NULL COMMENT '对应的问卷ID'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='题目';
 
-DROP TABLE IF EXISTS `quiz_item_relation`;
-CREATE TABLE `quiz_item_relation` (
-  `quizid` int(11) NOT NULL,
-  `quizitemid` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷-题目关联';
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
