@@ -10,18 +10,19 @@
 	<link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
     <link type="text/css" rel="stylesheet" href="${base }/css/ui/validate/jquery.validate.css" />
 	<style type="text/css">
-		body {overflow: auto}
+		body {overflow: auto;background-color: #f3f3f3}
 	</style>
 </head>
 <body>
 
 <c:import url="/includes/header_huijia.jsp"></c:import>
 <div class="container quiz_wrapper">
+	<div class="quiz_inner_wrapper">
 	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
 	<div class="row quiz_card">
 		<div class="header">
 			<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
-			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-primary active" role="button">开始测试</a>
+			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-info" role="button">开始测试</a>
 		</div>
 		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>
 		<p class="expire">有效期为yyyy-mm-dd - yyyy-mm-dd</p>
@@ -29,9 +30,9 @@
 			<div class="quiz_card_seperator"></div>
 		</c:if>
 	</div>
-	
 	</c:forEach>
-
+	<div style="height: 60px;"></div>
+	</div>
 </div>
 <%@ include file="/includes/footer_huijia.jsp" %>
 

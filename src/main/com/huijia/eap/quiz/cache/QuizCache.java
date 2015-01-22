@@ -1,6 +1,7 @@
 package com.huijia.eap.quiz.cache;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.nutz.ioc.loader.annotation.Inject;
@@ -14,7 +15,7 @@ import com.huijia.eap.quiz.service.QuizService;
  * @author leon
  *
  */
-@IocBean
+@IocBean(create="init")
 public class QuizCache {
 	private static QuizCache _instance = new QuizCache();
 	
@@ -26,6 +27,14 @@ public class QuizCache {
 	private QuizCache(){};
 	public static QuizCache me(){
 		return _instance;
+	}
+	
+	public void init(){
+		// 加载所有试卷至缓存
+		List<Quiz> quizList = quizService.query(null, null);
+		for(Quiz quiz : quizList){
+			_cache.put(quiz.getId(), quizService.fetchFullQuiz(quiz.getId()));
+		}
 	}
 	
 	public Quiz getQuiz(long quizId){

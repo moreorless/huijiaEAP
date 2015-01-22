@@ -46,24 +46,19 @@ body {
 
 /* Set the fixed height of the footer here */
 #footer {
-	height: 25px;
+	height: 98px;
 	width:100%;
-	background-color: #eee;
-	/*background: url(../images/footer-bg.png) repeat-x;*/
-	color: #48545b;
-	border-top: 1px solid #c3c3c3;
+	background-color: #727272;
+	color: #fff;
 }
 #footer > div{
-	width : 980px;
-	margin : 0 auto;	
-	padding-left:10px;
-	color: #48545b;
+	padding-top:16px;
 }
 #footer p{
-	height:24px;
-	line-height:24px;
-	font-size:12px;
-	margin: 0;
+	height:40px;
+	line-height:40px;
+	font-size:16px;
+	text-align:center;
 }
 
 /* Lastly, apply responsive CSS fixes as necessary */

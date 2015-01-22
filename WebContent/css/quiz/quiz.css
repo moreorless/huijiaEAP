@@ -1,6 +1,17 @@
 .quiz_wrapper{
 	width: 1000px;
 	margin: auto;
+	padding-top: 20px;
+	padding-bottom: 60px;
+}
+
+.quiz_inner_wrapper{
+	background-color:#fff;
+	width:800px;
+	margin:0 auto;
+	padding-top:20px;
+	border-right: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
 }
 
 .quiz_card{
@@ -13,7 +24,8 @@
 .quiz_card h2{
 	padding-left : 10px;
 	color: #3141a3;
-	font-size: 24px;
+	font-size: 22px;
+	font-weight: bold;
 	float:left;
 	margin-top: 0
 }
@@ -43,4 +55,33 @@
 .quiz_card_seperator {
 	height : 10px;
 	background-color: #e2e2e2;
+}
+
+p.quiz-tip{
+	height: 20px;
+	line-height: 20px;
+	padding-left: 90px;
+	color: #999;
+	margin-top: -20px;
+}
+
+.question-card {
+	padding : 10px 40px;
+	background-color: #fff;
+	margin: 0px;
+}
+.question-card.light{
+	background-color: #e8f4fc;
+}
+.question-card.gray {
+	background-color: #fff;
+}
+
+.question-card .radio {
+	margin-left : 20px;
+}
+.question-card h4{
+	color: #2d2d2d;
+	font-size: 14px;
+	font-weight: bold;
 }

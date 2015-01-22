@@ -11,4 +11,8 @@
 	
 	<!-- 系统调度服务，提供基本的调度服务 -->
 	<obj name="$setup_SchedulerService" type="com.huijia.eap.schedule.Scheduler" />
+	
+	<!-- 测评系统调度服务 -->
+	<obj name="$setup_QuizService" type="com.huijia.eap.quiz.QuizSetupListener">
+	</obj>
 </ioc>

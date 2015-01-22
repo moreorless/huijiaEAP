@@ -29,6 +29,7 @@ import com.huijia.eap.commons.i18n.Bundle;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
+import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
@@ -337,7 +338,7 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.test")
 	public void test(HttpServletRequest request, @Param("id") long id) {
-		Quiz quiz = quizService.fetchFullQuiz(id);
+		Quiz quiz = QuizCache.me().getQuiz(id);
 		request.setAttribute("quiz", quiz);
 	}
 
@@ -349,7 +350,7 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
 	public void answer(HttpServletRequest request) {
-
+		
 	}
 
 	/**
