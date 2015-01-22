@@ -223,8 +223,7 @@ public class QuizModule {
 	public void edit(HttpServletRequest request, @Param("..") Quiz quiz,
 			@Param("quiz_file") TempFile tempFile) {
 
-		quiz.setCategoryJson(quizService.fetch(quiz.getId()).getCategoryJson());
-		quiz.setCategoryNum(quizService.fetch(quiz.getId()).getCategoryNum());
+		
 
 		if (tempFile != null) {
 
@@ -281,6 +280,11 @@ public class QuizModule {
 			}
 
 		} else {
+			quiz.setCategoryJson(quizService.fetch(quiz.getId()).getCategoryJson());
+			quiz.setCategoryNum(quizService.fetch(quiz.getId()).getCategoryNum());
+			quiz.setItemNum(quizService.fetch(quiz.getId()).getItemNum());
+			quiz.setLieBorder(quizService.fetch(quiz.getId()).getLieBorder());
+			
 			quizService.update(quiz);
 			request.setAttribute("quiz", quiz);
 
