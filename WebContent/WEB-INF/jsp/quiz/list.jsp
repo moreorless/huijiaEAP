@@ -27,6 +27,7 @@ body {
 </head>
 <body>
 	<div class="container">
+	<%@ include file="/error/inline.jsp"%>
 		<div id="toolbar">
 			<a href="${base}/quiz/prepare?operation=add" class="btn"> <img
 				src="${base}/images/add_default.gif" />&nbsp;添加
@@ -37,6 +38,7 @@ body {
 			<thead>
 				<tr>
 					<th id="name">试题名称</th>
+					<th id="type">试题类型</th>
 					<th id="name">图标</th>
 					<th id="description">描述</th>
 					<th id="usedcount">使用次数</th>
@@ -48,14 +50,23 @@ body {
 				<c:forEach items="${obj.data }" var="quiz">
 					<tr>
 						<td data-id="${company.id }">${quiz.name }</td>
+						<c:if test="${quiz.type == 0}">
+							<td>独立问卷</td>
+						</c:if>
+						<c:if test="${quiz.type == 1}">
+							<td>组合问卷</td>
+						</c:if>
 						<td><img src="${base}/images/quiz/icons/${quiz.icon}"></img></td>
 						<td>${quiz.description }</td>
 						<td></td>
 						<td></td>
-						<td><a href="${base}/quiz/viewquiz?id=${quiz.id}">查看</a>&nbsp;|&nbsp;
+
+						<td><c:if test="${quiz.type == 0}">
+								<a href="${base}/quiz/viewquiz?id=${quiz.id}">查看</a>&nbsp;|&nbsp;</c:if>
 							<a href="${base}/quiz/prepare?operation=edit&id=${quiz.id}">修改</a>
 							&nbsp;|&nbsp; <a href="${base}/quiz/delete?id=${quiz.id}">删除</a>
 						</td>
+
 					</tr>
 				</c:forEach>
 			</tbody>

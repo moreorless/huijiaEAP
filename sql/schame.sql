@@ -69,8 +69,11 @@ DROP TABLE IF EXISTS `quiz`;
 CREATE TABLE `quiz` (
   `id` int(11) unsigned NOT NULL,
   `name` varchar(256) NOT NULL,
+  `type` tinyint(4) NOT NULL default '0' COMMENT '0,独立试卷;1,父试卷;2,子试卷',
   `description` text,
   `icon` varchar(256) default NULL,
+  `parentId` int(11) default NULL COMMENT '如果问卷类型为子试卷，填上父试卷的id',
+  `children` varchar(128) default '' COMMENT '如果问卷类型为父试卷，填写子试卷的id.格式为"1,3,5"',
   `categoryJson` varchar(512) default NULL COMMENT '{维度ID,维度名称}的Json对象',
   `createBy` int(11) unsigned default NULL,
   `createAt` int(11) unsigned default NULL,
@@ -82,7 +85,7 @@ CREATE TABLE `quiz` (
   `lieBorder` int(8) default '0' COMMENT '测谎题分数分割线',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
 
 DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (

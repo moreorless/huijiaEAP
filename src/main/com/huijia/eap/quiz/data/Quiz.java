@@ -13,6 +13,8 @@ import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
 @Table("quiz")
 public class Quiz {
 
+	
+
 	@Column
 	@Id(auto = false)
 	private long id;
@@ -26,6 +28,15 @@ public class Quiz {
 			@ValidateType(type = Type.minlength, parameters = { "1" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz"),
 			@ValidateType(type = Type.maxlength, parameters = { "512" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz") })
 	private String name;
+
+	@Column
+	private short type;
+
+	@Column
+	private long parentId;
+
+	@Column
+	private String children;
 
 	/**
 	 * 描述
@@ -59,6 +70,30 @@ public class Quiz {
 
 	@Column
 	private long lieBorder;
+
+	@Column
+	private String guideline;
+
+	public List<Quiz> getChildList() {
+		return childList;
+	}
+
+	public void setChildList(List<Quiz> childList) {
+		this.childList = childList;
+	}
+
+	/**
+	 * 题目
+	 */
+	private List<Quiz> childList;
+
+	public String getGuideline() {
+		return guideline;
+	}
+
+	public void setGuideline(String guideline) {
+		this.guideline = guideline;
+	}
 
 	public String getCategoryJson() {
 		return categoryJson;
@@ -116,6 +151,30 @@ public class Quiz {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	public long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getChildren() {
+		return children;
+	}
+
+	public void setChildren(String children) {
+		this.children = children;
 	}
 
 	public String getDescription() {

@@ -9,11 +9,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.nutz.dao.Cnd;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Files;
+import org.nutz.mvc.View;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Chain;
@@ -22,6 +24,10 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.upload.TempFile;
 import org.nutz.mvc.upload.UploadAdaptor;
+import org.nutz.mvc.view.ForwardView;
+import org.nutz.mvc.view.JspView;
+import org.nutz.mvc.view.ServerRedirectView;
+import org.nutz.mvc.view.ViewWrapper;
 
 import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.annotation.AuthBy;
@@ -47,7 +53,12 @@ import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 public class QuizModule {
 	private final static String OPERATION_ADD = "add";
 	private final static String OPERATION_EDIT = "edit";
+	private final static String OPERATION_ADD_CHILD = "addSubquiz";
 	private final static String OPERATION_READ = "read";
+
+	private final static short QUIZ_TYPE_STANDALONE = 0;
+	private final static short QUIZ_TYPE_PARENT = 1;
+	private final static short QUIZ_TYPE_CHILD = 2;
 
 	@Inject
 	private QuizService quizService;
@@ -71,7 +82,8 @@ public class QuizModule {
 	@Ok("jsp:jsp.quiz.list")
 	public Pager<Quiz> list(HttpServletRequest request,
 			@Param("..") Pager<Quiz> pager) {
-		return quizService.paging(null, pager);
+
+		return quizService.paging(Cnd.wrap("type <> 2"), pager);
 	}
 
 	/**
@@ -97,14 +109,10 @@ public class QuizModule {
 	 * @param operation
 	 */
 	@At
-	@Ok("jsp:jsp.quiz.edit")
-	public void prepare(HttpServletRequest request, @Param("id") long id,
+	// @Ok("jsp:jsp.quiz.edit")
+	public View prepare(HttpServletRequest request, @Param("id") long id,
+			@Param("parentId") long parentId,
 			@Param("operation") String operation) {
-		Quiz quiz = new Quiz();
-		if (OPERATION_EDIT.equals(operation)) {
-			quiz = quizService.fetch(id);
-		}
-		request.setAttribute("quiz", quiz);
 
 		// 从images/quiz/icons/目录加载可用的试卷图标
 		String iconpath = GlobalConfig.getContextValue("web.dir")
@@ -116,6 +124,23 @@ public class QuizModule {
 			iconNames.add(f.getName());
 		}
 		request.setAttribute("iconNames", iconNames);
+
+		Quiz quiz = new Quiz();
+
+		if (OPERATION_ADD_CHILD.equals(operation)) {
+			quiz.setParentId(parentId);
+			request.setAttribute("quiz", quiz);
+			return new ViewWrapper(new JspView("jsp.quiz.addSubquiz"), null);
+
+		}
+
+		if (OPERATION_EDIT.equals(operation)) {
+			quiz = quizService.fetch(id);
+			quiz.setChildList(quizService.fetchListByParentId(id));
+		}
+		request.setAttribute("quiz", quiz);
+		return new ViewWrapper(new JspView("jsp.quiz.edit"), null);
+
 	}
 
 	/**
@@ -127,12 +152,16 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.viewquiz")
-	@Fail("forward:/quiz/prepare")
+	@Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
-	public void add(HttpServletRequest request, @Param("..") Quiz quiz,
+	public View add(HttpServletRequest request, @Param("..") Quiz quiz,
 			@Param("quiz_file") TempFile tempFile) {
-		if (tempFile == null) {
+		if (quiz.getType() == QUIZ_TYPE_PARENT) {
+			quiz = quizService.insert(quiz);
+			request.setAttribute("quiz", quiz);
+			return new ViewWrapper(new ForwardView("/quiz/list"), null);
+		} else if (tempFile == null) {
 			EC error = new EC("quiz.add.import.empty.error", bundle);
 			throw ExceptionWrapper.wrapError(error);
 		} else {
@@ -178,6 +207,7 @@ public class QuizModule {
 			}
 
 		}
+		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
 
 	}
 
@@ -188,8 +218,8 @@ public class QuizModule {
 	 * @param id
 	 */
 	@At
-	@Ok("jsp:jsp.quiz.viewquiz")
-	public void viewquiz(HttpServletRequest request, @Param("id") long id) {
+	// @Ok("jsp:jsp.quiz.viewquiz")
+	public View viewquiz(HttpServletRequest request, @Param("id") long id) {
 		Quiz quiz = quizService.fetch(id);
 		request.setAttribute("quiz", quiz);
 
@@ -211,6 +241,8 @@ public class QuizModule {
 		request.setAttribute("quizItems", quizItems);
 		request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
 		request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
+
+		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
 	}
 
 	/**
@@ -219,14 +251,12 @@ public class QuizModule {
 	 * @param quiz
 	 */
 	@At
-	@Ok("jsp:jsp.quiz.viewquiz")
-	@Fail("forward:/quiz/prepare")
+	// @Ok("jsp:jsp.quiz.viewquiz")
+	@Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
-	public void edit(HttpServletRequest request, @Param("..") Quiz quiz,
+	public View edit(HttpServletRequest request, @Param("..") Quiz quiz,
 			@Param("quiz_file") TempFile tempFile) {
-
-		
 
 		if (tempFile != null) {
 
@@ -283,11 +313,14 @@ public class QuizModule {
 			}
 
 		} else {
-			quiz.setCategoryJson(quizService.fetch(quiz.getId()).getCategoryJson());
-			quiz.setCategoryNum(quizService.fetch(quiz.getId()).getCategoryNum());
+			quiz.setCategoryJson(quizService.fetch(quiz.getId())
+					.getCategoryJson());
+			quiz.setCategoryNum(quizService.fetch(quiz.getId())
+					.getCategoryNum());
 			quiz.setItemNum(quizService.fetch(quiz.getId()).getItemNum());
 			quiz.setLieBorder(quizService.fetch(quiz.getId()).getLieBorder());
-			
+			quiz.setChildList(quizService.fetchListByParentId(quiz.getId()));
+
 			quizService.update(quiz);
 			request.setAttribute("quiz", quiz);
 
@@ -310,6 +343,11 @@ public class QuizModule {
 			request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
 		}
 
+		if (quiz.getType() == QUIZ_TYPE_PARENT) {
+			return new ViewWrapper(new ForwardView("/quiz/list"), null);
+		}
+		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
+
 	}
 
 	/**
@@ -318,17 +356,96 @@ public class QuizModule {
 	 * @param id
 	 */
 	@At
-	@Ok("forward:/quiz/list")
-	public void delete(@Param("id") long id) {
+	// @Ok("forward:/quiz/list")
+	public View delete(@Param("id") long id) {
+
+		Quiz quiz = quizService.fetch(id);
+		List<Quiz> childList = quizService.fetchListByParentId(id);
+
+		for (Quiz q : childList) {
+			quizService.delete(q.getId());
+			quizItemService.deleteByQuizId(q.getId());
+			quizEvaluationService.deleteByQuizId(q.getId());
+		}
 
 		// Table: quiz
 		quizService.delete(id);
-
 		// Table: quiz_item
 		quizItemService.deleteByQuizId(id);
-
 		// Table: quiz_evaluation
 		quizEvaluationService.deleteByQuizId(id);
+
+		if (quiz.getType() == QUIZ_TYPE_CHILD) {
+			String s = "/quiz/prepare?operation=edit&id=" + quiz.getParentId();
+			return new ViewWrapper(new ServerRedirectView(s), null);
+		}
+		return new ViewWrapper(new ForwardView("/quiz/list"), null);
+	}
+
+	/**
+	 * 添加子试卷
+	 * 
+	 * @param request
+	 * @param quiz
+	 * @param tempFile
+	 */
+	@At
+	@Ok("jsp:jsp.quiz.viewquiz")
+	@Fail("forward:/quiz/list")
+	@AdaptBy(type = UploadAdaptor.class)
+	@Chain("validate")
+	public void addSubquiz(HttpServletRequest request, @Param("..") Quiz quiz,
+			@Param("quiz_file") TempFile tempFile,
+			@Param("parentId") long parentId) {
+		request.setAttribute("operation", "addSubquiz");
+		if (tempFile == null) {
+			EC error = new EC("quiz.add.import.empty.error", bundle);
+			throw ExceptionWrapper.wrapError(error);
+		} else {
+
+			File quizFile = tempFile.getFile();
+			String path = quizFile.getAbsolutePath();
+
+			QuizImportHandler quizImportHandler = new QuizImportHandler();
+			if (quizImportHandler.process(path) == 0) {
+				quiz.setItemNum(quizImportHandler.getItemNum());
+				quiz.setLieBorder(quizImportHandler.getLieBorder());
+				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
+				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
+				quiz = quizService.insert(quiz);
+				request.setAttribute("quiz", quiz);
+
+				LinkedList<QuizItem> quizItems = quizImportHandler
+						.getQuizItems();
+				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
+						.getQuizEvaluations();
+
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingle",
+						quizImportHandler.getQuizEvaluationsSingle());
+				request.setAttribute("quizEvaluationsTeam",
+						quizImportHandler.getQuizEvaluationsTeam());
+
+				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
+					QuizItem quizItem = it.next();
+					quizItem.setQuizId(quiz.getId());
+					quizItemService.insert(quizItem);
+				}
+				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
+						.hasNext();) {
+					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluationService.insert(quizEvaluation, quiz.getId());
+				}
+
+			} else {
+				// 向页面返回错误信息
+				EC error = new EC("quiz.add.import.invalid.error", bundle);
+				String s = "/quiz/prepare?operation=addSubquiz&id="
+						+ quiz.getParentId();
+				throw ExceptionWrapper.wrapError(error);
+			}
+
+		}
 	}
 
 	/**

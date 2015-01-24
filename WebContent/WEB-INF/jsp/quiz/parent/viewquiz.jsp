@@ -41,18 +41,7 @@ em {
 				<li><a href="#tabs-2">題目信息</a></li>
 				<li><a href="#tabs-3">个人评价信息</a></li>
 				<li><a href="#tabs-4">团体评价信息</a></li>
-
-				<c:if test="${quiz.type == 0}">
-					<a href="${base}/quiz/list" class="btn btn-info"
-						style="float: right; margin-right: 20px;">返回</a>
-				</c:if>
-
-				<c:if test="${quiz.type == 2}">
-					<a href="${base}/quiz/prepare?operation=edit&id=${quiz.parentId}"
-						class="btn btn-primary" style="float: right">返回</a>
-				</c:if>
 			</ul>
-
 			<div id="tabs-1">
 				<table class="table table-striped table-hover table-bordered">
 					<tr>
@@ -159,7 +148,6 @@ em {
 					</tbody>
 				</table>
 			</div>
-
 		</div>
 
 
