@@ -5,6 +5,7 @@
   <head>
     <title><fmt:message key="index.product.name" /></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
     <link type="text/css" rel="stylesheet" href="${base}/css/login.css"/>
   </head>
   <body>

@@ -85,3 +85,6 @@ p.quiz-tip{
 	font-size: 14px;
 	font-weight: bold;
 }
+.question-span-active {
+	background-color: #60bfff;
+}

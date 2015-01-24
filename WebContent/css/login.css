@@ -22,9 +22,8 @@
       .form-signin h2 {
       	color : #005580;
       }
-      .form-signin .form-signin-heading,
-      .form-signin .checkbox {
-        margin-bottom: 10px;
+      .form-signin .form-signin-heading {
+        margin-bottom: 20px;
       }
       .form-signin input[type="text"],
       .form-signin input[type="password"] {

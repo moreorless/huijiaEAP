@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.json.Json;
 import org.nutz.lang.Files;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
@@ -349,8 +351,11 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	public void answer(HttpServletRequest request) {
-		
+	public void answer(HttpServletRequest request, @Param("answerJson") String answerJson) {
+		Map<Long, String> answerMap = (Map<Long, String>)Json.fromJson(answerJson);
+		for(String answer : answerMap.values()){
+			System.out.println(answer);
+		}
 	}
 
 	/**
