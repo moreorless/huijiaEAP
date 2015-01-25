@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.data;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.nutz.dao.entity.annotation.Column;
@@ -68,11 +69,23 @@ public class Quiz {
 	@Column
 	private long itemNum;
 
+	/**
+	 * 测谎分数线
+	 */
 	@Column
 	private long lieBorder;
 
+	/**
+	 * 指导语
+	 */
 	@Column
 	private String guideline;
+	
+	/**
+	 * 报告模板
+	 */
+	@Column
+	private String reporttpl;
 
 	public List<Quiz> getChildList() {
 		return childList;
@@ -85,7 +98,7 @@ public class Quiz {
 	/**
 	 * 题目
 	 */
-	private List<Quiz> childList;
+	private List<Quiz> childList = new LinkedList<Quiz>();
 
 	public String getGuideline() {
 		return guideline;

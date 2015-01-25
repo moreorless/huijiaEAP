@@ -83,9 +83,11 @@ CREATE TABLE `quiz` (
   `categoryNum` int(8) default '0' COMMENT '维度个数',
   `itemNum` int(8) default '0' COMMENT '题目个数',
   `lieBorder` int(8) default '0' COMMENT '测谎题分数分割线',
+  `guideline` text COMMENT '指导语',
+  `reporttpl` varchar(128) default NULL COMMENT '报告模板文件名',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试卷';
 
 DROP TABLE IF EXISTS `quiz_evaluation`;
 CREATE TABLE `quiz_evaluation` (
