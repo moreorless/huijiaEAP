@@ -11,8 +11,9 @@
 	<style type="text/css">
 		body {background-color: #f3f3f3}
 		#scrollWrapper {overflow: auto;height: 100%}
-		#tip-content {height: 60px; line-height: 60px;}
-		#tip-content span {color: red; font-weight: bold; font-size: 18px;}
+		
+		#tip-dialog {display:none;position:absolute;background-color:#ee6666;width:160px;height:40px;z-index:9999;text-align: center;padding-top: 10px;color: #333}
+		#tip-dialog span {color: green; font-weight: bold; font-size: 18px;}
 	</style>
 </head>
 <body>
@@ -64,27 +65,11 @@
 <%@ include file="/includes/footer_huijia.jsp" %>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="tip-dialog">
-<div class="modal-dialog modal-sm">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h4>提示</h4>
-    </div>
-    <div class="modal-body">
-      <p id="tip-content"></p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-    </div>
-  </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
-</div>
+<div id="tip-dialog"></div>
 
 
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap-modalmanager.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap-modal.js"></script>
 
 <script type="text/javascript" src="${base }/js/cupid/core.js"></script>
 <script type="text/javascript" src="${base}/js/huijia/index.js"></script>
@@ -108,12 +93,19 @@
 			});
 			if(!_answered) {
 				_allAnswered = false;
-				$('#tip-content').html('第&nbsp;<span>' + ( questionIndex + 1 )  + '</span>&nbsp;题尚未作答，请填写完整。');
+				$('#tip-dialog').html('第&nbsp;<span>' + ( questionIndex + 1 )  + '</span>&nbsp;题尚未回答。');
 				
 				// scroll to 
 				$("#scrollWrapper").animate({ scrollTop: $(this).height() *  (questionIndex) + 300}, 400);
 				
-				$('#tip-dialog').modal();
+				$('#tip-dialog').css({
+					top : $(window).height()/2 - 100,
+					left : $(window).width()/2 - 80
+				});
+				$('#tip-dialog').show();
+
+				setTimeout(function(){$('#tip-dialog').hide('slow');}, 4000);
+				
 				return false;
 			}
 		});
