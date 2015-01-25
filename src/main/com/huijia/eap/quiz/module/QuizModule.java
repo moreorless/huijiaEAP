@@ -39,6 +39,7 @@ import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
 import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
@@ -55,10 +56,6 @@ public class QuizModule {
 	private final static String OPERATION_EDIT = "edit";
 	private final static String OPERATION_ADD_CHILD = "addSubquiz";
 	private final static String OPERATION_READ = "read";
-
-	private final static short QUIZ_TYPE_STANDALONE = 0;
-	private final static short QUIZ_TYPE_PARENT = 1;
-	private final static short QUIZ_TYPE_CHILD = 2;
 
 	@Inject
 	private QuizService quizService;
@@ -94,7 +91,7 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.quizlist")
 	public void enquizlist(HttpServletRequest request) {
-		List<Quiz> list = quizService.fetchAll();
+		List<Quiz> list = quizService.fetchDisplayQuizs();
 		request.setAttribute("quizlist", list);
 
 		User currentUser = Auths.getUser(request);
@@ -157,7 +154,7 @@ public class QuizModule {
 	@Chain("validate")
 	public View add(HttpServletRequest request, @Param("..") Quiz quiz,
 			@Param("quiz_file") TempFile tempFile) {
-		if (quiz.getType() == QUIZ_TYPE_PARENT) {
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			quiz = quizService.insert(quiz);
 			request.setAttribute("quiz", quiz);
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
@@ -343,7 +340,7 @@ public class QuizModule {
 			request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
 		}
 
-		if (quiz.getType() == QUIZ_TYPE_PARENT) {
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
 		}
 		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
@@ -375,7 +372,7 @@ public class QuizModule {
 		// Table: quiz_evaluation
 		quizEvaluationService.deleteByQuizId(id);
 
-		if (quiz.getType() == QUIZ_TYPE_CHILD) {
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
 			String s = "/quiz/prepare?operation=edit&id=" + quiz.getParentId();
 			return new ViewWrapper(new ServerRedirectView(s), null);
 		}
@@ -459,6 +456,14 @@ public class QuizModule {
 	public void test(HttpServletRequest request, @Param("id") long id) {
 		Quiz quiz = QuizCache.me().getQuiz(id);
 		request.setAttribute("quiz", quiz);
+		
+		List<Quiz> quizList = new LinkedList<Quiz>();
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+			quizList.add(quiz);
+		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+			quizList.addAll(quiz.getChildList());
+		}
+		request.setAttribute("quizlist", quizList);
 	}
 
 	/**

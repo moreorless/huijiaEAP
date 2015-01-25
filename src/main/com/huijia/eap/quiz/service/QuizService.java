@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.service;
 
 import java.util.List;
 
+import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -12,6 +13,7 @@ import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.dao.QuizDao;
 import com.huijia.eap.quiz.dao.QuizItemDao;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean
@@ -39,6 +41,14 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 
 	public List<Quiz> fetchAll() {
 		return super.query(null, null);
+	}
+	
+	/**
+	 * 显示多有可见的试卷 (独立试卷、复合试卷)
+	 * @return
+	 */
+	public List<Quiz> fetchDisplayQuizs(){
+		return super.query(Cnd.where("type", "=", QuizConstant.QUIZ_TYPE_STANDALONE).or("type", "=", QuizConstant.QUIZ_TYPE_PARENT), null);
 	}
 
 	public List<Quiz> fetchListByParentId(long parentId) {
@@ -70,15 +80,19 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	public Quiz fetchFullQuiz(long id) {
 		Quiz quiz = this.fetch(id);
 
-		/**
-		 * 获取题目
-		 */
+		// 如果是复合试卷，递归获取子试卷
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
+			List<Quiz> children = this.fetchListByParentId(id);
+			for(Quiz _quiz : children) {
+				quiz.getChildList().add(this.fetchFullQuiz(_quiz.getId()));
+			}
+		}
+		
+		//获取题目
 		List<QuizItem> itemList = quizItemService.getItemsByQuizId(id);
 		quiz.setItems(itemList);
 
-		/**
-		 * 获取评分标准
-		 */
+		// 获取评分标准
 		quiz.setEvaluations(quizEvaluationService.fetchListByQuizId(id));
 
 		return quiz;
