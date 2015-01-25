@@ -468,7 +468,8 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	public void answer(HttpServletRequest request, @Param("answerJson") String answerJson) {
+	public void answer(HttpServletRequest request, @Param("quizId") long quizId, @Param("answerJson") String answerJson) {
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		Map<Long, String> answerMap = (Map<Long, String>)Json.fromJson(answerJson);
 		for(String answer : answerMap.values()){
 			System.out.println(answer);
