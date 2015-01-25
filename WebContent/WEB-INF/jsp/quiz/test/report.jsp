@@ -6,17 +6,23 @@
 	<title>测验报告</title>
 	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
+	<link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
+	<link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
+	<style type="text/css">
+		body {overflow: auto;background-color: #f3f3f3}
+	</style>
 </head>
 <body>
-
-<div class="container">
-	<h2>测验报告</h2>
-	<div class="row">
+	<c:import url="/includes/header_huijia.jsp"></c:import>
+	<div class="container report-wrapper">
+		<h2 class="report-caption">您的测试结果</h2>
+		<div>
+		<c:import url="/includes/report/communication_person.jsp"></c:import>
+		</div>
 	</div>
-</div>
-
+	<%@ include file="/includes/footer_huijia.jsp" %>
+<script type="text/javascript" src="${base}/js/echarts/echarts-all.js"></script>
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
-
-  </body>
+<script type="text/javascript" src="${base}/js/huijia/report.js"></script>
+</body>
 </html>
