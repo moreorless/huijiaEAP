@@ -7,11 +7,9 @@ import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
-import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.data.Company;
-import com.huijia.eap.quiz.data.Quiz;
 
 @IocBean
 public class CompanyService extends TblIdsEntityService<Company>{

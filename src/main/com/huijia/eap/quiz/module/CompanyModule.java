@@ -2,7 +2,6 @@ package com.huijia.eap.quiz.module;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.nutz.ioc.Ioc;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -14,7 +13,6 @@ import org.nutz.mvc.annotation.Param;
 import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.quiz.data.Company;
-import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.service.CompanyService;
 
 @IocBean

@@ -15,59 +15,60 @@ import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
 
 @Table("auth_user")
 public class User extends BaseTimedObject implements Serializable {
-	
+
 	public static final int STATUS_ENABLE = 1;
 	public static final int STATUS_DISABLED = 0;
-	
+
 	public static final int TYPE_ROOT = 0;
 	public static final int TYPE_ADMIN = 1;
 	public static final int TYPE_USER = 2;
 	public static final int TYPE_SUPERUSER = 3;
-	
+
 	public static final String EXTS_LOGINIP = "loginip";
 	public static final String EXTS_LOGINTIME = "logintime";
 	public static final String EXTS_LASTACCESSTIME = "lastaccesstime";
 
 	public static final String PASSWORD_FADE = "#PassWord#";
-	
+
 	@Column
-	@Id(auto=false)
+	@Id(auto = false)
 	private long userId;
-	
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="auth.errors.required.name", resource=true, bundle="auth"),
-			@ValidateType(type=Type.minlength, parameters={ "2" }, errorMsg="user.add.name.span", resource=true, bundle="auth"),
-			@ValidateType(type=Type.maxlength, parameters={ "64" }, errorMsg="user.add.name.span", resource=true, bundle="auth"),
-			@ValidateType(type=Type.regexp, parameters={"^(?!_)(?!.*?_$)[a-zA-Z0-9_]+$"}, errorMsg="user.add.name.span", resource=true, bundle="auth")})
+
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "auth.errors.required.name", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.minlength, parameters = { "2" }, errorMsg = "user.add.name.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.maxlength, parameters = { "64" }, errorMsg = "user.add.name.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.regexp, parameters = { "^(?!_)(?!.*?_$)[a-zA-Z0-9_]+$" }, errorMsg = "user.add.name.span", resource = true, bundle = "auth") })
 	@Column
 	private String name;
-	
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="user.add.realname.span", resource=true, bundle="auth"),
-			@ValidateType(type=Type.maxlength, parameters={"64"}, errorMsg="user.add.realname.span", resource=true, bundle="auth")})
+
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "user.add.realname.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.maxlength, parameters = { "64" }, errorMsg = "user.add.realname.span", resource = true, bundle = "auth") })
 	@Column
 	private String realname;
-	
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="user.add.password.validate.null", resource=true, bundle="auth"), 
-			@ValidateType(type=Type.pwd, errorMsg="user.add.password.validate", resource=true, bundle="auth") })
+
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "user.add.password.validate.null", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.pwd, errorMsg = "user.add.password.validate", resource = true, bundle = "auth") })
 	@Column
 	private String password;
-	
-	@Validations(rules = {@ValidateType(type=Type.email, errorMsg="user.add.email.validate", resource=true, bundle="auth")})
+
+	@Validations(rules = { @ValidateType(type = Type.email, errorMsg = "user.add.email.validate", resource = true, bundle = "auth") })
 	@Column
 	private String email;
 
 	@Column
-	@Validations(rules = {@ValidateType(type=Type.regexp, parameters={"^([0-9]{2,4}\\-)?[0-9]{2,8}(\\-[0-9]{1,5})?$"}, 
-	errorMsg="user.add.phone.validate", resource=true, bundle="auth")})
+	@Validations(rules = { @ValidateType(type = Type.regexp, parameters = { "^([0-9]{2,4}\\-)?[0-9]{2,8}(\\-[0-9]{1,5})?$" }, errorMsg = "user.add.phone.validate", resource = true, bundle = "auth") })
 	private String phone;
-	
+
 	@Column
-	@Validations(rules = {@ValidateType(type=Type.regexp, parameters={"^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$"}, 
-	errorMsg="user.add.mobile.validate", resource=true, bundle="auth")})
+	@Validations(rules = { @ValidateType(type = Type.regexp, parameters = { "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$" }, errorMsg = "user.add.mobile.validate", resource = true, bundle = "auth") })
 	private String mobile;
 	@Column
 	private int status = STATUS_ENABLE;
 	@Column
-	@Validations(rules = @ValidateType(type=Type.maxlength, parameters = {"256"}, errorMsg = "user.add.description.validate", resource=true, bundle="auth"))
+	@Validations(rules = @ValidateType(type = Type.maxlength, parameters = { "256" }, errorMsg = "user.add.description.validate", resource = true, bundle = "auth"))
 	private String description;
 	@Column
 	private int type = TYPE_USER;
@@ -80,122 +81,169 @@ public class User extends BaseTimedObject implements Serializable {
 	@Column
 	private String iprestrict;
 	@Column
-	private String authedNavs;		// 授权的模块id集合
-	
+	private String authedNavs; // 授权的模块id集合
+
 	@Column
-	private long companyid;
-	
+	private long companyId;
+
+	@Column
+	private long segmentId;
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	public long getSegmentId() {
+		return segmentId;
+	}
+
+	public void setSegmentId(long segmentId) {
+		this.segmentId = segmentId;
+	}
+
 	/**
 	 * 保存额外信息，不进行持久化，仅作为内存中的保存
 	 */
 	private transient Map<String, Object> exts = new HashMap<String, Object>();
-	
+
 	public Map<String, Object> getExts() {
 		return exts;
 	}
+
 	public Object getExt(String key) {
 		return exts.get(key);
 	}
+
 	public void setExt(String key, Object value) {
 		exts.put(key, value);
 	}
+
 	public String getDept() {
 		return dept;
 	}
+
 	public void setDept(String dept) {
 		this.dept = dept;
 	}
+
 	public String getIprestrict() {
 		return iprestrict;
 	}
+
 	public void setIprestrict(String iprestrict) {
 		this.iprestrict = iprestrict;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getRealname() {
 		return realname;
 	}
+
 	public void setRealname(String realname) {
 		this.realname = realname;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getPhone() {
 		return phone;
 	}
+
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 	public String getMobile() {
 		return mobile;
 	}
+
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+
 	public int getStatus() {
 		return status;
 	}
+
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public int getType() {
 		return type;
 	}
+
 	public void setType(int type) {
 		this.type = type;
 	}
+
 	public long getLastLoginTime() {
 		return lastLoginTime;
 	}
+
 	public void setLastLoginTime(long lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
+
 	public long getLockedAt() {
 		return lockedAt;
 	}
+
 	public void setLockedAt(long lockedAt) {
 		this.lockedAt = lockedAt;
 	}
+
 	public long getUserId() {
 		return userId;
 	}
+
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getAuthedNavs() {
 		return authedNavs;
 	}
+
 	public void setAuthedNavs(String authedNavs) {
 		this.authedNavs = authedNavs;
 	}
-	public long getCompanyid() {
-		return companyid;
-	}
-	public void setCompanyid(long companyid) {
-		this.companyid = companyid;
-	}
+
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -218,6 +266,7 @@ public class User extends BaseTimedObject implements Serializable {
 		result = prime * result + (int) (userId ^ (userId >>> 32));
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -280,5 +329,5 @@ public class User extends BaseTimedObject implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }

@@ -21,27 +21,37 @@ CREATE TABLE IF NOT EXISTS auth_role (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS auth_user;
-CREATE TABLE auth_user (
-	userid BIGINT(10) NOT NULL,
-	name VARCHAR(64) NOT NULL,
-	realname VARCHAR(128) NOT NULL,
-	password VARCHAR(160) NOT NULL,
-	email VARCHAR(128) NULL DEFAULT NULL,
-	phone VARCHAR(32) NULL DEFAULT NULL,
-	mobile VARCHAR(32) NULL DEFAULT NULL,
-	status INT(4) NOT NULL,
-	description VARCHAR(256) NULL DEFAULT NULL,
-	type INT(4) NOT NULL,
-	lastLoginTime BIGINT(10) NULL DEFAULT NULL,
-	lockedAt BIGINT(10) NULL DEFAULT NULL,
-	created BIGINT(10) NULL DEFAULT NULL,
-	modified BIGINT(10) NULL DEFAULT NULL,
-	companyid INT(11) NULL DEFAULT NULL,
-	dept VARCHAR(128) NULL DEFAULT NULL,
-	iprestrict VARCHAR(128) NULL DEFAULT NULL,
-	authedNavs VARCHAR(512) NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `auth_user` (
+  `userid` bigint(10) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `realname` varchar(128) NOT NULL,
+  `password` varchar(160) NOT NULL,
+  `gender` tinyint(4) default NULL COMMENT '0:女;1:男',
+  `email` varchar(128) default NULL,
+  `phone` varchar(32) default NULL,
+  `mobile` varchar(32) default NULL,
+  `status` int(4) NOT NULL,
+  `description` varchar(256) default NULL,
+  `type` int(4) NOT NULL,
+  `lastLoginTime` bigint(10) default NULL,
+  `lockedAt` bigint(10) default NULL,
+  `created` bigint(10) default NULL,
+  `modified` bigint(10) default NULL,
+  `companyid` int(11) default NULL COMMENT '所属公司',
+  `segmentid` int(11) default NULL COMMENT '所属号段',
+  `iprestrict` varchar(128) default NULL,
+  `authedNavs` varchar(512) default NULL,
+  `dept` varchar(512) default NULL,
+  `code` varchar(64) default NULL COMMENT '用户编码'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
+DROP TABLE IF EXISTS user_temp;
+CREATE TABLE `user_temp` (
+  `code` varchar(64) character set latin1 default NULL COMMENT '用户编码',
+  `segmentid` int(11) default NULL COMMENT '所属号段',
+  `companyid` int(11) default NULL COMMENT '所属企业',
+  `passwd` varchar(160) character set latin1 default NULL COMMENT '初始密码'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 # Dumping structure for table auth_userrole_relation
 DROP TABLE IF EXISTS auth_userrole_relation;
@@ -131,24 +141,22 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `segment`;
 CREATE TABLE `segment` (
-	`id` INT(11) NOT NULL,
-	`companyId` INT(11) NOT NULL,
-	`startId` INT(11) NOT NULL COMMENT '起始值',
-	`size` INT(11) NOT NULL COMMENT '号段大小',
-	`status` INT(4) NOT NULL DEFAULT '1' COMMENT '0:已回收 1:正在使用'
-)
-COMMENT='号段'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(11) NOT NULL,
+  `companyId` int(11) NOT NULL,
+  `description` varchar(512) default NULL,
+  `startId` int(11) default NULL COMMENT '起始值',
+  `endId` int(11) default NULL COMMENT '结束值',
+  `size` int(11) default NULL COMMENT '号段大小',
+  `status` int(4) default '1' COMMENT '0:已回收 1:正在使用',
+  `expireDate` varchar(16) default NULL,
+  `initPassword` varchar(16) default '' COMMENT '初始密码，明文存放'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='号段'
 
 DROP TABLE IF EXISTS `seg_quiz_relation`;
 CREATE TABLE `seg_quiz_relation` (
-	`segmentid` INT(11) NOT NULL,
-	`quizid` INT(11) NOT NULL,
-	`startDate` VARCHAR(20) NOT NULL COMMENT '开始日期',
-	`expireDate` VARCHAR(20) NOT NULL COMMENT '废止日期'
-)
-COMMENT='号段-试题关联'
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `segmentid` INT(11) NOT NULL,
+  `quizid` INT(11) NOT NULL
+) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='号段-试题关联'
 
 DROP TABLE IF EXISTS `quiz_result`;
 CREATE TABLE `quiz_result` (

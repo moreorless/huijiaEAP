@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.nutz.dao.Cnd;
@@ -11,19 +12,38 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
 import com.huijia.eap.quiz.dao.QuizDao;
-import com.huijia.eap.quiz.dao.QuizItemDao;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.quiz.data.SegmentQuizRelation;
 
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz> {
+
+	private final static short QUIZ_TYPE_STANDALONE = 0;
+	private final static short QUIZ_TYPE_PARENT = 1;
+	private final static short QUIZ_TYPE_CHILD = 2;
+
+	public static short getQuizTypeStandalone() {
+		return QUIZ_TYPE_STANDALONE;
+	}
+
+	public static short getQuizTypeParent() {
+		return QUIZ_TYPE_PARENT;
+	}
+
+	public static short getQuizTypeChild() {
+		return QUIZ_TYPE_CHILD;
+	}
 
 	@Inject
 	private QuizItemService quizItemService;
 
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
+
+	@Inject
+	private SegmentQuizRelationService segmentQuizRelationService;
 
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -53,6 +73,17 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 
 	public List<Quiz> fetchListByParentId(long parentId) {
 		return ((QuizDao) this.dao()).fetchListByParentId(parentId);
+	}
+
+	public List<Quiz> fetchQuizListBySegmentId(long segmentId) {
+		LinkedList<Quiz> quizList = new LinkedList<Quiz>();
+		List<SegmentQuizRelation> list = segmentQuizRelationService
+				.fetchListBySegmentId(segmentId);
+		for(SegmentQuizRelation r : list){
+			Quiz q = this.fetch(r.getQuizId());
+			quizList.add(q);
+		}
+		return quizList;
 	}
 
 	public void deleteByParentId(long parentId) {
