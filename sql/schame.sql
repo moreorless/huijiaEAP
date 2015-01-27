@@ -161,12 +161,16 @@ CREATE TABLE `seg_quiz_relation` (
 DROP TABLE IF EXISTS `quiz_result`;
 CREATE TABLE `quiz_result` (
 	`id` INT(11) NOT NULL,
-	`userid` INT(11) NOT NULL,
-	`quizid` INT(11) NOT NULL,
-	`testDate` VARCHAR(20) NOT NULL,
-	`answer` VARCHAR(512) NOT NULL,
-	`score` INT(10) NOT NULL,
-	`scoreByCategory` VARCHAR(512) NOT NULL
+	`userid` INT(11) NOT NULL COMMENT '答题者id',
+	`companyId` INT(11) NOT NULL COMMENT '答题者公司id',
+	`quizid` INT(11) NOT NULL COMMENT '试卷id',
+	`timestamp` INT(11) NOT NULL COMMENT '答题时间',
+	`answer` VARCHAR(512) NOT NULL COMMENT '答案明细',
+	`score` INT(10) NOT NULL COMMENT '总分',
+	`scoreJson` VARCHAR(512) NOT NULL COMMENT '各类型得分',
+	`valid` TINYINT(1) NOT NULL COMMENT '是否有效',
+	`categoryId` INT(10) NOT NULL COMMENT '评定类型id',
+	`categoryName` VARCHAR(128) NOT NULL COMMENT '评定类型名称'
 )
 COMMENT='测试结果'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;

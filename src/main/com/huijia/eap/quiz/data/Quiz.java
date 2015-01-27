@@ -1,11 +1,15 @@
 package com.huijia.eap.quiz.data;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
+import org.nutz.json.Json;
 
 import com.huijia.eap.commons.mvc.validate.annotation.ValidateType;
 import com.huijia.eap.commons.mvc.validate.annotation.Validations;
@@ -254,4 +258,51 @@ public class Quiz {
 		this.evaluations = evaluations;
 	}
 
+	private List<QuizCategory> _categoryList = null;
+	/**
+	 * 获取试卷分类
+	 * @return
+	 */
+	public List<QuizCategory> getCategories(){
+		if(categoryJson == null) {
+			return null;
+		}
+		
+		if(_categoryList != null) return _categoryList;
+		
+		_categoryList = new ArrayList<QuizCategory>();
+		List<Map> _list = (List)Json.fromJson(categoryJson);
+		Iterator<Map> iter = _list.iterator();
+		while(iter.hasNext()){
+			Map _obj = iter.next();
+			int id = (int)_obj.get("id");
+			String name = (String)_obj.get("name");
+			QuizCategory category = new QuizCategory(id, name);
+			_categoryList.add(category);
+		}
+		
+		return _categoryList;
+	}
+	public QuizCategory getCategoryByName(String categoryName){
+		List<QuizCategory> categoryList = this.getCategories();
+		Iterator<QuizCategory> iter = categoryList.iterator();
+		while(iter.hasNext()){
+			QuizCategory category = iter.next();
+			if(category.getName().equals(categoryName)){
+				return category;
+			}
+		}
+		return null;
+	}
+	public QuizCategory getCategoryById(int categoryId){
+		List<QuizCategory> categoryList = this.getCategories();
+		Iterator<QuizCategory> iter = categoryList.iterator();
+		while(iter.hasNext()){
+			QuizCategory category = iter.next();
+			if(category.getId() == categoryId){
+				return category;
+			}
+		}
+		return null;
+	}
 }

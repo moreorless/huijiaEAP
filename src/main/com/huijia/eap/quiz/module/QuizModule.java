@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.module;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +45,7 @@ import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
+import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 
@@ -65,6 +67,9 @@ public class QuizModule {
 
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
+	
+	@Inject
+	private QuizResultService quizResultService;
 
 	Bundle bundle = new Bundle("quiz");
 
@@ -475,10 +480,19 @@ public class QuizModule {
 	@Ok("jsp:jsp.quiz.test.report")
 	public void answer(HttpServletRequest request, @Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
-		Map<Long, String> answerMap = (Map<Long, String>)Json.fromJson(answerJson);
-		for(String answer : answerMap.values()){
-			System.out.println(answer);
+		
+		User user = Auths.getUser(request);
+		
+		// 计算并存储答题结果
+		Map<String, String> _answer = (Map<String, String>)Json.fromJson(answerJson); 
+		Map<Long, String> answerMap = new HashMap<Long, String>();
+		for(String key : _answer.keySet()){
+			long questionId = Long.parseLong(key);
+			answerMap.put(questionId, _answer.get(key));
 		}
+		quizResultService.storeResult(user.getUserId(), quiz, answerMap);
+		
+		
 	}
 
 	/**

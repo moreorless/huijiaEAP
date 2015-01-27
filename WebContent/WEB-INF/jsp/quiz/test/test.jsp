@@ -12,8 +12,10 @@
 		body {background-color: #f3f3f3}
 		#scrollWrapper {overflow: auto;height: 100%}
 		
-		#tip-dialog {display:none;position:absolute;background-color:#ee6666;width:160px;height:40px;z-index:9999;text-align: center;padding-top: 10px;color: #333}
-		#tip-dialog span {color: green; font-weight: bold; font-size: 18px;}
+		#tip-dialog {display:none;position:absolute;z-index:9999;width: 250px;}
+		#tip-dialog .content {float:left}
+		#tip-dialog .content span {color: green; font-weight: bold; font-size: 18px;}
+		#tip-dialog button {float:right; margin:5px;}
 	</style>
 </head>
 <body>
@@ -65,7 +67,10 @@
 <%@ include file="/includes/footer_huijia.jsp" %>
 </div>
 
-<div id="tip-dialog"></div>
+<div id="tip-dialog" class="alert alert-danger">
+	<div class="content"></div>
+	<button type="button" class="close"><span>&times;</span></button>
+</div>
 
 
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
@@ -93,24 +98,28 @@
 			});
 			if(!_answered) {
 				_allAnswered = false;
-				$('#tip-dialog').html('第&nbsp;<span>' + ( questionIndex + 1 )  + '</span>&nbsp;题尚未回答。');
 				
 				// scroll to 
 				$("#scrollWrapper").animate({ scrollTop: $(this).height() *  (questionIndex) + 300}, 400);
-				
-				$('#tip-dialog').css({
-					top : $(window).height()/2 - 100,
-					left : $(window).width()/2 - 80
-				});
-				$('#tip-dialog').show();
-
-				setTimeout(function(){$('#tip-dialog').hide('slow');}, 4000);
-				
+				TipHandler.show('第&nbsp;<span>' + ( questionIndex + 1 )  + '</span>&nbsp;题尚未回答。');
+								
 				return false;
 			}
 		});
 		
 		return _allAnswered;
+	}
+	
+	var TipHandler = {
+		show : function(htmlContent){
+			$('#tip-dialog .content').html(htmlContent);
+			$('#tip-dialog').css({
+				top : $(window).height()/2 - 100,
+				left : $(window).width()/2 - 80
+			});
+			$('#tip-dialog').show();
+			setTimeout(function(){$('#tip-dialog').hide();}, 3000);
+		}
 	}
 	
 	var BtnHandler = {
@@ -138,6 +147,10 @@
 				$('#answerJson').val($.toJSON(answerMap));
 				
 				$('#quiz-form').submit();
+			});
+			
+			$('#tip-dialog .close').click(function(){
+				$('#tip-dialog').hide();
 			});
 		}
 	}

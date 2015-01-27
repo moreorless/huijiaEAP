@@ -1,6 +1,9 @@
 package com.huijia.eap.quiz.data;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
@@ -35,6 +38,8 @@ public class QuizItem {
 	@Column
 	private String optionJson;
 
+	
+	private boolean _bConverted = false;
 	private LinkedList<QuizItemOption> options = new LinkedList<QuizItemOption>();
 
 	public long getQuizId() {
@@ -70,6 +75,9 @@ public class QuizItem {
 	}
 
 	public LinkedList<QuizItemOption> getOptions() {
+		if(!_bConverted) {
+			this.convertOptions();
+		}
 		return options;
 	}
 
@@ -88,6 +96,34 @@ public class QuizItem {
 	 * 转换选项
 	 */
 	public void convertOptions(){
-		this.options = (LinkedList<QuizItemOption>)Json.fromJson(optionJson);
+		LinkedList<QuizItemOption> optionList = new LinkedList<QuizItemOption>();
+		List _list = (List)Json.fromJson(optionJson); 
+		Iterator<Map> iter = _list.iterator();
+		while(iter.hasNext()){
+			Map optObj = iter.next();
+			String index = (String)optObj.get("index");
+			String content = (String)optObj.get("content");
+			String categoryName = (String)optObj.get("categoryName");
+			int value = (int)optObj.get("value");
+			QuizItemOption option = new QuizItemOption(index, content, categoryName, value);
+			optionList.add(option);
+		}
+		
+		this.options = optionList;
+		_bConverted = true;
+	}
+	
+	public QuizItemOption getOption(String optIndex){
+		if(!_bConverted) {
+			this.convertOptions();
+		}
+		Iterator<QuizItemOption> iter = this.options.iterator();
+		while(iter.hasNext()){
+			QuizItemOption option = iter.next();
+			if(option.getIndex().equals(optIndex)){
+				return option;
+			}
+		}
+		return null;
 	}
 }
