@@ -167,6 +167,10 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 		((SegmentDao) this.dao()).deleteBySegmentId(segmentId);
 	}
 
+	public List<Segment> fetchListByCompanyId(long companyId) {
+		return ((SegmentDao) this.dao()).fetchListByCompanyId(companyId);
+	}
+
 	/**
 	 * 分页返回所有用户列表
 	 */
