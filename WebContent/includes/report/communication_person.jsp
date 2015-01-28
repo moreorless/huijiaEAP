@@ -1,8 +1,10 @@
-﻿<h1 id="沟通风格与冲突处理方式的概念">Ⅰ 沟通风格与冲突处理方式的概念</h1>
-<h2 id="沟通风格的概念">沟通风格的概念</h2>
+﻿<%@ page contentType="text/html;charset=utf-8" language="java" %>
+<%@ include file="/includes/taglibs.jsp" %>
+<h1>Ⅰ 沟通风格与冲突处理方式的概念</h1>
+<h2>沟通风格的概念</h2>
 <p>社会是人与人相互作用的产物，人也是社会的动物，在生活和工作中中免不了沟通。因此，沟通能力是一个人生存和发展的必备技能，在某些程度上，也决定了一个人能够取得的个人成就和社会成就。</p>
 <p>沟通风格是个体在信息沟通活动中表现出的个性风格，体现了管理者人际关系的基本结构与面貌。它不仅与组织的凝聚力、生产效率密切相关，而且会影响到员工的工作满意度及其绩效水平。沟通风格包括以下四种典型风格：支配型、表达型、和蔼型和分析型。</p>
-<h2 id="冲突处理方式的概念">冲突处理方式的概念</h2>
+<h2>冲突处理方式的概念</h2>
 <p>身处于组织和团队中，就意味着处于冲突中。</p>
 <p>冲突是日常社会关系中的重要组成部分，我们的生活越来越有压力，因此人际间冲突也越来越多，而且冲突也毫无疑问是组织行为和管理的主要领域之一，是现代管理中的重要概念。冲突花费了组织和个人大量的时间和精力。有心理研究调查发现，CEO 大概要花18%的时间处理冲突，而中级管理者要花掉26%的时间来处理冲突问题。冲突是没有必要也是没有办法完全在组织中消除的。冲突处理中，对冲突采取何种处理方式会直接影响到冲突管理的效果和效率，是冲突中的重要要素之一。</p>
 <p>国际著名心理学家Rahim将人际冲突的类型在他人利益的关注(concern for others)维度和自己利益关注（concern for self）两个维度上划分成五个类型：整合（integrating），谦让（obliging），支配（dominating），回避（avoiding）和折中（compromising），这两种维度描绘了冲突中特定个体的动机取向。</p>
@@ -10,9 +12,9 @@
 <img src="${base}/images/report/conflict.png" alt="五种冲突处理方式" />
 <p class="caption">五种冲突处理方式</p>
 </div>
-<h1 id="影响沟通风格与冲突处理方式的因素">Ⅱ 影响沟通风格与冲突处理方式的因素</h1>
-<h2 id="沟通风格的影响因素">1.沟通风格的影响因素</h2>
-<h3 id="个人因素">（1）个人因素</h3>
+<h1>Ⅱ 影响沟通风格与冲突处理方式的因素</h1>
+<h2>1.沟通风格的影响因素</h2>
+<h3>（1）个人因素</h3>
 <p>个人因素对个人的沟通风格有着重要的影响，主要包括个人经历和性格特点等。个人经历对个体的沟通风格有着重要的影响，尤其是早期的个人经历的影响。</p>
 <p>性格是人格中最重要的核心，它在一定程度上对个人的沟通风格影响很大。内向的人就不太容易形成支配型或者表达型的沟通风格；外项型的个体很难在沟通中沉默寡言，成为分析型的沟通风格。</p>
 <h3 id="环境因素">（2）环境因素</h3>
@@ -38,11 +40,29 @@
 </div>
 <p>在各个维度中，<span class="math"><em>m</em><em>y</em><em>S</em><em>t</em><em>y</em><em>l</em><em>e</em><sub>0</sub><em>维</em><em>度</em><em>得</em><em>分</em><em>最</em><em>高</em>，<em>得</em><em>分</em><em>为</em></span>{maxscore_0}分，说明您的沟通风格为${myStyle_0}型(此处为最高分维度类型)。</p>
 <h2 id="二您的特点关键词">二． 您的特点关键词</h2>
-<p>${myStyle_keyword_0}</p>
+<p>
+<c:forEach items="${quiz.childList[0].evaluations}" var="evaluation">
+<c:if test="${evaluation.categoryId == resultlist[0].categoryId}">
+${evaluation.feature}
+</c:if>
+</c:forEach>
+</p>
 <h2 id="三沟通特点">三．沟通特点</h2>
-<p>${myStyle_character_0}</p>
+<p>
+<c:forEach items="${quiz.childList[0].evaluations}" var="evaluation">
+<c:if test="${evaluation.categoryId == resultlist[0].categoryId}">
+${evaluation.evaluation}
+</c:if>
+</c:forEach>
+</p>
 <h2 id="四.沟通方面的建议">四.沟通方面的建议</h2>
-<p>${myStyle_advice_0}</p>
+<p>
+<c:forEach items="${quiz.childList[0].evaluations}" var="evaluation">
+<c:if test="${evaluation.categoryId == resultlist[0].categoryId}">
+${evaluation.suggestion}
+</c:if>
+</c:forEach>
+</p>
 <h1 id="您的冲突处理方式详解">Ⅴ 您的冲突处理方式详解</h1>
 <h2 id="一各个维度得分图-1">一．各个维度得分图</h2>
 <div class="figure">
@@ -51,9 +71,21 @@
 </div>
 <p>在各个维度中，<span class="math"><em>m</em><em>y</em><em>S</em><em>t</em><em>y</em><em>l</em><em>e</em><sub>1</sub><em>维</em><em>度</em><em>得</em><em>分</em><em>最</em><em>高</em>，<em>得</em><em>分</em><em>为</em></span>{maxscore_1}分，说明您的冲突处理方式为${myStyle_1}型。</p>
 <h2 id="二您的冲突处理特点">二．您的冲突处理特点：</h2>
-<p>${myStyle_character_1}</p>
+<p>
+<c:forEach items="${quiz.childList[1].evaluations}" var="evaluation">
+<c:if test="${evaluation.categoryId == resultlist[1].categoryId}">
+${evaluation.evaluation}
+</c:if>
+</c:forEach>
+</p>
 <h2 id="三给您的建议">三．给您的建议:</h2>
-<p>${myStyle_advice_1}</p>
+<p>
+<c:forEach items="${quiz.childList[1].evaluations}" var="evaluation">
+<c:if test="${evaluation.categoryId == resultlist[1].categoryId}">
+${evaluation.suggestion}
+</c:if>
+</c:forEach>
+</p>
 <h1 id="心理测评师给您的建议">Ⅵ 心理测评师给您的建议</h1>
 <h2 id="一在沟通前做好准备">一、在沟通前做好准备</h2>
 <p>在沟通前做好准备是必要的。完备的准备能够提升您的沟通效果，而且保持这种良好的习惯，您的沟通能力也会稳步提升。</p>

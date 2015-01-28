@@ -257,20 +257,34 @@ public class Quiz {
 	public void setEvaluations(List<QuizEvaluation> evaluations) {
 		this.evaluations = evaluations;
 	}
+	
+	
 
-	private List<QuizCategory> _categoryList = null;
+	public String getReporttpl() {
+		return reporttpl;
+	}
+
+	public void setReporttpl(String reporttpl) {
+		this.reporttpl = reporttpl;
+	}
+
+	public void setCategoryList(List<QuizCategory> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	private List<QuizCategory> categoryList = null;
 	/**
 	 * 获取试卷分类
 	 * @return
 	 */
-	public List<QuizCategory> getCategories(){
+	public List<QuizCategory> getCategoryList(){
 		if(categoryJson == null) {
 			return null;
 		}
 		
-		if(_categoryList != null) return _categoryList;
+		if(categoryList != null) return categoryList;
 		
-		_categoryList = new ArrayList<QuizCategory>();
+		categoryList = new ArrayList<QuizCategory>();
 		List<Map> _list = (List)Json.fromJson(categoryJson);
 		Iterator<Map> iter = _list.iterator();
 		while(iter.hasNext()){
@@ -278,13 +292,13 @@ public class Quiz {
 			int id = (int)_obj.get("id");
 			String name = (String)_obj.get("name");
 			QuizCategory category = new QuizCategory(id, name);
-			_categoryList.add(category);
+			categoryList.add(category);
 		}
 		
-		return _categoryList;
+		return categoryList;
 	}
 	public QuizCategory getCategoryByName(String categoryName){
-		List<QuizCategory> categoryList = this.getCategories();
+		List<QuizCategory> categoryList = this.getCategoryList();
 		Iterator<QuizCategory> iter = categoryList.iterator();
 		while(iter.hasNext()){
 			QuizCategory category = iter.next();
@@ -295,7 +309,7 @@ public class Quiz {
 		return null;
 	}
 	public QuizCategory getCategoryById(int categoryId){
-		List<QuizCategory> categoryList = this.getCategories();
+		List<QuizCategory> categoryList = this.getCategoryList();
 		Iterator<QuizCategory> iter = categoryList.iterator();
 		while(iter.hasNext()){
 			QuizCategory category = iter.next();

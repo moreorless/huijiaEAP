@@ -43,6 +43,7 @@ import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
@@ -490,9 +491,18 @@ public class QuizModule {
 			long questionId = Long.parseLong(key);
 			answerMap.put(questionId, _answer.get(key));
 		}
-		quizResultService.storeResult(user.getUserId(), quiz, answerMap);
+		List<QuizResult> resultList = quizResultService.storeResult(user.getUserId(), quiz, answerMap);
+		request.setAttribute("resultlist", resultList);
 		
+		List<Quiz> quizList = new ArrayList<Quiz>();
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+			quizList.add(quiz);
+		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+			quizList.addAll(quiz.getChildList());
+		}
+		request.setAttribute("quizlist", quizList);
 		
+		request.setAttribute("quiz", quiz);
 	}
 
 	/**
@@ -500,8 +510,23 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	public void report() {
-
+	public void report(HttpServletRequest request, @Param("quizId") long quizId) {
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+		
+		User user = Auths.getUser(request);
+	
+		List<QuizResult> resultList = quizResultService.getQuizResult(user.getUserId(), quizId);
+		request.setAttribute("resultlist", resultList);
+		
+		List<Quiz> quizList = new ArrayList<Quiz>();
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+			quizList.add(quiz);
+		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+			quizList.addAll(quiz.getChildList());
+		}
+		request.setAttribute("quizlist", quizList);
+		
+		request.setAttribute("quiz", quiz);
 	}
 
 }

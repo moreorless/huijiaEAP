@@ -3,6 +3,7 @@ package com.huijia.eap.quiz.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import org.nutz.json.Json;
 import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.service.TblIdsEntityService;
-import com.huijia.eap.quiz.dao.QuizResultDao;
+import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizConstant;
@@ -48,12 +49,24 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		return this.dao().clear(getEntityClass(), Cnd.where("quizId", "=", quizId));
 	}
 	
-	public QuizResult getQuizResult(long userId, long quizId){
-		List<QuizResult> results = this.dao().query(getEntityClass(), Cnd.where("quizId", "=", quizId).and("userId", "=", userId).desc("timestamp"));
-		if(results.size() > 0){
-			return results.get(0);
+	public List<QuizResult> getQuizResult(long userId, long quizId){
+		List<QuizResult> resultList = new LinkedList<QuizResult>();
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+		
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+			for(Quiz _quiz : quiz.getChildList()){
+				List<QuizResult> _rList = getQuizResult(userId, _quiz.getId());
+				resultList.addAll(_rList);
+			}
+			return resultList;
 		}
-		return null;
+		
+		// 如果同一用户 对同一问卷，回答了多次，取最近一次
+		List<QuizResult> tmpList = this.dao().query(getEntityClass(), Cnd.where("quizId", "=", quizId).and("userId", "=", userId).desc("timestamp"));
+		if(tmpList.size() > 0){
+			resultList.add(tmpList.get(0));
+		}
+		return resultList;
 	}
 	
 	public List<QuizResult> storeResult(long userId, Quiz quiz, Map<Long, String> answerMap){
@@ -123,7 +136,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		quizResult.setId(getTblMaxIdWithUpdate());
 		quizResult.setQuizId(quiz.getId());
 		quizResult.setUserId(userId);
-		quizResult.setCompanyId(user.getCompanyid());
+		quizResult.setCompanyId(user.getCompanyId());
 		quizResult.setTimestamp(System.currentTimeMillis());
 		quizResult.setAnswer(Json.toJson(quizAnswer));
 		quizResult.setScore(totalScore);

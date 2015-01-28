@@ -1,8 +1,11 @@
 package com.huijia.eap.quiz.data;
 
+import java.util.Map;
+
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
+import org.nutz.json.Json;
 
 /**
  * 答题结果
@@ -69,6 +72,7 @@ public class QuizResult {
 	@Column
 	private String categoryName;
 
+	
 	public long getId() {
 		return id;
 	}
@@ -157,6 +161,12 @@ public class QuizResult {
 		this.categoryName = categoryName;
 	}
 
+	private Map<String, Integer> scoreMap = null;
 	
+	public Map<String, Integer> getScoreMap(){
+		if(scoreMap != null) return scoreMap;
+		scoreMap = (Map<String, Integer>)Json.fromJson(scoreJson);
+		return scoreMap;
+	}
 	
 }
