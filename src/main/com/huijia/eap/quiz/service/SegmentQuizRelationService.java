@@ -34,7 +34,7 @@ public class SegmentQuizRelationService extends
 	}
 
 	public void deleteBySegmentId(long segmentId) {
-		((SegmentQuizRelationDao) this.dao()).deleteByQuizId(segmentId);
+		((SegmentQuizRelationDao) this.dao()).deleteBySegmentId(segmentId);
 	}
 
 }

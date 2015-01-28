@@ -27,4 +27,9 @@ public class SegmentDao extends NutDao {
 	public void deleteBySegmentId(long segmentId) {
 		this.clear(Segment.class, Cnd.where("id", "=", segmentId));
 	}
+
+	public List<Segment> fetchListByCompanyId(long companyId) {
+		return this
+				.query(Segment.class, Cnd.where("companyid", "=", companyId));
+	}
 }

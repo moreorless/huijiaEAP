@@ -3,7 +3,6 @@ package com.huijia.eap.quiz.module;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,12 +21,15 @@ import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.mvc.Pager;
+import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.Segment;
+import com.huijia.eap.quiz.data.UserTemp;
 import com.huijia.eap.quiz.service.CompanyService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.SegmentQuizRelationService;
 import com.huijia.eap.quiz.service.SegmentService;
+import com.huijia.eap.quiz.service.UserTempService;
 
 @IocBean
 @InjectName
@@ -54,6 +56,9 @@ public class SegmentModule {
 	private UserService userService;
 
 	@Inject
+	private UserTempService userTempService;
+
+	@Inject
 	private SegmentQuizRelationService segmentQuizRelationService;
 
 	@At
@@ -61,15 +66,18 @@ public class SegmentModule {
 	public Pager<Segment> list(HttpServletRequest request,
 			@Param("..") Pager<Segment> pager,
 			@Param("companyId") long companyId) {
+		Company company = companyService.fetch(companyId);
+		request.setAttribute("company", company);
 		return segmentService.paging(Cnd.where("companyId", "=", companyId),
 				pager);
 	}
 
 	@At
 	@Ok("raw")
-	public File exportUsers(HttpServletRequest request,
-			@Param("..") Segment segment, @Param("id") long id) {
-		File file = new File(id + ".txt");
+	public File exportUsers(HttpServletRequest request, @Param("id") long id) {
+		Segment segment = segmentService.fetch(id);
+		File file = new File(companyService.fetch(segment.getCompanyId())
+				.getName() + id + ".segment.txt");
 		if (file.exists())
 			file.delete();
 		try {
@@ -82,7 +90,15 @@ public class SegmentModule {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
-			out.write("测试java 文件操作\r\n".getBytes());
+			List<UserTemp> list = userTempService.fetchListBySegmentId(id);
+			out.write(("企业名称: "
+					+ companyService.fetch(segment.getCompanyId()).getName() + "\r\n")
+					.getBytes());
+			out.write("号段编码\t\t\t初始密码\r\n".getBytes());
+			for (UserTemp userTemp : list) {
+				out.write((userTemp.getCode() + "\t\t\t"
+						+ segment.getInitPassword() + "\r\n").getBytes());
+			}
 			out.close();
 
 		} catch (IOException e) {
@@ -97,8 +113,12 @@ public class SegmentModule {
 	@Ok("jsp:jsp.segment.listuser")
 	public void listUsers(HttpServletRequest request, @Param("id") long id) {
 
+		Segment segment = segmentService.fetch(id);
+		Company company = companyService.fetch(segment.getCompanyId());
 		List<User> userList = userService.fetchBySegmentId(id);
 		request.setAttribute("userList", userList);
+		request.setAttribute("segment", segment);
+		request.setAttribute("company", company);
 	}
 
 	@At
@@ -118,12 +138,11 @@ public class SegmentModule {
 			segment = segmentService.fetchSegmentById(id);
 		}
 		segment.setCompanyId(companyId);
-		
 		request.setAttribute("segment", segment);
 	}
 
 	@At
-	@Ok("forward:/company/list")
+	@Ok("forward:/segment/list")
 	@Chain("validate")
 	public void edit(HttpServletRequest request, @Param("..") Segment segment) {
 		segmentService.update(segment);
@@ -136,5 +155,14 @@ public class SegmentModule {
 
 		// 组合问卷1,个人性格分析
 		segmentService.insert(segment);
+	}
+
+	@At
+	@Ok("forward:/segment/list")
+	public void delete(HttpServletRequest request, @Param("id") long id,
+			@Param("companyId") long companyId) {
+
+		// 组合问卷1,个人性格分析
+		segmentService.deleteBySegmentId(id);
 	}
 }

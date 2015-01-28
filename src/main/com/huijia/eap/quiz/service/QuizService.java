@@ -44,6 +44,7 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 
 	@Inject
 	private SegmentQuizRelationService segmentQuizRelationService;
+	
 
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -62,13 +63,36 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	public List<Quiz> fetchAll() {
 		return super.query(null, null);
 	}
-	
+
+	public void deleteByQuizId(long id) {
+		List<Quiz> childList = this.fetchListByParentId(id);
+
+		for (Quiz q : childList) {
+			this.delete(q.getId());
+			quizItemService.deleteByQuizId(q.getId());
+			quizEvaluationService.deleteByQuizId(q.getId());
+			segmentQuizRelationService.deleteByQuizId(id);
+		}
+
+		// Table: quiz
+		this.delete(id);
+		// Table: quiz_item
+		quizItemService.deleteByQuizId(id);
+		// Table: quiz_evaluation
+		quizEvaluationService.deleteByQuizId(id);
+		//Table: seg_quiz_relation
+		segmentQuizRelationService.deleteByQuizId(id);
+	}
+
 	/**
 	 * 显示多有可见的试卷 (独立试卷、复合试卷)
+	 * 
 	 * @return
 	 */
-	public List<Quiz> fetchDisplayQuizs(){
-		return super.query(Cnd.where("type", "=", QuizConstant.QUIZ_TYPE_STANDALONE).or("type", "=", QuizConstant.QUIZ_TYPE_PARENT), null);
+	public List<Quiz> fetchDisplayQuizs() {
+		return super.query(
+				Cnd.where("type", "=", QuizConstant.QUIZ_TYPE_STANDALONE).or(
+						"type", "=", QuizConstant.QUIZ_TYPE_PARENT), null);
 	}
 
 	public List<Quiz> fetchListByParentId(long parentId) {
@@ -79,7 +103,7 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 		LinkedList<Quiz> quizList = new LinkedList<Quiz>();
 		List<SegmentQuizRelation> list = segmentQuizRelationService
 				.fetchListBySegmentId(segmentId);
-		for(SegmentQuizRelation r : list){
+		for (SegmentQuizRelation r : list) {
 			Quiz q = this.fetch(r.getQuizId());
 			quizList.add(q);
 		}
@@ -112,14 +136,14 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 		Quiz quiz = this.fetch(id);
 
 		// 如果是复合试卷，递归获取子试卷
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			List<Quiz> children = this.fetchListByParentId(id);
-			for(Quiz _quiz : children) {
+			for (Quiz _quiz : children) {
 				quiz.getChildList().add(this.fetchFullQuiz(_quiz.getId()));
 			}
 		}
-		
-		//获取题目
+
+		// 获取题目
 		List<QuizItem> itemList = quizItemService.getItemsByQuizId(id);
 		quiz.setItems(itemList);
 

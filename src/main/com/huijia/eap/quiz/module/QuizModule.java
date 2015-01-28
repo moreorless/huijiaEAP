@@ -48,6 +48,7 @@ import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
+import com.huijia.eap.quiz.service.SegmentQuizRelationService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 
 @IocBean
@@ -68,9 +69,12 @@ public class QuizModule {
 
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
-	
+
 	@Inject
 	private QuizResultService quizResultService;
+
+	@Inject
+	private SegmentQuizRelationService segmentQuizRelationService;
 
 	Bundle bundle = new Bundle("quiz");
 
@@ -155,7 +159,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.viewquiz")
-	@Fail("forward:/quiz/list")
+	// @Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View add(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -255,7 +259,7 @@ public class QuizModule {
 	 */
 	@At
 	// @Ok("jsp:jsp.quiz.viewquiz")
-	@Fail("forward:/quiz/list")
+	// @Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View edit(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -362,24 +366,11 @@ public class QuizModule {
 	// @Ok("forward:/quiz/list")
 	public View delete(@Param("id") long id) {
 
-		Quiz quiz = quizService.fetch(id);
-		List<Quiz> childList = quizService.fetchListByParentId(id);
+		quizService.deleteByQuizId(id);
 
-		for (Quiz q : childList) {
-			quizService.delete(q.getId());
-			quizItemService.deleteByQuizId(q.getId());
-			quizEvaluationService.deleteByQuizId(q.getId());
-		}
-
-		// Table: quiz
-		quizService.delete(id);
-		// Table: quiz_item
-		quizItemService.deleteByQuizId(id);
-		// Table: quiz_evaluation
-		quizEvaluationService.deleteByQuizId(id);
-
-		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
-			String s = "/quiz/prepare?operation=edit&id=" + quiz.getParentId();
+		if (quizService.fetch(id).getType() == QuizConstant.QUIZ_TYPE_CHILD) {
+			String s = "/quiz/prepare?operation=edit&id="
+					+ quizService.fetch(id).getParentId();
 			return new ViewWrapper(new ServerRedirectView(s), null);
 		}
 		return new ViewWrapper(new ForwardView("/quiz/list"), null);
@@ -443,8 +434,6 @@ public class QuizModule {
 			} else {
 				// 向页面返回错误信息
 				EC error = new EC("quiz.add.import.invalid.error", bundle);
-				String s = "/quiz/prepare?operation=addSubquiz&id="
-						+ quiz.getParentId();
 				throw ExceptionWrapper.wrapError(error);
 			}
 
@@ -462,11 +451,11 @@ public class QuizModule {
 	public void test(HttpServletRequest request, @Param("id") long id) {
 		Quiz quiz = QuizCache.me().getQuiz(id);
 		request.setAttribute("quiz", quiz);
-		
+
 		List<Quiz> quizList = new LinkedList<Quiz>();
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE) {
 			quizList.add(quiz);
-		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+		} else if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			quizList.addAll(quiz.getChildList());
 		}
 		request.setAttribute("quizlist", quizList);
@@ -479,15 +468,17 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	public void answer(HttpServletRequest request, @Param("quizId") long quizId, @Param("answerJson") String answerJson) {
+	public void answer(HttpServletRequest request,
+			@Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
-		
+
 		User user = Auths.getUser(request);
-		
+
 		// 计算并存储答题结果
-		Map<String, String> _answer = (Map<String, String>)Json.fromJson(answerJson); 
+		Map<String, String> _answer = (Map<String, String>) Json
+				.fromJson(answerJson);
 		Map<Long, String> answerMap = new HashMap<Long, String>();
-		for(String key : _answer.keySet()){
+		for (String key : _answer.keySet()) {
 			long questionId = Long.parseLong(key);
 			answerMap.put(questionId, _answer.get(key));
 		}

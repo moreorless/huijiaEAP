@@ -23,7 +23,6 @@
     <%@ include file="/includes/footer_huijia.jsp" %>
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/echarts/echarts.js"></script>
-<script type="text/javascript" src="${base}/js/huijia/report.js"></script>
 <script type="text/javascript">
 
 var quizMap = {};
@@ -47,13 +46,7 @@ var column_h_Options = [];
                 trigger: 'axis'
             },
             toolbox: {
-                show : true,
-                feature : {
-                    mark : {show: true},
-                    magicType : {show: true, type: ['line', 'bar']},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
-                }
+                show : false
             },
             calculable : true,
             xAxis : [
@@ -78,6 +71,32 @@ var column_h_Options = [];
             ]
         };
 </c:forEach>
+
+    
+    require.config({
+        paths: {
+            echarts: '${base}/js/echarts'
+        }
+    });
+
+    
+    require([
+         'echarts',
+         'echarts/chart/bar',
+         'echarts/theme/green'
+         ],
+         function(echarts, theme){
+            $('.eap-report').each(function(){
+                var data = $(this).attr('data');
+                if(data.indexOf('report:column_h') != -1){
+                    var quizIndex = data.substr(data.lastIndexOf(':') + 1);
+                    quizIndex = parseInt(quizIndex);
+                    var myChart = echarts.init($(this).get(0), theme);
+                    myChart.setOption(column_h_Options[quizIndex]);
+                }
+            });
+         });
+
 </script>
 </body>
 </html>

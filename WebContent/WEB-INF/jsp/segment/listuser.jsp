@@ -22,7 +22,7 @@
 <body>
 
 	<div id="wrap" class="container">
-
+		<h5>号段已注册用户列表&nbsp;&nbsp;&nbsp;&nbsp;(所属企业:${company.name}&nbsp;|&nbsp;号段范围:${segment.startId}-${segment.endId})</h5>
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
 				<tr>
