@@ -37,7 +37,6 @@ body {
 			class="table table-striped table-bordered table-hover">
 			<thead>
 				<tr>
-					<th id="id">号段ID</th>
 					<th id="description">描述</th>
 					<th id="startId">号段范围</th>
 					<th id="size">号段长度</th>
@@ -48,7 +47,6 @@ body {
 			<tbody>
 				<c:forEach items="${obj.data }" var="segment">
 					<tr>
-						<td data-id="${segment.id }">${segment.id}</td>
 						<td>${segment.description }</td>
 						<td>${segment.startId }-${segment.endId }</td>
 						<td>${segment.size }</td>
@@ -60,8 +58,8 @@ body {
 						</c:if>
 						<td><a href="${base}/segment/exportUsers?id=${segment.id}">导出</a>&nbsp;|&nbsp;
 							<a href="${base}/segment/listUsers?id=${segment.id}">查看用户</a>&nbsp;|&nbsp;
-							<a href="${base}/segment/prepare?operation=edit&id=${segment.id}">修改</a>
-							&nbsp;|&nbsp; <a href="${base}/segment/delete?id=${segment.id}">删除</a>
+							<a href="${base}/segment/prepare?operation=edit&id=${segment.id}&companyId=${company.id}">修改</a>
+							&nbsp;|&nbsp; <a href="${base}/segment/delete?id=${segment.id}&companyId=${company.id}">删除</a>
 						</td>
 					</tr>
 				</c:forEach>

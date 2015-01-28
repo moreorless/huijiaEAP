@@ -8,7 +8,6 @@ import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
-import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
@@ -17,6 +16,7 @@ import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.data.SegmentQuizRelation;
+import com.huijia.eap.quiz.data.UserTemp;
 
 @IocBean
 public class SegmentService extends TblIdsEntityService<Segment> {
@@ -33,6 +33,9 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private UserTempService userTempService;
 
 	@Inject
 	private QuizService quizService;
@@ -82,9 +85,15 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 	 * @param segment
 	 * @return
 	 */
-	private String generageUserName(long companyId, long startId, long offset) {
+	private String generageUserCode(long companyId, long startId, long offset) {
 		Company company = companyService.fetch(companyId);
-		return company.getCode() + "N" + startId + offset;
+		String s = "";
+		int maxLen = (MAXSEGMENTSIZE + "").length();
+		for (int i = 0; i + (startId + offset + "").length() < maxLen; i++)
+			s = s + "0";
+		s = s + (startId + offset + "");
+
+		return company.getCode() + "N" + s;
 	}
 
 	public Segment insert(Segment segment) {
@@ -93,6 +102,7 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 		 * 1-4位表示企业  第5位表示身份：S代表高级用户，N代表普通该用户  第6至12字段是用户号：用户号段可以重复使用
 		 * ，且可回收，全用数字，不用字母
 		 */
+		// 编辑号段
 		long startId = simpleAllocateSegment(segment.getCompanyId(),
 				segment.getSize());
 		if (startId == -1) {
@@ -102,28 +112,58 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 				return null;
 		}
 		segment.setStartId(startId);
-		segment.setEndId(startId + segment.getSize());
+		segment.setEndId(startId + segment.getSize() - 1);
 		segment = this.dao().insert(segment);
 
 		for (int i = 0; i < segment.getSize(); i++) {
-			User user = new User();
-			String name = generageUserName(segment.getCompanyId(),
+			UserTemp user = new UserTemp();
+			String code = generageUserCode(segment.getCompanyId(),
 					segment.getStartId(), i);
-			user.setName(name);
+			user.setCode(code);
 			user.setPassword(segment.getInitPassword());
 			user.setCompanyId(segment.getCompanyId());
 			user.setSegmentId(segment.getId());
-			userService.insert(user);
+			userTempService.insert(user);
 		}
+
+		// 添加可用试卷ID
+		String s = segment.getMyQuizIds();
+		if (s != null && s.length() > 0) {
+			String arr[] = s.split(",");
+			for (int i = 0; i < arr.length; i++) {
+				long quizId = Integer.parseInt(arr[i]);
+				SegmentQuizRelation sqr = new SegmentQuizRelation();
+				sqr.setQuizId(quizId);
+				sqr.setSegmentId(segment.getId());
+				segmentQuizRelationService.insert(sqr);
+			}
+		}
+
 		return segment;
 	}
 
 	public void update(Segment segment) {
+		// 更新的时候，用户的号段不允许修改，只能更改描述信息、过期时间和问卷权限
+		// 需要在关联表中先删除原来的关系，再重新插入新的关系
+		segmentQuizRelationService.deleteBySegmentId(segment.getId());
+		// 添加可用试卷ID
+		String s = segment.getMyQuizIds();
+		String arr[] = s.split(",");
+		for (int i = 0; i < arr.length; i++) {
+			long quizId = Integer.parseInt(arr[i]);
+			SegmentQuizRelation sqr = new SegmentQuizRelation();
+			sqr.setQuizId(quizId);
+			sqr.setSegmentId(segment.getId());
+			segmentQuizRelationService.insert(sqr);
+		}
+
 		this.dao().update(segment);
 	}
 
 	public void deleteBySegmentId(long segmentId) {
 		userService.deleteBySegmentId(segmentId);
+		userTempService.deleteBySegmentId(segmentId);
+		segmentQuizRelationService.deleteBySegmentId(segmentId);
 		((SegmentDao) this.dao()).deleteBySegmentId(segmentId);
 	}
 

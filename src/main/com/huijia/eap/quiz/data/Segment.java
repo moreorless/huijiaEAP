@@ -6,6 +6,10 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import com.huijia.eap.commons.mvc.validate.annotation.ValidateType;
+import com.huijia.eap.commons.mvc.validate.annotation.Validations;
+import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
+
 @Table("segment")
 public class Segment {
 
@@ -16,6 +20,7 @@ public class Segment {
 	@Column
 	private long companyId;
 
+	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.description.span", resource=true, bundle="segment")})
 	@Column
 	private String description;
 
@@ -23,6 +28,7 @@ public class Segment {
 	private short status;
 
 	@Column
+	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.expireDate.span", resource=true, bundle="segment")})
 	private String expireDate;
 
 	@Column
@@ -31,10 +37,17 @@ public class Segment {
 	@Column
 	private long endId;
 
+	
 	@Column
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "segment.add.size.span", resource = true, bundle = "segment"),
+			@ValidateType(type = Type.maxlength, parameters = { "9999999" }, errorMsg = "segment.add.size.span", resource = true, bundle = "segment"),
+			@ValidateType(type = Type.minlength, parameters = { "1" }, errorMsg = "segment.add.size.span", resource = true, bundle = "segment") })
 	private long size;
 
 	@Column
+	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.initPassword.span", resource=true, bundle="segment"),
+			@ValidateType(type = Type.pwd, errorMsg = "segment.add.initPassword.span", resource = true, bundle = "segment")})
 	private String initPassword;
 
 	private LinkedList<Quiz> myQuizList = new LinkedList<Quiz>();

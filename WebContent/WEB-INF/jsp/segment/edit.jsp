@@ -45,7 +45,7 @@ em {
 
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">用户数量</label>
+					<label class="col-sm-2 control-label">用户数量<em>*</em></label>
 					<div class="col-sm-2">
 						<input type="text" name="size" id="size" value="${segment.size}"
 							<c:if test="${param.operation == 'edit' }">readonly="readonly"</c:if> />
@@ -53,7 +53,7 @@ em {
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">初始密码</label>
+					<label class="col-sm-2 control-label">初始密码<em>*</em></label>
 					<div class="col-sm-2">
 						<input type="text" name="initPassword" id="initPassword"
 							value="${segment.initPassword}"
@@ -62,7 +62,7 @@ em {
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">是否启用</label>
+					<label class="col-sm-2 control-label">是否启用<em>*</em></label>
 					<div class="col-sm-2">
 						<select class="form-control" name="status" id="status"">
 							<option value="0"
@@ -74,7 +74,7 @@ em {
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">描述</label>
+					<label class="col-sm-2 control-label">描述<em>*</em></label>
 					<div class="col-sm-10">
 						<textarea class="form-control" rows="3" name="description"
 							id="description">${segment.description}</textarea>
@@ -82,7 +82,7 @@ em {
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">到期时间</label>
+					<label class="col-sm-2 control-label">到期时间<em>*</em></label>
 					<div class="col-sm-10">
 						<input type="text" name="expireDate" id="expireDate"
 							value="${segment.expireDate}" readonly="readonly" />
@@ -102,7 +102,7 @@ em {
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
 						<button class="btn btn-primary">保存</button>
-						<a href="${base}/company/list" class="btn btn-default">取消</a>
+						<a href="${base}/segment/list?companyId=${quiz.companyId}" class="btn btn-default">取消</a>
 					</div>
 				</div>
 			</fieldset>
@@ -131,8 +131,8 @@ em {
 		$(document).ready(function() {
 			$("#expireDate").datepicker();
 			$("#expireDate").blur();
-			<c:forEach items="${segment.myQuizList}" var="quiz">
-			setCheckBox("${quiz.id}");
+			<c:forEach items="${segment.myQuizList}" var="myquiz">
+			setCheckBox("${myquiz.id}");
 			</c:forEach>
 		});
 	</script>

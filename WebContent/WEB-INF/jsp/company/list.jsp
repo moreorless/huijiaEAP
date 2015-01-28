@@ -37,7 +37,7 @@
 		        <td>${company.description }</td>
 		        <td>
 		        	<a href="${base}/company/prepare?operation=edit&id=${company.id}">修改</a> &nbsp;|&nbsp;
-		        	<a href="${base}/segment/list?id=${company.id}">号段</a> &nbsp;|&nbsp;
+		        	<a href="${base}/segment/list?companyId=${company.id}">号段</a> &nbsp;|&nbsp;
 		        	<a href="${base}/company/report">报表</a>
 				</td>
 		      </tr>
