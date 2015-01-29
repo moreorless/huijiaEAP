@@ -89,6 +89,74 @@ public class User extends BaseTimedObject implements Serializable {
 	@Column
 	private long segmentId;
 
+	// 性别: 0女 1男
+	@Column
+	private long gender;
+
+	// 年龄
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.minlength, parameters = { "0" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.maxlength, parameters = { "150" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth") })
+	@Column
+	private long age;
+
+	// 工作年限
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.minlength, parameters = { "0" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.maxlength, parameters = { "150" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth") })
+	@Column
+	private long workAge;
+
+	// 教育程度 0:大专及以下 1:本科 2:硕士及以上
+	@Column
+	private long education;
+
+	// 职位信息 0:普通员工 1:中层管理 2:高层管理
+	@Column
+	private long jobTitle;
+
+	public long getGender() {
+		return gender;
+	}
+
+	public void setGender(long gender) {
+		this.gender = gender;
+	}
+
+	public long getAge() {
+		return age;
+	}
+
+	public void setAge(long age) {
+		this.age = age;
+	}
+
+	public long getWorkAge() {
+		return workAge;
+	}
+
+	public void setWorkAge(long workAge) {
+		this.workAge = workAge;
+	}
+
+	public long getEducation() {
+		return education;
+	}
+
+	public void setEducation(long education) {
+		this.education = education;
+	}
+
+	public long getJobTitle() {
+		return jobTitle;
+	}
+
+	public void setJobTitle(long jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
 	public long getCompanyId() {
 		return companyId;
 	}
@@ -241,8 +309,6 @@ public class User extends BaseTimedObject implements Serializable {
 	public void setAuthedNavs(String authedNavs) {
 		this.authedNavs = authedNavs;
 	}
-
-
 
 	@Override
 	public int hashCode() {
