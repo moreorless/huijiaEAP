@@ -63,7 +63,9 @@ public class User extends BaseTimedObject implements Serializable {
 	private String phone;
 
 	@Column
-	@Validations(rules = { @ValidateType(type = Type.regexp, parameters = { "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$" }, errorMsg = "user.add.mobile.validate", resource = true, bundle = "auth") })
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "user.add.mobile.validate", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.regexp, parameters = { "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$" }, errorMsg = "user.add.mobile.validate", resource = true, bundle = "auth") })
 	private String mobile;
 	@Column
 	private int status = STATUS_ENABLE;
@@ -87,6 +89,7 @@ public class User extends BaseTimedObject implements Serializable {
 	private long companyId;
 
 	@Column
+	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "user.add.segment.span", resource = true, bundle = "auth") })
 	private long segmentId;
 
 	// 性别: 0女 1男
@@ -111,10 +114,12 @@ public class User extends BaseTimedObject implements Serializable {
 
 	// 教育程度 0:大专及以下 1:本科 2:硕士及以上
 	@Column
+	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "user.add.education.span", resource = true, bundle = "auth") })
 	private long education;
 
 	// 职位信息 0:普通员工 1:中层管理 2:高层管理
 	@Column
+	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "user.add.jobtitle.span", resource = true, bundle = "auth") })
 	private long jobtitle;
 
 	// 用户编码

@@ -34,6 +34,7 @@ import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.Auths;
 import com.huijia.eap.auth.bean.User;
+import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.i18n.Bundle;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
@@ -44,11 +45,13 @@ import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
+import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.SegmentQuizRelationService;
+import com.huijia.eap.quiz.service.SegmentService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 
 @IocBean
@@ -76,6 +79,12 @@ public class QuizModule {
 	@Inject
 	private SegmentQuizRelationService segmentQuizRelationService;
 
+	@Inject
+	private UserService userService;
+	
+	@Inject
+	private SegmentService segmentService;
+
 	Bundle bundle = new Bundle("quiz");
 
 	/**
@@ -101,11 +110,25 @@ public class QuizModule {
 	@At
 	@Ok("jsp:jsp.quiz.test.quizlist")
 	public void enquizlist(HttpServletRequest request) {
-		List<Quiz> list = quizService.fetchDisplayQuizs();
-		request.setAttribute("quizlist", list);
+		// List<Quiz> list = quizService.fetchDisplayQuizs();
+		// request.setAttribute("quizlist", list);
 
-		User currentUser = Auths.getUser(request);
+		// User currentUser = Auths.getUser(request);
+		User currentUser = userService.fetchByName(Auths.getUser(request)
+				.getName());
+		currentUser.setPassword(User.PASSWORD_FADE);
 		request.setAttribute("user", currentUser);
+		request.setAttribute("current_user", currentUser);
+		
+
+		//按照用户拥有的问卷权限显示问卷列表
+		List<Quiz> list = quizService.fetchQuizListBySegmentId(currentUser
+				.getSegmentId());
+		request.setAttribute("quizlist", list);
+		
+		//加载用户所在的号段
+		Segment segment = segmentService.fetch(currentUser.getSegmentId());
+		request.setAttribute("segment", segment);
 	}
 
 	/**
@@ -159,7 +182,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.viewquiz")
-	 @Fail("forward:/quiz/list")
+	@Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View add(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -259,7 +282,7 @@ public class QuizModule {
 	 */
 	@At
 	// @Ok("jsp:jsp.quiz.viewquiz")
-	 @Fail("forward:/quiz/list")
+	@Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View edit(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -367,14 +390,13 @@ public class QuizModule {
 	public View delete(@Param("id") long id) {
 
 		Quiz quiz = quizService.fetch(id);
-		if(quiz == null)
+		if (quiz == null)
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
-		
+
 		quizService.deleteByQuizId(id);
 
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
-			String s = "/quiz/prepare?operation=edit&id="
-					+ quiz.getParentId();
+			String s = "/quiz/prepare?operation=edit&id=" + quiz.getParentId();
 			return new ViewWrapper(new ServerRedirectView(s), null);
 		}
 		return new ViewWrapper(new ForwardView("/quiz/list"), null);
@@ -486,17 +508,18 @@ public class QuizModule {
 			long questionId = Long.parseLong(key);
 			answerMap.put(questionId, _answer.get(key));
 		}
-		List<QuizResult> resultList = quizResultService.storeResult(user.getUserId(), quiz, answerMap);
+		List<QuizResult> resultList = quizResultService.storeResult(
+				user.getUserId(), quiz, answerMap);
 		request.setAttribute("resultlist", resultList);
-		
+
 		List<Quiz> quizList = new ArrayList<Quiz>();
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE) {
 			quizList.add(quiz);
-		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+		} else if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			quizList.addAll(quiz.getChildList());
 		}
 		request.setAttribute("quizlist", quizList);
-		
+
 		request.setAttribute("quiz", quiz);
 	}
 
@@ -507,20 +530,21 @@ public class QuizModule {
 	@Ok("jsp:jsp.quiz.test.report")
 	public void report(HttpServletRequest request, @Param("quizId") long quizId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
-		
+
 		User user = Auths.getUser(request);
-	
-		List<QuizResult> resultList = quizResultService.getQuizResult(user.getUserId(), quizId);
+
+		List<QuizResult> resultList = quizResultService.getQuizResult(
+				user.getUserId(), quizId);
 		request.setAttribute("resultlist", resultList);
-		
+
 		List<Quiz> quizList = new ArrayList<Quiz>();
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE) {
 			quizList.add(quiz);
-		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+		} else if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			quizList.addAll(quiz.getChildList());
 		}
 		request.setAttribute("quizlist", quizList);
-		
+
 		request.setAttribute("quiz", quiz);
 	}
 

@@ -1,6 +1,10 @@
 package com.huijia.eap.auth.user.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.nutz.dao.Cnd;
@@ -13,6 +17,7 @@ import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.dao.UserDao;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.service.CompanyService;
 import com.huijia.eap.quiz.service.SegmentService;
 import com.huijia.eap.util.DigestUtil;
@@ -61,8 +66,32 @@ public class UserService extends TblIdsEntityService<User> {
 				DigestUtil.encodeSHA(pwd));
 	}
 
+	public User checkUserByMobile(String mobile, String pwd, boolean encrypted) {
+		if (encrypted) {
+			return ((UserDao) this.dao()).checkUserByMobile(mobile, pwd);
+		}
+		return ((UserDao) this.dao()).checkUserByMobile(mobile,
+				DigestUtil.encodeSHA(pwd));
+	}
+
+	public User checkUserByCode(String code, String pwd, boolean encrypted) {
+		if (encrypted) {
+			return ((UserDao) this.dao()).checkUserByCode(code, pwd);
+		}
+		return ((UserDao) this.dao()).checkUserByCode(code,
+				DigestUtil.encodeSHA(pwd));
+	}
+
 	public User fetchByName(String name) {
 		return ((UserDao) this.dao()).fetchByName(name);
+	}
+
+	public User fetchByCode(String code) {
+		return ((UserDao) this.dao()).fetchByCode(code);
+	}
+
+	public User fetchByMobile(String mobile) {
+		return ((UserDao) this.dao()).fetchByMobile(mobile);
 	}
 
 	public List<User> fetchBySegmentId(long segmentId) {
@@ -135,6 +164,27 @@ public class UserService extends TblIdsEntityService<User> {
 	@Override
 	public int count() {
 		return this.count(mergeCondition(null));
+	}
+
+	public boolean isUserValid(User user) {
+		// TODO Auto-generated method stub
+		Segment segment = segmentService.fetch(user.getSegmentId());
+		if (segment == null)
+			return false;
+		if (segment.getStatus() == 0)
+			return false;
+		String expireDate = segment.getExpireDate();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.CHINA);
+		Date date = new Date();
+		try {
+			date = sdf.parse(expireDate);
+		} catch (ParseException e) {
+			return false;
+		}
+		java.util.Date nowdate=new java.util.Date(); 
+
+		return date.after(nowdate);
 	}
 
 }

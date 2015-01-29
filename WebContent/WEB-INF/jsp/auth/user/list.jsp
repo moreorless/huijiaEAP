@@ -23,7 +23,7 @@
 			<tr>
 				<th>用户名</th>
 				<th>真实姓名</th>
-				<th>邮箱</th>
+				<th>用户编码</th>
 				<th><fmt:message key="user.add.mobile" bundle="${i18n_auth}"/></th>
 				<th>操作</th>
 			</tr>
@@ -33,8 +33,8 @@
 			<tr>
 				<td>${user.name }</td>
 				<td>${user.realname }</td>
-				<td>${user.email }</td>
-				<td>${user.phone }</td>
+				<td>${user.code }</td>
+				<td>${user.mobile }</td>
 				<td><a href="${base}/user/prepare?userId=${user.userId}&operation=edit" title="修改用户"><img src="${base}/images/edit_default.gif"/></a>
 					&nbsp;|&nbsp;
 					<a href="${base}/user/delete?userId=${user.userId}" title="删除用户"><img src="${base}/images/del_default.gif"/></a>

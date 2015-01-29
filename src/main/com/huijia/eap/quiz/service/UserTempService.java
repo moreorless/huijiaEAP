@@ -2,7 +2,6 @@ package com.huijia.eap.quiz.service;
 
 import java.util.List;
 
-import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -26,6 +25,11 @@ public class UserTempService extends TblIdsEntityService<Company> {
 		return this.dao().insert(userTemp);
 	}
 
+	public UserTemp fetchByCode(String code) {
+
+		return ((UserTempDao) this.dao()).fetchByCode(code);
+	}
+
 	public void update(UserTemp userTemp) {
 		this.dao().update(userTemp);
 	}
@@ -40,6 +44,19 @@ public class UserTempService extends TblIdsEntityService<Company> {
 
 	public List<UserTemp> fetchListBySegmentId(long segmentId) {
 		return ((UserTempDao) this.dao()).fetchListBySegmentId(segmentId);
+	}
+
+	public UserTemp checkUserTemp(String code, String pwd, boolean encrypted) {
+		if (encrypted) {
+			return ((UserTempDao) this.dao()).checkUser(code, pwd);
+		}
+		return ((UserTempDao) this.dao()).checkUser(code,
+				DigestUtil.encodeSHA(pwd));
+	}
+
+	public void deleteByCode(String code) {
+		((UserTempDao) this.dao()).deleteByCompanyId(code);
+		
 	}
 
 }

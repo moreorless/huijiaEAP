@@ -25,7 +25,7 @@
 			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-info" role="button">开始测试</a>
 		</div>
 		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>
-		<p class="expire">有效期为yyyy-mm-dd - yyyy-mm-dd</p>
+		<p class="expire">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有效期截止至${segment.expireDate}早上零点</p>
 		<c:if test="${!stat.last}">
 			<div class="quiz_card_seperator"></div>
 		</c:if>

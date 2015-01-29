@@ -222,7 +222,7 @@ em {
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label"><fmt:message
-							key="user.add.mobile" bundle="${i18n_auth}" /></label>
+							key="user.add.mobile" bundle="${i18n_auth}" /><em>*</em></label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="mobile"
 							value="${user.mobile}" />

@@ -94,6 +94,7 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 				Cnd.where("type", "=", QuizConstant.QUIZ_TYPE_STANDALONE).or(
 						"type", "=", QuizConstant.QUIZ_TYPE_PARENT), null);
 	}
+	
 
 	public List<Quiz> fetchListByParentId(long parentId) {
 		return ((QuizDao) this.dao()).fetchListByParentId(parentId);

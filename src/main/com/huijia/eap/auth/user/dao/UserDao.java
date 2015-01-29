@@ -19,6 +19,20 @@ public class UserDao extends NutDao {
 						Cnd.where("name", "=", username).and("password", "=",
 								password));
 	}
+	
+	public User checkUserByCode(String username, String password) {
+		return this
+				.fetch(User.class,
+						Cnd.where("code", "=", username).and("password", "=",
+								password));
+	}
+	
+	public User checkUserByMobile(String username, String password) {
+		return this
+				.fetch(User.class,
+						Cnd.where("mobile", "=", username).and("password", "=",
+								password));
+	}
 
 	public User fetchByName(String username) {
 		return this.fetch(User.class, Cnd.where("name", "=", username));
@@ -34,5 +48,13 @@ public class UserDao extends NutDao {
 
 	public void deleteByCompanyId(long companyId) {
 		this.clear(User.class, Cnd.where("companyid", "=", companyId));
+	}
+
+	public User fetchByCode(String code) {
+		return this.fetch(User.class, Cnd.where("code", "=", code));
+	}
+
+	public User fetchByMobile(String mobile) {
+		return this.fetch(User.class, Cnd.where("mobile", "=", mobile));
 	}
 }
