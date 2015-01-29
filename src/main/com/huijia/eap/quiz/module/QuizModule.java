@@ -374,7 +374,7 @@ public class QuizModule {
 
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
 			String s = "/quiz/prepare?operation=edit&id="
-					+ quizService.fetch(id).getParentId();
+					+ quiz.getParentId();
 			return new ViewWrapper(new ServerRedirectView(s), null);
 		}
 		return new ViewWrapper(new ForwardView("/quiz/list"), null);
