@@ -291,7 +291,8 @@ public class Quiz {
 			Map _obj = iter.next();
 			int id = (int)_obj.get("id");
 			String name = (String)_obj.get("name");
-			QuizCategory category = new QuizCategory(id, name);
+			int priority = (int)_obj.get("priority");
+			QuizCategory category = new QuizCategory(id, name,priority);
 			categoryList.add(category);
 		}
 		
