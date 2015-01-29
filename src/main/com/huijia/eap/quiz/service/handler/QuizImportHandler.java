@@ -42,6 +42,7 @@ public class QuizImportHandler {
 	class Category {
 		public int id; // 维度编号，从0开始
 		public String name; // 维度名称
+		public int priority;
 	}
 
 	class CellPosition {
@@ -160,7 +161,7 @@ public class QuizImportHandler {
 	public int getItemNum() {
 		return this.meta.itemNum;
 	}
-	
+
 	public int getLieBorder() {
 		return this.meta.lieBorder;
 	}
@@ -269,6 +270,16 @@ public class QuizImportHandler {
 				this.meta = null;
 				return -1;
 			}
+			try {
+				category.priority = Integer.parseInt(this.getCellValue(
+						position.sheetIndex, position.rowIndex + 1,
+						position.columnIndex + 1 + i));
+			} catch (NumberFormatException ex) {
+				logger.error("处理题目表单失败：维度优先级格式错误，非数字格式。");
+				this.meta = null;
+				return -1;
+			}
+
 			this.meta.categories.add(category);
 		}
 
@@ -916,6 +927,8 @@ public class QuizImportHandler {
 	}
 
 	public static void main(String[] args) throws Exception {
+
+		// int t = Integer.parseInt("123abc");
 
 		// QuizItemOption quizItemOption = new QuizItemOption();
 

@@ -60,24 +60,6 @@ em {
 					</div>
 				</div>
 
-				<c:if test="${user.type > 0 }">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">所属企业<em>*</em></label>
-						<div class="col-sm-4">
-							<select class="form-control" name="companyId" id="sel-company">
-								<c:forEach items="${companyList}" var="company">
-									<option value="${company.id}"
-										<c:if test="${user.companyId == company.id}"> selected</c:if>>${company.name}</option>
-								</c:forEach>
-							</select>
-						</div>
-						<div class="col-sm-6">
-							<span><fmt:message key="user.add.company.span"
-									bundle="${i18n_auth}" /></span>
-						</div>
-					</div>
-				</c:if>
-
 				<div class="form-group">
 					<label class="col-sm-2 control-label">密码<em>*</em></label>
 					<div class="col-sm-4">
@@ -104,6 +86,126 @@ em {
 								bundle="${i18n_auth}" /></span>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">性别<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="gender" id="sel-gender">
+							<option value="0"
+								<c:if test="${user.gender == 0}"> selected</c:if>>女</option>
+							<option value="1"
+								<c:if test="${user.gender == 1}"> selected</c:if>>男</option>
+						</select>
+					</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.gender.span"
+								bundle="${i18n_auth}" /></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">年龄<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="age"
+							value="${user.age}" />
+					</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.age.span"
+								bundle="${i18n_auth}" /></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">工作年限<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="workage"
+							value="${user.workage}" />
+					</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.workage.span"
+								bundle="${i18n_auth}" /></span>
+					</div>
+				</div>
+
+
+
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">教育程度<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="education" id="sel-education">
+							<option value="0"
+								<c:if test="${user.education == 0}"> selected</c:if>>大专及以下</option>
+							<option value="1"
+								<c:if test="${user.education == 1}"> selected</c:if>>本科</option>
+							<option value="2"
+								<c:if test="${user.education == 2}"> selected</c:if>>硕士及以上</option>
+						</select>
+					</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.education.span"
+								bundle="${i18n_auth}" /></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">职位<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="jobtitle" id="sel-jobtitle">
+							<option value="0"
+								<c:if test="${user.jobtitle == 0}"> selected</c:if>>普通员工</option>
+							<option value="1"
+								<c:if test="${user.jobtitle == 1}"> selected</c:if>>中层管理人员</option>
+							<option value="2"
+								<c:if test="${user.jobtitle == 2}"> selected</c:if>>高层管理人员</option>
+						</select>
+					</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.jobtitle.span"
+								bundle="${i18n_auth}" /></span>
+					</div>
+				</div>
+
+
+				<!-- 不需要添加企业信息，只要添加号段信息  -->
+				<!--  
+				<c:if test="${user.type > 0 }">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所属企业<em>*</em></label>
+						<div class="col-sm-4">
+							<select class="form-control" name="companyId" id="sel-company">
+								<c:forEach items="${companyList}" var="company">
+									<option value="${company.id}"
+										<c:if test="${user.companyId == company.id}"> selected</c:if>>${company.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="col-sm-6">
+							<span><fmt:message key="user.add.company.span"
+									bundle="${i18n_auth}" /></span>
+						</div>
+					</div>
+				</c:if>
+				-->
+
+				<c:if test="${user.type > 0 }">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所属号段<em>*</em></label>
+						<div class="col-sm-4">
+							<select class="form-control" name="segmentId" id="sel-segment">
+								<c:forEach items="${segmentList}" var="segment">
+									<option value="${segment.id}"
+										<c:if test="${user.segmentId == segment.id}"> selected</c:if>>${segment.description}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="col-sm-6">
+							<span><fmt:message key="user.add.segment.span"
+									bundle="${i18n_auth}" /></span>
+						</div>
+					</div>
+				</c:if>
+
 
 
 				<div class="form-group">

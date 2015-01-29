@@ -19,7 +19,9 @@ import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.nav.Navigator;
 import com.huijia.eap.commons.nav.NavigatorHelper;
 import com.huijia.eap.quiz.data.Company;
+import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.SegmentService;
 
 /**
  * 用户管理
@@ -40,6 +42,9 @@ public class UserModule {
 	
 	@Inject
 	private CompanyService companyService;
+	
+	@Inject
+	private SegmentService segmentService;
 	
 	@At
 	@Ok("jsp:jsp.auth.user.list")
@@ -70,7 +75,9 @@ public class UserModule {
 		request.setAttribute("navigators", navigators);
 		
 		List<Company> companyList = companyService.query(null, null);
+		List<Segment> segmentList = segmentService.query(null, null);
 		request.setAttribute("companyList", companyList);
+		request.setAttribute("segmentList", segmentList);
 	}
 	
 	@At

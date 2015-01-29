@@ -13,10 +13,18 @@ import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.dao.UserDao;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.SegmentService;
 import com.huijia.eap.util.DigestUtil;
 
 @IocBean(name = "userService")
 public class UserService extends TblIdsEntityService<User> {
+
+	@Inject
+	private CompanyService companyService;
+
+	@Inject
+	private SegmentService segmentService;
 
 	@Inject("refer:userDao")
 	public void setUserDao(Dao dao) {
@@ -26,6 +34,8 @@ public class UserService extends TblIdsEntityService<User> {
 	public User insert(User user) {
 		user.setUserId(getTblMaxIdWithUpdate());
 		user.setPassword(DigestUtil.encodeSHA(user.getPassword()));
+		user.setCompanyId(segmentService.fetch(user.getSegmentId())
+				.getCompanyId());
 		return this.dao().insert(user);
 	}
 

@@ -107,7 +107,7 @@ public class User extends BaseTimedObject implements Serializable {
 			@ValidateType(type = Type.minlength, parameters = { "0" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
 			@ValidateType(type = Type.maxlength, parameters = { "150" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth") })
 	@Column
-	private long workAge;
+	private long workage;
 
 	// 教育程度 0:大专及以下 1:本科 2:硕士及以上
 	@Column
@@ -115,7 +115,11 @@ public class User extends BaseTimedObject implements Serializable {
 
 	// 职位信息 0:普通员工 1:中层管理 2:高层管理
 	@Column
-	private long jobTitle;
+	private long jobtitle;
+
+	// 用户编码
+	@Column
+	private String code;
 
 	public long getGender() {
 		return gender;
@@ -133,12 +137,20 @@ public class User extends BaseTimedObject implements Serializable {
 		this.age = age;
 	}
 
-	public long getWorkAge() {
-		return workAge;
+	public long getWorkage() {
+		return workage;
 	}
 
-	public void setWorkAge(long workAge) {
-		this.workAge = workAge;
+	public void setWorkage(long workage) {
+		this.workage = workage;
+	}
+
+	public long getJobtitle() {
+		return jobtitle;
+	}
+
+	public void setJobtitle(long jobtitle) {
+		this.jobtitle = jobtitle;
 	}
 
 	public long getEducation() {
@@ -147,14 +159,6 @@ public class User extends BaseTimedObject implements Serializable {
 
 	public void setEducation(long education) {
 		this.education = education;
-	}
-
-	public long getJobTitle() {
-		return jobTitle;
-	}
-
-	public void setJobTitle(long jobTitle) {
-		this.jobTitle = jobTitle;
 	}
 
 	public long getCompanyId() {
@@ -171,6 +175,14 @@ public class User extends BaseTimedObject implements Serializable {
 
 	public void setSegmentId(long segmentId) {
 		this.segmentId = segmentId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**
