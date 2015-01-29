@@ -33,12 +33,18 @@
 <p>该测评的适用对象为16岁以上的成人（具有初中以上文化程度的人群），尤其适用于职场中的各类人群，可以帮助个人及时了解自己的沟通风格和冲突处理方式状况，并详细分析其在沟通和冲突处理中可能存在的问题，提供相对应的建议。</p>
 <h1 id="您的沟通风格状况详解">Ⅳ 您的沟通风格状况详解</h1>
 <h2 id="一各个维度得分图">一、各个维度得分图</h2>
-<p>所有维度的总分之和为100分。您在各个维度上的得分如下图所示：</p>
+<p>所有维度的总分之和为${resultlist[0].score}分。您在各个维度上的得分如下图所示：</p>
 <div class="figure">
 <div data="report:column_h:0" class="eap-report"></div>
 <p class="caption">各维度得分</p>
 </div>
-<p>在各个维度中，<span class="math"><em>m</em><em>y</em><em>S</em><em>t</em><em>y</em><em>l</em><em>e</em><sub>0</sub><em>维</em><em>度</em><em>得</em><em>分</em><em>最</em><em>高</em>，<em>得</em><em>分</em><em>为</em></span>{maxscore_0}分，说明您的沟通风格为${myStyle_0}型(此处为最高分维度类型)。</p>
+
+<c:forEach items="${resultlist[0].scoreMap}" var="_v">
+	<c:if test="${_v.key == resultlist[0].categoryId}">
+		<c:set var="maxCateScore" value="${_v.value}" />
+	</c:if>
+</c:forEach>
+<p>在各个维度中，${resultlist[0].categoryName}维度得分最高，得分为${maxCateScore}分，说明您的沟通风格为${resultlist[0].categoryName}。</p>
 <h2 id="二您的特点关键词">二． 您的特点关键词</h2>
 <p>
 <c:forEach items="${quiz.childList[0].evaluations}" var="evaluation">
@@ -69,7 +75,14 @@ ${evaluation.suggestion}
 <div data="report:column_h:1" class="eap-report"></div>
 <p class="caption">各维度得分</p>
 </div>
-<p>在各个维度中，<span class="math"><em>m</em><em>y</em><em>S</em><em>t</em><em>y</em><em>l</em><em>e</em><sub>1</sub><em>维</em><em>度</em><em>得</em><em>分</em><em>最</em><em>高</em>，<em>得</em><em>分</em><em>为</em></span>{maxscore_1}分，说明您的冲突处理方式为${myStyle_1}型。</p>
+
+<c:forEach items="${resultlist[1].scoreMap}" var="_v">
+	<c:if test="${_v.key == resultlist[1].categoryId}">
+		<c:set var="maxCateScore" value="${_v.value}" />
+	</c:if>
+</c:forEach>
+
+<p>在各个维度中，${resultlist[1].categoryName}维度得分最高，得分为${maxCateScore}分，说明您的冲突处理方式为${resultlist[0].categoryName}。</p>
 <h2 id="二您的冲突处理特点">二．您的冲突处理特点：</h2>
 <p>
 <c:forEach items="${quiz.childList[1].evaluations}" var="evaluation">

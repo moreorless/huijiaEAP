@@ -15,7 +15,6 @@
 <body>
     <c:import url="/includes/header_huijia.jsp"></c:import>
     <div class="container report-wrapper">
-        <h2 class="report-caption">您的测试结果 ${quiz.reporttpl}</h2>
         <div>
         <c:import url="/includes/report/${quiz.reporttpl}_person.jsp"></c:import>
         </div>
@@ -42,17 +41,15 @@ var column_h_Options = [];
     </c:forEach>
     
     column_h_Options[${stat.index}] = {
-            tooltip : {
-                trigger: 'axis'
+    		title : {
+    	        text: '各维度得分'
+    	    },
+    	    tooltip : {
+                show: true
             },
-            toolbox: {
-                show : false
-            },
-            calculable : true,
             xAxis : [
                 {
-                    type : 'value',
-                    splitArea : {show : true}
+                    type : 'value'
                 }
             ],
             yAxis : [
@@ -82,8 +79,8 @@ var column_h_Options = [];
     
     require([
          'echarts',
-         'echarts/chart/bar',
-         'echarts/theme/green'
+         'echarts/theme/green',
+         'echarts/chart/bar'
          ],
          function(echarts, theme){
             $('.eap-report').each(function(){

@@ -1,7 +1,7 @@
 .report-wrapper {width:1000px}
 .report-caption {text-align:center; color:green}
 
-.eap-report {width: 600px; height: 400px; margin:0 auto;}
+.eap-report {width: 600px; height: 300px;margin:-40px auto -20px auto;}
 
 h1 {font-size: 24px;}
 h2 {font-size: 20px; padding-left: 10px;}
