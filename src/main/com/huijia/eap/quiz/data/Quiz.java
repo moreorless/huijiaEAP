@@ -292,7 +292,7 @@ public class Quiz {
 			int id = (int)_obj.get("id");
 			String name = (String)_obj.get("name");
 			int priority = (int)_obj.get("priority");
-			QuizCategory category = new QuizCategory(id, name,priority);
+			QuizCategory category = new QuizCategory(id, name, priority);
 			categoryList.add(category);
 		}
 		

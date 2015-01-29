@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.service;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.commons.service.TblIdsEntityService;
+import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.dao.QuizDao;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizConstant;
@@ -45,6 +47,9 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	@Inject
 	private SegmentQuizRelationService segmentQuizRelationService;
 	
+	@Inject
+	private QuizResultService quizResultService;
+	
 
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
@@ -65,23 +70,31 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	}
 
 	public void deleteByQuizId(long id) {
-		List<Quiz> childList = this.fetchListByParentId(id);
-
-		for (Quiz q : childList) {
-			this.delete(q.getId());
-			quizItemService.deleteByQuizId(q.getId());
-			quizEvaluationService.deleteByQuizId(q.getId());
-			segmentQuizRelationService.deleteByQuizId(id);
+		Quiz quiz = QuizCache.me().getQuiz(id);
+		if(quiz == null) return;
+		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+			Iterator<Quiz> iter = quiz.getChildList().iterator();
+			while(iter.hasNext()){
+				Quiz _quiz = iter.next();
+				deleteByQuizId(_quiz.getId());
+			}
 		}
-
-		// Table: quiz
-		this.delete(id);
+		
+		
 		// Table: quiz_item
 		quizItemService.deleteByQuizId(id);
 		// Table: quiz_evaluation
 		quizEvaluationService.deleteByQuizId(id);
-		//Table: seg_quiz_relation
+		// Table: seg_quiz_relation
 		segmentQuizRelationService.deleteByQuizId(id);
+		// Table: quiz_result
+		quizResultService.deleteByQuizId(id);
+		
+		// Table: quiz
+		this.delete(id);
+		
+		// 从缓存中删除
+		QuizCache.me().delete(id);
 	}
 
 	/**
