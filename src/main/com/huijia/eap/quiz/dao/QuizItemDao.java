@@ -12,7 +12,7 @@ import com.huijia.eap.quiz.data.QuizItem;
 public class QuizItemDao extends NutDao {
 	
 	public List<QuizItem> fetchListByQuizId(long quizId) {
-		return this.query(QuizItem.class, Cnd.where("quizid", "=", quizId));
+		return this.query(QuizItem.class, Cnd.where("quizid", "=", quizId).asc("id"));
 	}
 
 	public void deleteByQuizId(long quizId) {

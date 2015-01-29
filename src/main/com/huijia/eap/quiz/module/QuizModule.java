@@ -452,8 +452,8 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.test")
-	public void test(HttpServletRequest request, @Param("id") long id) {
-		Quiz quiz = QuizCache.me().getQuiz(id);
+	public void test(HttpServletRequest request, @Param("quizId") long quizId) {
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		request.setAttribute("quiz", quiz);
 
 		List<Quiz> quizList = new LinkedList<Quiz>();
@@ -472,6 +472,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
+	@Fail("forward:/quiz/test")
 	public void answer(HttpServletRequest request,
 			@Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
@@ -486,7 +487,30 @@ public class QuizModule {
 			long questionId = Long.parseLong(key);
 			answerMap.put(questionId, _answer.get(key));
 		}
-		List<QuizResult> resultList = quizResultService.storeResult(user.getUserId(), quiz, answerMap);
+		
+		// 当前时间
+		long currentTime = System.currentTimeMillis();
+		
+		List<QuizResult> resultList = quizResultService.storeResult(user.getUserId(), quiz, answerMap, currentTime);
+		
+		// 检测结果有效性
+		boolean isValid = true;
+		for(QuizResult result : resultList){
+			if(result.isValid() == false){
+				isValid = false;
+				break;
+			}
+		}
+		if(!isValid){
+			// 无效作答，重新答题
+			// 回滚数据
+			quizResultService.deleteByX(user.getUserId(), quizId, currentTime);
+			
+			// 向页面返回错误信息
+			EC error = new EC("quiz.test.answer.invalid", bundle);
+			throw ExceptionWrapper.wrapError(error);
+		}
+		
 		request.setAttribute("resultlist", resultList);
 		
 		List<Quiz> quizList = new ArrayList<Quiz>();

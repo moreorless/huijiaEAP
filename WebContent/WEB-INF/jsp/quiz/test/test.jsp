@@ -20,6 +20,7 @@
 </head>
 <body>
 <div id="scrollWrapper">
+<%@ include file="/error/inline.jsp"%>
 <c:import url="/includes/header_huijia.jsp"></c:import>
 <div class="container quiz_wrapper">
 	<p class="quiz-tip">温馨提示：请注意保护个人测评信息。</p>
@@ -31,13 +32,13 @@
 	<c:forEach items="${quizlist}" var="_quiz" varStatus="quizstat">
 	<div id="quiz-card-${quizstat.index}" class="quiz-page" <c:if test="${quizstat.index != 0}">style="display:none"</c:if>>
 	<h3>&nbsp;&nbsp;&nbsp;&nbsp;${_quiz.name }</h3>
-	<c:forEach items="${_quiz.items}" var="quizitem" varStatus="itemStat">
-		<div id="question-card-${quizitem.id}" class="row question-card <c:if test="${itemStat.index % 2 ==0}">light</c:if>">
-			<h4>${itemStat.index + 1}.&nbsp;${quizitem.question}</h4>
-			<c:forEach items="${quizitem.options}" var="qOption">
+	<c:forEach items="${_quiz.items}" var="questionObj" varStatus="itemStat">
+		<div id="question-card-${questionObj.id}" class="row question-card <c:if test="${itemStat.index % 2 ==0}">light</c:if>">
+			<h4>${itemStat.index + 1}.&nbsp;${questionObj.question}</h4>
+			<c:forEach items="${questionObj.options}" var="qOption">
 			<div class="radio">
-			  <label index="${itemStat.index+1}">
-			    <input type="radio" name="answer[${quizitem.id}]" id="answerOption${quizitem.id}${qOption.index}" value="${qOption.index}" index="${itemStat.index+1}" question="${quizitem.id}" answer="${qOption.index}"/>
+			  <label question="${questionObj.id}">
+			    <input type="radio" name="answer[${questionObj.id}]" id="answerOption${questionObj.id}${qOption.index}" value="${qOption.index}" index="${itemStat.index+1}" question="${questionObj.id}" answer="${qOption.index}"/>
 			    <span>${qOption.index}.&nbsp;${qOption.content}</span>
 			  </label>
 			</div>
@@ -156,8 +157,8 @@
 	}
 	$(document).ready(function(){
 		$('.question-card label').click(function(){
-			var index = $(this).attr('index');
-			$('#question-card-' + index).find('span').removeClass('question-span-active');
+			var questionId = $(this).attr('question');
+			$('#question-card-' + questionId).find('span').removeClass('question-span-active');
 			$(this).find('span').addClass('question-span-active');
 		});
 		

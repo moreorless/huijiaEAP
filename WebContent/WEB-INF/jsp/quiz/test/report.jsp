@@ -15,6 +15,7 @@
 <body>
     <c:import url="/includes/header_huijia.jsp"></c:import>
     <div class="container report-wrapper">
+      	<%@ include file="/error/inline.jsp"%>
         <div>
         <c:import url="/includes/report/${quiz.reporttpl}_person.jsp"></c:import>
         </div>

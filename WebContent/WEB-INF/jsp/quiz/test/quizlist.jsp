@@ -22,7 +22,7 @@
 	<div class="row quiz_card">
 		<div class="header">
 			<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
-			<a href="${base}/quiz/test?id=${quiz.id}" class="btn btn-info" role="button">开始测试</a>
+			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-info" role="button">开始测试</a>
 		</div>
 		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>
 		<p class="expire">有效期为yyyy-mm-dd - yyyy-mm-dd</p>
