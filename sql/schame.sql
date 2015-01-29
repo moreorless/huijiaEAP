@@ -42,7 +42,11 @@ CREATE TABLE `auth_user` (
   `iprestrict` varchar(128) default NULL,
   `authedNavs` varchar(512) default NULL,
   `dept` varchar(512) default NULL,
-  `code` varchar(64) default NULL COMMENT '用户编码'
+  `code` varchar(64) default NULL COMMENT '用户编码',
+  `age` int(8) default NULL COMMENT '年龄',
+  `workage` int(8) default NULL COMMENT '工作年龄',
+  `education` tinyint(4) default NULL COMMENT '0:大专及以下;1:本科;2:硕士及以上',
+  `jobtitle` tinyint(4) default NULL COMMENT '0:一般员工;1:中层管理者;2:高层管理者'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 DROP TABLE IF EXISTS user_temp;
@@ -186,5 +190,5 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 
 
 -- admin / admin
-INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,NULL,NULL,NULL);
+INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,0,0,0,0);
 INSERT INTO sys_tblids VALUES ('auth_user', 2);

@@ -159,7 +159,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.viewquiz")
-	// @Fail("forward:/quiz/list")
+	 @Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View add(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -259,7 +259,7 @@ public class QuizModule {
 	 */
 	@At
 	// @Ok("jsp:jsp.quiz.viewquiz")
-	// @Fail("forward:/quiz/list")
+	 @Fail("forward:/quiz/list")
 	@AdaptBy(type = UploadAdaptor.class)
 	@Chain("validate")
 	public View edit(HttpServletRequest request, @Param("..") Quiz quiz,
@@ -366,9 +366,13 @@ public class QuizModule {
 	// @Ok("forward:/quiz/list")
 	public View delete(@Param("id") long id) {
 
+		Quiz quiz = quizService.fetch(id);
+		if(quiz == null)
+			return new ViewWrapper(new ForwardView("/quiz/list"), null);
+		
 		quizService.deleteByQuizId(id);
 
-		if (quizService.fetch(id).getType() == QuizConstant.QUIZ_TYPE_CHILD) {
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
 			String s = "/quiz/prepare?operation=edit&id="
 					+ quizService.fetch(id).getParentId();
 			return new ViewWrapper(new ServerRedirectView(s), null);
