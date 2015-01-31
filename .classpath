@@ -71,5 +71,6 @@
 	<classpathentry kind="lib" path="D:/workspace/java_workspace/apache-tomcat-7.0.40/lib/tomcat-i18n-ja.jar"/>
 	<classpathentry kind="lib" path="D:/workspace/java_workspace/apache-tomcat-7.0.40/lib/tomcat-jdbc.jar"/>
 	<classpathentry kind="lib" path="D:/workspace/java_workspace/apache-tomcat-7.0.40/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/CCP_REST_SMS_SDK_JAVA_v2.6.3r.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
