@@ -50,5 +50,3 @@ conf/db.properties
 conf/log4j.properties
 .externalToolBuilders/
 build.properties
-.classpath
-*.classpath
