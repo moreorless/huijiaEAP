@@ -109,6 +109,13 @@ public class UserModule {
 	}
 
 	@At
+	@Ok("jsp:jsp.quiz.test.register")
+	public void enregister(HttpServletRequest request){
+		User user = Auths.getUser(request);
+		request.setAttribute("user", user);
+	}
+	
+	@At
 	@Ok("forward:/quiz/enquizlist")
 	//@Fail("jsp:jsp.quiz.test.register")
 	@Fail("forward:/user/registerError")
@@ -125,8 +132,9 @@ public class UserModule {
 		// Bundle("auth"));
 		// throw ExceptionWrapper.wrapError(error);
 		// }
-		userService.insert(user);
+		user = userService.insert(user);
 		userTempService.deleteByCode(user.getCode());
+		request.getSession().setAttribute(Auths.USER_SESSION_KEY, user);
 	}
 	
 	@At
@@ -155,7 +163,7 @@ public class UserModule {
 		SMSHandler sms = (SMSHandler) GlobalConfig.getContextValue("SMS");
 		// String validateCode = sms.sendSMS(mobile);
 		//String validateCode = sms.sendSMS("15201262843");
-		String validateCode = sms.sendSMS("13717759088");
+		String validateCode = "1111"; /*sms.sendSMS("13717759088");*/
 		if (validateCode == null)
 			return 2; // 校验码生成失败
 		MobileCode moblieCode = new MobileCode();

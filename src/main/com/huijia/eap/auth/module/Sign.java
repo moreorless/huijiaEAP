@@ -117,7 +117,7 @@ public class Sign {
 			user.setType(User.TYPE_USER);
 			request.setAttribute("user", user);
 			session.setAttribute(Auths.USER_SESSION_KEY, user);
-			return new  ViewWrapper(new JspView("jsp.quiz.test.register"), null);
+			return new ServerRedirectView("/user/enregister");
 		}
 
 		boolean authen = false;
