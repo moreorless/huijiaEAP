@@ -50,7 +50,9 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	@Inject
 	private QuizResultService quizResultService;
 	
-
+	@Inject
+	private QuizAnswerLogService quizAnswerLogService;
+	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
 		setDao(dao);
@@ -89,7 +91,8 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 		segmentQuizRelationService.deleteByQuizId(id);
 		// Table: quiz_result
 		quizResultService.deleteByQuizId(id);
-		
+		// Table: quiz_answer_log
+		quizAnswerLogService.deleteByQuizId(id);
 		// Table: quiz
 		this.delete(id);
 		

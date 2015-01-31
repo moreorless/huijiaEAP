@@ -20,12 +20,26 @@
 	<div class="quiz_inner_wrapper">
 	<c:forEach items="${quizlist}" var="quiz" varStatus="stat">
 	<div class="row quiz_card">
-		<div class="header">
-			<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
-			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-info" role="button">开始测试</a>
+		<div class="col-md-10">
+			<div class="header">
+				<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
+			</div>
+			<p class="desc">${quiz.description}</p>
+			<p class="expire">有效期截止至${segment.expireDate}</p>			
 		</div>
-		<p class="desc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quiz.description}</p>
-		<p class="expire">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有效期截止至${segment.expireDate}早上零点</p>
+		<div class="col-md-2">
+			<div style="margin-bottom: 10px;">
+			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-info" role="button">
+				<c:if test="${fn:length(quizHistoryMap[quiz.id]) == 0}">开始测试</c:if>
+				<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">重新测试</c:if>
+				</a>
+			</div>
+			<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">
+			<div style="margin-bottom: 10px;">
+			<a href="${base}/quiz/report?quizId=${quiz.id}" class="btn btn-info" role="button">查看报告</a>
+			</div>
+			</c:if>
+		</div>
 		<c:if test="${!stat.last}">
 			<div class="quiz_card_seperator"></div>
 		</c:if>

@@ -41,11 +41,13 @@ import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
 import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizAnswerLog;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.data.Segment;
+import com.huijia.eap.quiz.service.QuizAnswerLogService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
@@ -84,6 +86,9 @@ public class QuizModule {
 	
 	@Inject
 	private SegmentService segmentService;
+	
+	@Inject
+	private QuizAnswerLogService quizAnswerLogService;
 
 	Bundle bundle = new Bundle("quiz");
 
@@ -125,6 +130,16 @@ public class QuizModule {
 		List<Quiz> list = quizService.fetchQuizListBySegmentId(currentUser
 				.getSegmentId());
 		request.setAttribute("quizlist", list);
+		
+		// 答题历史记录
+		Map<Long, List<QuizAnswerLog>> quizHistoryMap = new HashMap<Long, List<QuizAnswerLog>>();
+		Iterator<Quiz> iter = list.iterator();
+		while(iter.hasNext()){
+			Quiz _quiz = iter.next();
+			List<QuizAnswerLog> history = quizAnswerLogService.getHistory(currentUser.getUserId(), _quiz.getId());
+			quizHistoryMap.put(_quiz.getId(), history);
+		}
+		request.setAttribute("quizHistoryMap", quizHistoryMap);
 		
 		//加载用户所在的号段
 		Segment segment = segmentService.fetch(currentUser.getSegmentId());
@@ -373,6 +388,9 @@ public class QuizModule {
 			request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
 		}
 
+		// 更新缓存
+		QuizCache.me().update(quiz);
+		
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
 		}
@@ -394,6 +412,9 @@ public class QuizModule {
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
 
 		quizService.deleteByQuizId(id);
+		
+		// 更新缓存
+		QuizCache.me().delete(id);
 
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_CHILD) {
 			String s = "/quiz/prepare?operation=edit&id=" + quiz.getParentId();
@@ -532,6 +553,13 @@ public class QuizModule {
 			EC error = new EC("quiz.test.answer.invalid", bundle);
 			throw ExceptionWrapper.wrapError(error);
 		}
+		
+		QuizAnswerLog history = new QuizAnswerLog();
+		history.setQuizId(quizId);
+		history.setUserId(user.getUserId());
+		history.setCompanyId(user.getCompanyId());
+		history.setTimestamp(currentTime);
+		quizAnswerLogService.insert(history);
 		
 		request.setAttribute("resultlist", resultList);
 		

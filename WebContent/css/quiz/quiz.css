@@ -36,21 +36,19 @@
 	height: 24px;
 }
 
-.quiz_card a{
-	float: right;
-	margin-right: 10px;
-}
 .quiz_card p{
 	clear:both;
 }
 .quiz_card .desc{
 	color: #505050;
 	font-size : 16px;
-	font-weight: 'bold'
+	font-weight: 'bold';
+	padding-left: 40px;
 }
 
 .quiz_card .expire{
 	color : #959595;
+	padding-left: 40px;
 }
 .quiz_card_seperator {
 	height : 10px;
