@@ -10,8 +10,8 @@ import org.nutz.dao.entity.annotation.Table;
 
 import com.huijia.eap.commons.bean.BaseTimedObject;
 import com.huijia.eap.commons.mvc.validate.annotation.ValidateType;
-import com.huijia.eap.commons.mvc.validate.annotation.Validations;
 import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
+import com.huijia.eap.commons.mvc.validate.annotation.Validations;
 
 @Table("auth_user")
 public class User extends BaseTimedObject implements Serializable {
@@ -125,6 +125,19 @@ public class User extends BaseTimedObject implements Serializable {
 	// 用户编码
 	@Column
 	private String code;
+
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "auth.signin.errors.validatecode", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.regexp, parameters = { "[0-9][0-9][0-9][0-9]" }, errorMsg = "auth.signin.errors.validatecode", resource = true, bundle = "auth") })
+	private String validateCode;
+
+	public String getValidateCode() {
+		return validateCode;
+	}
+
+	public void setValidateCode(String validateCode) {
+		this.validateCode = validateCode;
+	}
 
 	public long getGender() {
 		return gender;

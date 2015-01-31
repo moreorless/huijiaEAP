@@ -20,9 +20,12 @@ body {
 </head>
 <body>
 	<c:import url="/includes/header_huijia.jsp"></c:import>
+	 <!--%@ include file="/error/inline.jsp"%-->
+	<c:import url="/error/inline.jsp"></c:import>
+
 	<div class="container quiz_wrapper">
 		<div class="quiz_inner_wrapper">
-			<%@ include file="/error/inline.jsp"%>
+
 			<form action="${base }/user/register" class="form-horizontal"
 				role="form" method="post">
 				<input type="hidden" name="userId" value="${user.userId }" /> <input
@@ -176,11 +179,23 @@ body {
 									bundle="${i18n_auth}" /></span>
 						</div>
 					</div>
+					 
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><fmt:message
+								key="user.add.validatecode" bundle="${i18n_auth}" /><em>*</em></label>
+						<div class="col-sm-2">
+							<input type="text" class="form-control" name="validateCode"
+								value="${user.validateCode}" />
+						</div>
+						<div class="col-sm-6">
+							 <input class="mya" type="button" value="确定" onclick="validateMobileCode();" />  
+						</div>
+					</div>
 
 					<div class="form-group">
 						<div class="col-sm-offset-5 col-sm-10">
-							<input type="submit" class="btn btn-primary"></input>
-							<a href="${base}/signout" class="btn btn-default">取消</a>
+							<input type="submit" class="btn btn-primary"></input> <a
+								href="${base}/signout" class="btn btn-default">取消</a>
 						</div>
 					</div>
 				</fieldset>
@@ -210,6 +225,26 @@ body {
 	<script type="text/javascript"
 		src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
 	<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
+
+	<script type="text/javascript">
+		function validateMobileCode() {
+			var mobile = $('input[name=mobile]').val();
+			var userCode = $('input[name=code]').val();
+			//var obj = false;
+			$.ajax({
+				async : false, //使用同步请求，因为异步请求不能将返回值传给全局变量；这里很重要  
+				url : "${base}/user/sendSMS",
+				type : "post",
+				dataType : "json",
+				data : "mobile=" + mobile,
+				//data: "{mobile:'" + mobile + "',userCode:'" + userCode + "'}",
+				success : function(data) {
+					alert("ok:"+data);  
+					//obj = data;
+				}
+			});
+		}
+	</script>
 
 	<script type="text/javascript">
 		var ValidateHandler = {
