@@ -55,7 +55,7 @@ CREATE TABLE `user_temp` (
   `segmentid` int(11) default NULL COMMENT '所属号段',
   `companyid` int(11) default NULL COMMENT '所属企业',
   `password` varchar(160) default NULL COMMENT '初始密码，加密存储'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Dumping structure for table auth_userrole_relation
 DROP TABLE IF EXISTS auth_userrole_relation;
@@ -179,6 +179,15 @@ CREATE TABLE `quiz_result` (
 COMMENT='测试结果'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `quiz_answer_log`;
+CREATE TABLE `quiz_answer_log` (
+	`quizId` INT(11) NULL DEFAULT NULL,
+	`userId` INT(11) NULL DEFAULT NULL,
+	`timestamp` BIGINT(20) NULL DEFAULT NULL
+)
+COMMENT='答题记录'
+ENGINE=InnoDB;
+
 # Dumping structure for table sys_tblids
 DROP TABLE IF EXISTS `sys_tblids`;
 CREATE TABLE IF NOT EXISTS `sys_tblids` (
@@ -189,6 +198,6 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- admin / admin
+# admin / admin
 INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,0,0,0,0);
 
