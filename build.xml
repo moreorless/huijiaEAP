@@ -21,4 +21,16 @@
 	<target name="clean">
 		<delete dir="${catalina.home}/webapps/${appName}"></delete>
 	</target>
+	
+	<!-- ================================= 
+          target: database-start              
+         ================================= -->
+    <target name="database-start" description="启动mysql数据库">
+		<exec dir="${db.path}" executable="cmd.exe" failonerror="false" failifexecutionfails="false">
+			<!-- if execute on linux, fail to pass -->
+			<arg line="/c start.bat" />
+		</exec>
+		<echo>数据库服务器已启动</echo>
+    </target>
+
 </project>
