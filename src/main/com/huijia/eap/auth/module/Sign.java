@@ -114,7 +114,9 @@ public class Sign {
 			user.setCompanyId(userTemp.getCompanyId());
 			user.setSegmentId(userTemp.getSegmentId());
 			user.setPassword(userTemp.getPassword());
+			user.setType(User.TYPE_USER);
 			request.setAttribute("user", user);
+			session.setAttribute(Auths.USER_SESSION_KEY, user);
 			return new  ViewWrapper(new JspView("jsp.quiz.test.register"), null);
 		}
 

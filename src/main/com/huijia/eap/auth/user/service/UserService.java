@@ -167,6 +167,9 @@ public class UserService extends TblIdsEntityService<User> {
 	}
 
 	public boolean isUserValid(User user) {
+		if (user.getType() == User.TYPE_ADMIN
+				|| user.getType() == User.TYPE_ROOT)
+			return true;
 		// TODO Auto-generated method stub
 		Segment segment = segmentService.fetch(user.getSegmentId());
 		if (segment == null)
@@ -175,16 +178,22 @@ public class UserService extends TblIdsEntityService<User> {
 			return false;
 		String expireDate = segment.getExpireDate();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.CHINA);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.CHINA);
 		Date date = new Date();
 		try {
 			date = sdf.parse(expireDate);
 		} catch (ParseException e) {
 			return false;
 		}
-		java.util.Date nowdate=new java.util.Date(); 
+		java.util.Date nowdate = new java.util.Date();
 
 		return date.after(nowdate);
+	}
+
+	public boolean mobileExisted(String mobile) {
+		if (this.fetchByMobile(mobile) != null)
+			return true;
+		return false;
 	}
 
 }

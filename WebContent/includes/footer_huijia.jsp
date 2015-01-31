@@ -152,7 +152,7 @@
 									key="user.add.mobile" bundle="${i18n_auth}" /></label>
 							<div class="col-sm-4">
 								<input type="text" name="mobile" class="form-control"
-									value="${current_user.mobile}" />
+									value="${current_user.mobile}" readonly="readonly"/>
 							</div>
 							<div class="col-sm-6">
 								<span><fmt:message key="user.add.mobile.span"

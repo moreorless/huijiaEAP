@@ -47,15 +47,15 @@ CREATE TABLE `auth_user` (
   `workage` int(8) default NULL COMMENT '工作年龄',
   `education` tinyint(4) default NULL COMMENT '0:大专及以下;1:本科;2:硕士及以上',
   `jobtitle` tinyint(4) default NULL COMMENT '0:一般员工;1:中层管理者;2:高层管理者'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS user_temp;
 CREATE TABLE `user_temp` (
   `code` varchar(64) character set latin1 default NULL COMMENT '用户编码',
   `segmentid` int(11) default NULL COMMENT '所属号段',
   `companyid` int(11) default NULL COMMENT '所属企业',
-  `passwd` varchar(160) character set latin1 default NULL COMMENT '初始密码'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+  `password` varchar(160) default NULL COMMENT '初始密码，加密存储'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1
 
 # Dumping structure for table auth_userrole_relation
 DROP TABLE IF EXISTS auth_userrole_relation;
@@ -154,13 +154,13 @@ CREATE TABLE `segment` (
   `status` int(4) default '1' COMMENT '0:已回收 1:正在使用',
   `expireDate` varchar(16) default NULL,
   `initPassword` varchar(16) default '' COMMENT '初始密码，明文存放'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='号段'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='号段';
 
 DROP TABLE IF EXISTS `seg_quiz_relation`;
 CREATE TABLE `seg_quiz_relation` (
   `segmentid` INT(11) NOT NULL,
   `quizid` INT(11) NOT NULL
-) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='号段-试题关联'
+) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='号段-试题关联';
 
 DROP TABLE IF EXISTS `quiz_result`;
 CREATE TABLE `quiz_result` (
@@ -191,5 +191,4 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 
 -- admin / admin
 INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,0,0,0,0);
-INSERT INTO segment VALUES (0,0,NULL,1,0,0,1,01/01/3010,NULL);
-INSERT INTO sys_tblids VALUES ('auth_user', 2);
+

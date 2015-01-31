@@ -16,6 +16,9 @@ import org.nutz.mvc.annotation.Param;
 import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
+import com.huijia.eap.commons.i18n.Bundle;
+import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
+import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
 import com.huijia.eap.commons.nav.Navigator;
 import com.huijia.eap.commons.nav.NavigatorHelper;
 import com.huijia.eap.quiz.data.Company;
@@ -47,7 +50,7 @@ public class UserModule {
 
 	@Inject
 	private SegmentService segmentService;
-	
+
 	@Inject
 	private UserTempService userTempService;
 
@@ -98,11 +101,18 @@ public class UserModule {
 	public void edit(@Param("..") User user) {
 		userService.update(user);
 	}
-	
+
 	@At
-	@Ok("forward:/signout")
+	@Ok("forward:/quiz/enquizlist")
+	//@Fail("jsp:jsp.quiz.test.register")
+	//@Fail("forward:/signout")
 	@Chain("validate")
-	public void register(@Param("..") User user) {
+	public void register(HttpServletRequest request, @Param("..") User user) {
+		if (userService.mobileExisted(user.getMobile()) == true) {
+			EC error = new EC("auth.signin.errors.input", new Bundle(
+					"auth"));
+			throw ExceptionWrapper.wrapError(error);
+		}
 		userService.insert(user);
 		userTempService.deleteByCode(user.getCode());
 	}
