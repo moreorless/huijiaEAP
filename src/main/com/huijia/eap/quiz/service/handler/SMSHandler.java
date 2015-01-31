@@ -49,7 +49,7 @@ public class SMSHandler {
 			// *测试开发可使用“测试Demo”的APP ID，正式上线需要使用自己创建的应用的App ID *
 			// *应用ID的获取：登陆官网，在“应用-应用列表”，点击应用名称，看应用详情获取APP ID*
 			// *******************************************************************************
-			restAPI.setAppId("aaf98f894aec8568014af0c2f6560218");
+			restAPI.setAppId("aaf98f894b353559014b3a14dead0338");
 
 			logger.error("短信服务器登录成功");
 			return 0;
@@ -112,7 +112,7 @@ public class SMSHandler {
 			System.out.println("初始化短信服务器失败");
 			return;
 		}
-		String randomCode = sms.sendSMS("15201262843");
+		String randomCode = sms.sendSMS("13717759088");
 		if (randomCode == null) {
 			System.out.println("发送短信失败");
 			return;
