@@ -53,6 +53,7 @@
 .quiz_card_seperator {
 	height : 10px;
 	background-color: #e2e2e2;
+	margin: 0 80px;
 }
 
 p.quiz-tip{
