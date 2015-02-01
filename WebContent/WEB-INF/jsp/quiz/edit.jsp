@@ -85,8 +85,7 @@ em {
 					<div class="form-group">
 						<label class="col-sm-2 control-label">问卷类型<em>*</em></label>
 						<div class="col-sm-2">
-							<select class="form-control" name="type" id="type"
-								onchange="type_show()">
+							<select class="form-control" name="type" id="quiz-type-select">
 								<option value="0"
 									<c:if test="${quiz.type == 0}"> selected</c:if>>独立问卷</option>
 								<option value="1"
@@ -216,6 +215,16 @@ em {
 						</c:forEach>
 					</div>
 				</div>
+				<div class="form-group" id="report-temple-group">
+					<label class="col-sm-2 control-label">报告模板</label>
+					<div class="col-sm-4" >
+						<select class="form-control" name="reporttpl">
+							<c:forEach items="${templeMap}" var="temple">
+							<option value="${temple.key}" <c:if test="${temple.key == quiz.reporttpl}">selected</c:if>>${temple.value}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
 
 				<!-- 当组合问卷进行编辑时，不显示试题上传 -->
 				<c:if test="${param.operation == 'add'}">
@@ -252,18 +261,6 @@ em {
 	<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${base}/js/cupid/core.js"></script>
 	<script type="text/javascript">
-		function type_show() {
-			if ($('select[name=type]').val() == "0") {
-				$('#upload_div').show();
-				$('#subquiz_div').hide();
-				$('#btn_add_subquiz').hide();
-			}
-			if ($('select[name=type]').val() == "1") {
-				$('#upload_div').hide();
-				$('#subquiz_div').show();
-				$('#btn_add_subquiz').show();
-			}
-		}
 
 		var IconPicker = {
 			init : function() {
@@ -292,7 +289,30 @@ em {
 
 		$(document).ready(function() {
 			IconPicker.init();
-			type_show();
+			
+			$('#quiz-type-select').change(function(){
+				if ($(this).val() == "0") {
+					$('#upload_div').show();
+					$('#subquiz_div').hide();
+					$('#btn_add_subquiz').hide();
+				} else if ($(this).val() == "1") {
+					$('#upload_div').hide();
+					$('#subquiz_div').show();
+					$('#btn_add_subquiz').show();
+				}
+				
+				
+				// 子试卷，隐藏模板选择区域
+				if($(this).val() == "2"){
+					$('#report-temple-group').hide();
+					$('#report-temple-group select').prop("disabled", true);
+				}else{
+					$('#report-temple-group').show();
+					$('#report-temple-group select').prop("disabled", false);
+				}
+				
+			});
+			$('#quiz-type-select').trigger('change');
 
 		});
 	</script>

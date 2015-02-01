@@ -1,4 +1,4 @@
-.report-wrapper {width:1000px}
+.report-wrapper {min-width:600px; padding : 20px 60px 40px 60px}
 .report-caption {text-align:center; color:green}
 
 .eap-report {width: 600px; height: 300px;margin:-40px auto -20px auto;}

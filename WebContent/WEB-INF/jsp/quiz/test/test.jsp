@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>会佳心语测评系统</title>
+	<title><fmt:message key="index.product.name" bundle="${i18n_main}"/></title>
 	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />
@@ -20,7 +20,6 @@
 </head>
 <body>
 <div id="scrollWrapper">
-<%@ include file="/error/inline.jsp"%>
 <c:import url="/includes/header_huijia.jsp"></c:import>
 <div class="container quiz_wrapper">
 	<p class="quiz-tip">温馨提示：请注意保护个人测评信息。</p>
@@ -48,7 +47,7 @@
 	</div>
 	</c:forEach>
 	<div class="row">
-    	<div style="text-align: center;height: 60px;line-height: 60px;padding-top: 20px;">
+    	<div style="text-align: center;height: 60px;line-height: 60px;margin-top: 20px;">
     	<c:if test="${fn:length(quizlist) > 1}">
     		<button type="button" id="btn-next" class="btn btn-primary">继续答题</button>
     		<button type="button" id="btn-submit" class="btn btn-primary" style="display:none">提交</button>
@@ -56,16 +55,14 @@
       	<c:if test="${fn:length(quizlist) == 1}">
       	<button type="button" id="btn-submit" class="btn btn-primary">提交</button>
       	</c:if>
-      	<%--
-      	<a href="${base}/quiz/enquizlist" class="btn btn-default">返回</a>
-      	 --%>
+      	<button type="button" id="btn-cancel" class="btn btn-default">取消答题</button>
     	</div>
   	</div>
 	</form>
 </div>
 </div>
 
-<%@ include file="/includes/footer_huijia.jsp" %>
+<c:import url="/includes/footer_huijia.jsp"></c:import>
 </div>
 
 <div id="tip-dialog" class="alert alert-danger">
@@ -73,6 +70,21 @@
 	<button type="button" class="close"><span>&times;</span></button>
 </div>
 
+<div class="modal" id="redo-dialog" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">重新答题</h4>
+      </div>
+      <div class="modal-body">
+        <p><fmt:message key="quiz.test.error.redo" bundle="${i18n_quiz}" /></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
@@ -150,6 +162,12 @@
 				$('#quiz-form').submit();
 			});
 			
+			$('#btn-cancel').click(function(){
+				if(confirm("确定取消本次答题？")){
+					window.location = "${base}/quiz/enquizlist";
+				}
+			});
+			
 			$('#tip-dialog .close').click(function(){
 				$('#tip-dialog').hide();
 			});
@@ -163,6 +181,10 @@
 		});
 		
 		BtnHandler.init();
+		
+		<c:if test="${param.redo == 'true'}">
+			$('#redo-dialog').modal();
+		</c:if>
 	});
 </script>
 </body>

@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>试题列表</title>
+	<title><fmt:message key="index.product.name" bundle="${i18n_main}"/></title>
 	<link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
 	<link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />

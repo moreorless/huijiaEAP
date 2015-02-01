@@ -82,7 +82,7 @@ ${evaluation.suggestion}
 	</c:if>
 </c:forEach>
 
-<p>在各个维度中，${resultlist[1].categoryName}维度得分最高，得分为${maxCateScore}分，说明您的冲突处理方式为${resultlist[0].categoryName}。</p>
+<p>在各个维度中，${resultlist[1].categoryName}维度得分最高，得分为${maxCateScore}分，说明您的冲突处理方式为${resultlist[1].categoryName}。</p>
 <h2 id="二您的冲突处理特点">二．您的冲突处理特点：</h2>
 <p>
 <c:forEach items="${quiz.childList[1].evaluations}" var="evaluation">

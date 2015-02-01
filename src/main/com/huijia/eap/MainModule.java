@@ -15,8 +15,7 @@ import com.huijia.eap.commons.mvc.view.ExceptionViewMaker;
 
 @LoadingBy(CupidNutLoading.class)
 @Modules(scanPackage=true)
-@Ok("json")
-@Fail("json")
+@Fail("error")
 @IocBy(type = ComboIocProvider.class, args = {	//配置Ioc容器
 		"*org.nutz.ioc.loader.json.JsonLoader", "ioc/dao.js", "ioc/service.js",
 		"*org.nutz.ioc.loader.annotation.AnnotationIocLoader","com.huijia.eap",

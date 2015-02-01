@@ -52,9 +52,11 @@ import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
+import com.huijia.eap.quiz.service.ReportTemple;
 import com.huijia.eap.quiz.service.SegmentQuizRelationService;
 import com.huijia.eap.quiz.service.SegmentService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
+import com.huijia.eap.quiz.util.PdfUtil;
 
 @IocBean
 @InjectName
@@ -169,6 +171,8 @@ public class QuizModule {
 			iconNames.add(f.getName());
 		}
 		request.setAttribute("iconNames", iconNames);
+		
+		request.setAttribute("templeMap", ReportTemple.getTemple());
 
 		Quiz quiz = new Quiz();
 
@@ -515,8 +519,7 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	@Fail("forward:/quiz/test")
-	public void answer(HttpServletRequest request,
+	public View answer(HttpServletRequest request,
 			@Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
@@ -550,8 +553,8 @@ public class QuizModule {
 			quizResultService.deleteByX(user.getUserId(), quizId, currentTime);
 			
 			// 向页面返回错误信息
-			EC error = new EC("quiz.test.answer.invalid", bundle);
-			throw ExceptionWrapper.wrapError(error);
+			String redoPath = "/quiz/test?quizId=" +  quizId + "&redo=true";
+			return new ServerRedirectView(redoPath);
 		}
 		
 		QuizAnswerLog history = new QuizAnswerLog();
@@ -572,6 +575,7 @@ public class QuizModule {
 		request.setAttribute("quizlist", quizList);
 		
 		request.setAttribute("quiz", quiz);
+		return new JspView("jsp.quiz.test.report");
 	}
 
 	/**
@@ -579,10 +583,17 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	public void report(HttpServletRequest request, @Param("quizId") long quizId) {
+	@AuthBy(login=false)
+	public void report(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		User user = Auths.getUser(request);
+		User user = null;
+		if(userId > 0){
+			user = userService.fetch(userId);
+		}
+		else {
+			user = Auths.getUser(request);
+		}
 
 		List<QuizResult> resultList = quizResultService.getQuizResult(
 				user.getUserId(), quizId);
@@ -599,4 +610,17 @@ public class QuizModule {
 		request.setAttribute("quiz", quiz);
 	}
 
+	@At
+	@Ok("raw")
+	public File reportexport(HttpServletRequest request, @Param("quizId") long quizId){
+		String url = request.getScheme() + "://127.0.0.1:" + request.getServerPort() + "/"
+				+ request.getContextPath() + "/quiz/report?quizId=" + quizId + "&userId=" + Auths.getUser(request).getUserId() + "&exportpdf=true";
+		
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+		
+		File pdf = PdfUtil.renderPdf(url);
+		// Files.rename(pdf, quiz.getName() + ".pdf");
+		return pdf;
+	}
+	
 }

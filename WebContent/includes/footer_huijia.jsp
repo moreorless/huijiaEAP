@@ -115,12 +115,9 @@
 							<label class="col-sm-2 control-label">教育程度<em>*</em></label>
 							<div class="col-sm-4">
 								<select class="form-control" name="education" id="sel-education">
-									<option value="0"
-										<c:if test="${current_user.education == 0}"> selected</c:if>>大专及以下</option>
-									<option value="1"
-										<c:if test="${current_user.education == 1}"> selected</c:if>>本科</option>
-									<option value="2"
-										<c:if test="${current_user.education == 2}"> selected</c:if>>硕士及以上</option>
+									<option value="0"<c:if test="${current_user.education == 0}"> selected</c:if>>大专及以下</option>
+									<option value="1"<c:if test="${current_user.education == 1}"> selected</c:if>>本科</option>
+									<option value="2"<c:if test="${current_user.education == 2}"> selected</c:if>>硕士及以上</option>
 								</select>
 							</div>
 							<div class="col-sm-6">

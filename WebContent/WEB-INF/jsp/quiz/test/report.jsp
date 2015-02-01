@@ -3,28 +3,45 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>测验报告</title>
+    <title><fmt:message key="index.product.name" bundle="${i18n_main}"/></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
-    <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
+    <c:if test="${param.exportpdf != 'true'}">
     <link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
+    </c:if>
+    <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
     <style type="text/css">
-        body {overflow: auto;background-color: #f3f3f3}
+        html {overflow: auto !important;}
+        body {overflow: auto !important;background-color: #fff}
+        <c:if test="${param.exportpdf == 'true'}">
+        	#export-btn-wrappwer {display:none}
+        	#nav{display:none}
+        	#footer{display:none}
+        	@media print{
+            	p h1 h2 h3 h4 {page-break-before:always;}
+        	}
+        </c:if>        
     </style>
 </head>
 <body>
     <c:import url="/includes/header_huijia.jsp"></c:import>
     <div class="container report-wrapper">
-      	<%@ include file="/error/inline.jsp"%>
+        
+      	<div style="text-align:right" id="export-btn-wrappwer">
+      		<a href="${base}/quiz/enquizlist" class="btn btn-link"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
+      		<a href="${base}/quiz/reportexport?quizId=${param.quizId}" class="btn btn-link" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;导出报告</a>
+      	</div>
+        
         <div>
-        <c:import url="/includes/report/${quiz.reporttpl}_person.jsp"></c:import>
+        <c:import url="/includes/report/${quiz.reporttpl}_person.jsp">
+            <c:param name="exportpdf" value="${param.exportpdf}" />
+        </c:import>
         </div>
     </div>
     <%@ include file="/includes/footer_huijia.jsp" %>
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/echarts/echarts.js"></script>
 <script type="text/javascript">
-
 var quizMap = {};
 <c:forEach items="${quizlist}" var="_quiz" varStatus="stat">
   var categories = [];
@@ -42,9 +59,6 @@ var column_h_Options = [];
     </c:forEach>
     
     column_h_Options[${stat.index}] = {
-    		title : {
-    	        text: '各维度得分'
-    	    },
     	    tooltip : {
                 show: true
             },
