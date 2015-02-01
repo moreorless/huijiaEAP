@@ -200,5 +200,5 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 
 
 # admin / admin
-INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,0,0,0,0);
+INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0);
 INSERT INTO sys_tblids VALUES ('auth_user', 1);
