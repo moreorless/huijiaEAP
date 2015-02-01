@@ -99,16 +99,16 @@ public class User extends BaseTimedObject implements Serializable {
 	// 年龄
 	@Validations(rules = {
 			@ValidateType(type = Type.required, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.minlength, parameters = { "0" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.maxlength, parameters = { "150" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth") })
+			@ValidateType(type = Type.min, parameters = { "10" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.max, parameters = { "100" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth") })
 	@Column
 	private long age;
 
 	// 工作年限
 	@Validations(rules = {
 			@ValidateType(type = Type.required, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.minlength, parameters = { "0" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.maxlength, parameters = { "150" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth") })
+			@ValidateType(type = Type.min, parameters = { "0" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.max, parameters = { "50" }, errorMsg = "user.add.workage.span", resource = true, bundle = "auth") })
 	@Column
 	private long workage;
 
