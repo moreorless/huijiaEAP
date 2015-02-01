@@ -13,66 +13,50 @@
 	href="${base }/css/ui/validate/jquery.validate.css" />
 <style type="text/css">
 body {
-	overflow: auto;
-	background-color: #f3f3f3
+	overflow: auto;	background-color: #f3f3f3
 }
 </style>
 </head>
 <body>
-	<c:import url="/includes/header_huijia.jsp"></c:import>
-	 <!--%@ include file="/error/inline.jsp"%-->
 	<c:import url="/error/inline.jsp"></c:import>
-
 	<div class="container quiz_wrapper">
 		<div class="quiz_inner_wrapper">
-
-			<form action="${base }/user/register" class="form-horizontal"
-				role="form" method="post">
-				<input type="hidden" name="userId" value="${user.userId }" /> <input
-					type="hidden" name="name" value="${user.name }" /> <input
-					type="hidden" name="type" value="${user.type }" /> <input
-					type="hidden" name="companyId" value="${user.companyId }" /> <input
-					type="hidden" name="segmentId" value="${user.segmentId }" /> <input
-					type="hidden" name="code" value="${user.code }" />
+			<form action="${base}/user/register" class="form-horizontal" role="form" method="post">
+				<input type="hidden" name="userId" value="${user.userId }" /> 
+				<input type="hidden" name="name" value="${user.name }" /> 
+				<input type="hidden" name="type" value="${user.type }" /> 
+				<input type="hidden" name="companyId" value="${user.companyId }" /> 
+				<input type="hidden" name="segmentId" value="${user.segmentId }" /> 
+				<input type="hidden" name="code" value="${user.code }" />
 
 				<fieldset>
-
 					<div class="form-group">
 						<label class="col-sm-2 control-label">真实姓名<em>*</em></label>
 						<div class="col-sm-4">
-							<input type="text" class="form-control" name="realname"
-								value="${user.realname}" />
+							<input type="text" class="form-control" name="realname" value="${user.realname}" />
 						</div>
 						<div class="col-sm-6">
-							<span><fmt:message key="user.add.realname.span"
-									bundle="${i18n_auth}" /></span>
+							<span><fmt:message key="user.add.realname.span" bundle="${i18n_auth}" /></span>
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label class="col-sm-2 control-label">密码<em>*</em></label>
 						<div class="col-sm-4">
-							<input type="password" class="form-control" name="password"
-								id="password" value="${user.password}" />
+							<input type="password" class="form-control" name="password" id="password" value="" />
 						</div>
 						<div class="col-sm-6">
-							<span><fmt:message key="user.add.password.span"
-									bundle="${i18n_auth}" /></span>
+							<span><fmt:message key="user.add.password.span" bundle="${i18n_auth}" /></span>
 						</div>
 					</div>
 
-
 					<div class="form-group">
-						<label class="col-sm-2 control-label"><fmt:message
-								key="user.add.repassword" bundle="${i18n_auth}" /><em>*</em></label>
+						<label class="col-sm-2 control-label"><fmt:message key="user.add.repassword" bundle="${i18n_auth}" /><em>*</em></label>
 						<div class="col-sm-4">
-							<input type="password" class="form-control" name="repassword"
-								id="repassword"
-								value="${not empty user ? '#PassWord#' : user.password }" />
+							<input type="password" class="form-control" name="repassword" id="repassword" value="" />
 						</div>
 						<div class="col-sm-6">
-							<span><fmt:message key="user.add.repassword.span"
-									bundle="${i18n_auth}" /></span>
+							<span><fmt:message key="user.add.repassword.span" bundle="${i18n_auth}" /></span>
 						</div>
 					</div>
 
@@ -80,10 +64,8 @@ body {
 						<label class="col-sm-2 control-label">性别<em>*</em></label>
 						<div class="col-sm-4">
 							<select class="form-control" name="gender" id="sel-gender">
-								<option value="0"
-									<c:if test="${user.gender == 0}"> selected</c:if>>女</option>
-								<option value="1"
-									<c:if test="${user.gender == 1}"> selected</c:if>>男</option>
+								<option value="1">男</option>
+								<option value="0">女</option>
 							</select>
 						</div>
 						<div class="col-sm-6">
@@ -214,17 +196,11 @@ body {
 	<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
 
-	<script type="text/javascript" src="${base}/js/bootstrap-modal.js"></script>
-
 	<script type="text/javascript" src="${base }/js/cupid/core.js"></script>
 	<!--验证脚本 -->
-	<script type="text/javascript"
-		src="${base }/js/ui/validate/jquery.validate.js"></script>
-	<script type="text/javascript"
-		src="${base }/js/ui/validate/messages_cn.js"></script>
-	<script type="text/javascript"
-		src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
-	<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
+	<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js"></script>
+	<script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js"></script>
+	<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
 
 	<script type="text/javascript">
 		function validateMobileCode() {
