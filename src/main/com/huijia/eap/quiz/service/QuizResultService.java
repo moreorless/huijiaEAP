@@ -48,9 +48,11 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 	public int deleteByQuizId(long quizId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
-			for(Quiz _quiz : quiz.getChildList()){
-				this.deleteByQuizId(_quiz.getId());
+		if(quiz != null){
+			if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+				for(Quiz _quiz : quiz.getChildList()){
+					this.deleteByQuizId(_quiz.getId());
+				}
 			}
 		}
 		

@@ -22,22 +22,6 @@ import com.huijia.eap.quiz.data.SegmentQuizRelation;
 @IocBean
 public class QuizService extends TblIdsEntityService<Quiz> {
 
-	private final static short QUIZ_TYPE_STANDALONE = 0;
-	private final static short QUIZ_TYPE_PARENT = 1;
-	private final static short QUIZ_TYPE_CHILD = 2;
-
-	public static short getQuizTypeStandalone() {
-		return QUIZ_TYPE_STANDALONE;
-	}
-
-	public static short getQuizTypeParent() {
-		return QUIZ_TYPE_PARENT;
-	}
-
-	public static short getQuizTypeChild() {
-		return QUIZ_TYPE_CHILD;
-	}
-
 	@Inject
 	private QuizItemService quizItemService;
 

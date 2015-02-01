@@ -23,6 +23,7 @@ import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.data.UserTemp;
 import com.huijia.eap.quiz.service.CompanyService;
@@ -130,7 +131,7 @@ public class SegmentModule {
 		List<Quiz> all = quizService.fetchAll();
 		LinkedList<Quiz> list = new LinkedList<Quiz>();
 		for (Quiz q : all) {
-			if (q.getType() != QuizService.getQuizTypeChild())
+			if (q.getType() != QuizConstant.QUIZ_TYPE_CHILD)
 				list.add(q);
 		}
 		request.setAttribute("allQuizList", list);
