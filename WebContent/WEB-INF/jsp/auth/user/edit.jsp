@@ -91,10 +91,8 @@ em {
 					<label class="col-sm-2 control-label">性别<em>*</em></label>
 					<div class="col-sm-4">
 						<select class="form-control" name="gender" id="sel-gender">
-							<option value="0"
-								<c:if test="${user.gender == 0}"> selected</c:if>>女</option>
-							<option value="1"
-								<c:if test="${user.gender == 1}"> selected</c:if>>男</option>
+							<option value="0" <c:if test="${user.gender == 0}"> selected</c:if>>女</option>
+							<option value="1" <c:if test="${user.gender == 1}"> selected</c:if>>男</option>
 						</select>
 					</div>
 					<div class="col-sm-6">

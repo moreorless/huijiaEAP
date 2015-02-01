@@ -126,19 +126,6 @@ public class User extends BaseTimedObject implements Serializable {
 	@Column
 	private String code;
 
-	@Validations(rules = {
-			@ValidateType(type = Type.required, errorMsg = "auth.signin.errors.validatecode", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.regexp, parameters = { "[0-9][0-9][0-9][0-9]" }, errorMsg = "auth.signin.errors.validatecode", resource = true, bundle = "auth") })
-	private String validateCode;
-
-	public String getValidateCode() {
-		return validateCode;
-	}
-
-	public void setValidateCode(String validateCode) {
-		this.validateCode = validateCode;
-	}
-
 	public long getGender() {
 		return gender;
 	}
