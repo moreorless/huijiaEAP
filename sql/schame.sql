@@ -183,6 +183,7 @@ DROP TABLE IF EXISTS `quiz_answer_log`;
 CREATE TABLE `quiz_answer_log` (
 	`quizId` INT(11) NULL DEFAULT NULL,
 	`userId` INT(11) NULL DEFAULT NULL,
+	`companyId` INT(11) NULL DEFAULT NULL,
 	`timestamp` BIGINT(20) NULL DEFAULT NULL
 )
 COMMENT='答题记录'
