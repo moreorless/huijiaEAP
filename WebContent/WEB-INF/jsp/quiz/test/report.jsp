@@ -12,7 +12,7 @@
     <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
     <style type="text/css">
         html {overflow: auto !important;}
-        body {background-color: #fff; font-family: "微软雅黑","Arial","Helvetica","sans-serif";font-size:16px;}
+        body {overflow: auto !important; background-color: #fff; font-family: "微软雅黑","Arial","Helvetica","sans-serif";font-size:16px;}
         <c:if test="${param.exportpdf == 'true'}">
             #export-btn-wrappwer {display:none}
             #nav{display:none}
@@ -22,7 +22,10 @@
                 p h1 h2 h3 h4 {page-break-after:always;}
             }
             */
-        </c:if>        
+        </c:if>
+		<c:if test="${param.exportpdf != 'true'}">
+			.report-wrapper {width: 1000px;}
+		</c:if>
     </style>
 </head>
 <body>
