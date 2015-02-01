@@ -12,14 +12,16 @@
     <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
     <style type="text/css">
         html {overflow: auto !important;}
-        body {overflow: auto !important;background-color: #fff}
+        body {background-color: #fff; font-family: "微软雅黑","Arial","Helvetica","sans-serif";font-size:16px;}
         <c:if test="${param.exportpdf == 'true'}">
-        	#export-btn-wrappwer {display:none}
-        	#nav{display:none}
-        	#footer{display:none}
-        	@media print{
-            	p h1 h2 h3 h4 {page-break-before:always;}
-        	}
+            #export-btn-wrappwer {display:none}
+            #nav{display:none}
+            #footer{display:none}
+            /*
+            @media print{
+                p h1 h2 h3 h4 {page-break-after:always;}
+            }
+            */
         </c:if>        
     </style>
 </head>
@@ -27,10 +29,10 @@
     <c:import url="/includes/header_huijia.jsp"></c:import>
     <div class="container report-wrapper">
         
-      	<div style="text-align:right" id="export-btn-wrappwer">
-      		<a href="${base}/quiz/enquizlist" class="btn btn-link"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
-      		<a href="${base}/quiz/reportexport?quizId=${param.quizId}" class="btn btn-link" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;导出报告</a>
-      	</div>
+        <div style="text-align:right" id="export-btn-wrappwer">
+            <a href="${base}/quiz/enquizlist" class="btn btn-link"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
+            <a href="${base}/quiz/reportexport?quizId=${param.quizId}" class="btn btn-link" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;导出报告</a>
+        </div>
         
         <div>
         <c:import url="/includes/report/${quiz.reporttpl}_person.jsp">
@@ -59,7 +61,7 @@ var column_h_Options = [];
     </c:forEach>
     
     column_h_Options[${stat.index}] = {
-    	    tooltip : {
+            tooltip : {
                 show: true
             },
             xAxis : [
