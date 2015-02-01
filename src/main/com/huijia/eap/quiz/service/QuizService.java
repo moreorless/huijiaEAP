@@ -136,6 +136,7 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	public Quiz fetchFullQuiz(long id) {
 		Quiz quiz = this.fetch(id);
 
+		if(quiz == null) return null;
 		// 如果是复合试卷，递归获取子试卷
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			List<Quiz> children = this.fetchListByParentId(id);
