@@ -40,10 +40,10 @@
 			</div>
 			</c:if>
 		</div>
-		<c:if test="${!stat.last}">
-			<div class="quiz_card_seperator"></div>
-		</c:if>
 	</div>
+	<c:if test="${!stat.last}">
+		<div class="quiz_card_seperator"></div>
+	</c:if>
 	</c:forEach>
 	<div style="height: 60px;"></div>
 	</div>
