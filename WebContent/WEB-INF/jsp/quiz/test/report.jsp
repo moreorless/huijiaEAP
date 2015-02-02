@@ -14,18 +14,18 @@
         html {overflow: auto !important;}
         body {overflow: auto !important; background-color: #fff; font-family: "微软雅黑","Arial","Helvetica","sans-serif";font-size:16px;}
         <c:if test="${param.exportpdf == 'true'}">
+            body {font-size:16px !important;line-height:1.8em !important;}
             #export-btn-wrappwer {display:none}
             #nav{display:none}
             #footer{display:none}
-            /*
-            @media print{
-                p h1 h2 h3 h4 {page-break-after:always;}
-            }
+            .report-wrapper{padding:0px; margin:40px auto;}
+            p{line-height:1.8em !important;}
+            
             */
         </c:if>
-		<c:if test="${param.exportpdf != 'true'}">
-			.report-wrapper {width: 1000px;}
-		</c:if>
+        <c:if test="${param.exportpdf != 'true'}">
+            .report-wrapper {width: 1000px;}
+        </c:if>
     </style>
 </head>
 <body>
