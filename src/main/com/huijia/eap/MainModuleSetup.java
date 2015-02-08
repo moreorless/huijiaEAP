@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.nutz.mvc.NutConfig;
 import org.nutz.mvc.Setup;
 
-import com.huijia.eap.quiz.service.handler.SMSHandler;
 import com.huijia.eap.util.LocalAddressUtil;
 import com.huijia.eap.util.dao.DaoUtil;
 
@@ -31,11 +30,6 @@ private static final Logger logger = Logger.getLogger(MainModuleSetup.class);
 		GlobalConfig.addContextValue("server.ip", LocalAddressUtil.getIp());
 		GlobalConfig.addContextValue("server.hostname", LocalAddressUtil.getHostName());
 		GlobalConfig.addContextValue("server.starting", String.valueOf(System.currentTimeMillis()));
-		
-		//添加短信服务变量
-		SMSHandler SMSService = new SMSHandler("1", 1);
-		SMSService.initSMSService();
-		GlobalConfig.addContextValue("SMS", SMSService);
 		
 		System.setProperty("conf.dir", webdir + "/WEB-INF/_conf");
 		

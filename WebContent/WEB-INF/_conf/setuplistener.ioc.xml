@@ -1,0 +1,7 @@
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="nutz-ioc-0.1.xsd">
+
+	<!-- 资产分类缓存,如果有资产模块,则此服务必须 -->
+	<obj name="$setup_quizListener" type="com.huijia.eap.quiz.QuizSetupListener">
+	</obj>
+</ioc>	

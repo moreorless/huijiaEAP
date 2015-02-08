@@ -45,7 +45,11 @@
     </div>
     <%@ include file="/includes/footer_huijia.jsp" %>
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${base}/js/echarts/echarts.js"></script>
+<script type="text/javascript" src="${base }/js/cupid/core.js"></script>
+<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
+
 <script type="text/javascript">
 var quizMap = {};
 <c:forEach items="${quizlist}" var="_quiz" varStatus="stat">
