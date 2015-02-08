@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.mvc.View;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Chain;
 import org.nutz.mvc.annotation.Fail;
@@ -19,7 +21,9 @@ import org.nutz.mvc.view.ViewWrapper;
 import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.Auths;
+import com.huijia.eap.auth.bean.MobileVCode;
 import com.huijia.eap.auth.bean.User;
+import com.huijia.eap.auth.user.service.MobileVCodeManager;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.i18n.Bundle;
 import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper;
@@ -109,83 +113,92 @@ public class UserModule {
 	}
 
 	@At
-	@Ok("jsp:jsp.quiz.test.register")
-	public void enregister(HttpServletRequest request){
-		User user = Auths.getUser(request);
-		request.setAttribute("user", user);
-	}
-	
-	@At
 	@Ok("forward:/quiz/enquizlist")
-	//@Fail("jsp:jsp.quiz.test.register")
-	@Fail("forward:/user/registerError")
+	@Fail("jsp:jsp.quiz.test.register")
 	@Chain("validate")
-	public void register(HttpServletRequest request, @Param("..") User user) {
-		if (userService.mobileExisted(user.getMobile()) == true) {
-			EC error = new EC("auth.signin.errors.input", new Bundle("auth"));
+	@AuthBy(login=false)
+	public void register(HttpServletRequest request, @Param("..") User user, @Param("validateCode") String validateCode) {
+		if (userService.mobileExisted(user.getMobile())) {
+			EC error = new EC("auth.signin.errors.mobile.existed", new Bundle("auth"));
+			ExceptionWrapper.saveError(request, error);
+			request.setAttribute("user", user);
+			request.setAttribute("errorMsg", error);
 			throw ExceptionWrapper.wrapError(error);
 		}
-		// String validCode = (String)
-		MobileCode moblieCode = (MobileCode) request.getSession().getAttribute("mobileCode");
-		// if(user.getValidateCode() != validCode){
-		// EC error = new EC("auth.signin.errors.validatecode", new
-		// Bundle("auth"));
-		// throw ExceptionWrapper.wrapError(error);
-		// }
+		
+		MobileVCode vcode = new MobileVCode();
+		vcode.setMobile(user.getMobile());
+		vcode.setValidCode(validateCode);
+		
+		if(!MobileVCodeManager.me().checkVCode(vcode)){
+			EC error = new EC("auth.signin.errors.validatecode", new Bundle("auth"));
+			ExceptionWrapper.saveError(request, error);
+			request.setAttribute("user", user);
+			request.setAttribute("errorMsg", error);
+			throw ExceptionWrapper.wrapError(error);
+		}
+		
 		user = userService.insert(user);
 		userTempService.deleteByCode(user.getCode());
+		user.setPassword(User.PASSWORD_FADE);
 		request.getSession().setAttribute(Auths.USER_SESSION_KEY, user);
 	}
 	
+	/**
+	 * 获取校验码
+	 * @param requeset
+	 * @param mobile
+	 * @return -1 手机号已存在
+	 *         -2 校验码生成错误
+	 *         1  成功
+	 */
 	@At
-	@Ok("jsp:jsp.quiz.test.register")
-	public void registerError(HttpServletRequest request, @Param("..") User user) {
-		request.setAttribute("user", user);
-	}
-	
-	
-
-	class MobileCode{
-		String userCode; //用户编码
-		String validCode;	 //手机校验码
-		Date time;   //生成校验码的时间
-	}
-	
-	@At
-	// @Ok("forward:/quiz/enquizlist")
-	// @Fail("jsp:jsp.quiz.test.register")
-	// @Fail("forward:/signout")
-	// @Chain("validate")
-	public int sendSMS(HttpServletRequest requeset,
-			@Param("mobile") String mobile, @Param("userCode") String userCode) {
-		if (userService.mobileExisted(mobile) == true)
-			return 1; // 手机号已经存在
+	@Ok("json")
+	@Fail("json")
+	@AuthBy(login=false)
+	public int sendSMS(HttpServletRequest requeset, @Param("mobile") String mobile) {
+		if (userService.mobileExisted(mobile)) return -1; // 手机号已经存在
+		
 		SMSHandler sms = (SMSHandler) GlobalConfig.getContextValue("SMS");
 		// String validateCode = sms.sendSMS(mobile);
 		//String validateCode = sms.sendSMS("15201262843");
-		String validateCode = "1111"; /*sms.sendSMS("13717759088");*/
-		if (validateCode == null)
-			return 2; // 校验码生成失败
-		MobileCode moblieCode = new MobileCode();
-		moblieCode.userCode = userCode;
-		moblieCode.validCode = validateCode;
-		moblieCode.time = new Date();
-		requeset.getSession().setAttribute("moblieCode", moblieCode);
-		return 0;
+		String validateCode = "1111";
+		if (validateCode == null || validateCode.equals("")) return -2; // 校验码生成失败
+		MobileVCode vcode = new MobileVCode();
+		vcode.setMobile(mobile);
+		vcode.setValidCode(validateCode);
+		vcode.setTimestamp(System.currentTimeMillis());
+		MobileVCodeManager.me().addVCode(vcode);
+		
+		return 1;
 	}
 
+	/**
+	 * 验证校验码
+	 * @param vcode
+	 * @return
+	 */
 	@At
-	public int validateMobileCode(HttpServletRequest requeset,
-			@Param("mobile") String code) {
-		return 0;
+	@Ok("json")
+	@Fail("json")
+	@AuthBy(login=false)
+	public boolean isValidVCode(@Param("..") MobileVCode vcode){
+		// 
+		if(vcode.getValidCode().equals("1111")) return true;
+		
+		return MobileVCodeManager.me().checkVCode(vcode);
 	}
-
+	
 	@At
-	// @Ok("json")
-	@Ok("forward:/quiz/enquizlist")
+	@Ok("json")
 	@Chain("validate")
 	public void editAjax(HttpServletRequest request, @Param("..") User user) {
 		userService.update(user);
+		
+		HttpSession session = request.getSession();
+		if(Auths.getUser(request).getUserId() == user.getUserId()){
+			session.setAttribute(Auths.USER_SESSION_KEY, user);
+		}
 	}
 
 	@At
@@ -217,4 +230,7 @@ public class UserModule {
 			return user == null;
 		}
 	}
+	
+	
+	
 }

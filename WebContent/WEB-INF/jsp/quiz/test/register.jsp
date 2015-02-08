@@ -7,24 +7,25 @@
 <link type="text/css" rel="stylesheet"
 	href="${base}/css/bootstrap.min.css" />
 <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
-<link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />
 <link type="text/css" rel="stylesheet" href="${base}/css/huijia.css" />
-<link type="text/css" rel="stylesheet"
-	href="${base }/css/ui/validate/jquery.validate.css" />
+<link type="text/css" rel="stylesheet" href="${base }/css/ui/validate/jquery.validate.css" />
 <style type="text/css">
 body {
-	overflow: auto;	background-color: #f3f3f3
+	overflow: auto;	background-color: #f3f3f3;
 }
+#container {width:1000px;}
 </style>
 </head>
 <body>
 	<c:import url="/includes/header_huijia.jsp">
 		<c:param name="hideBtn" value="true"></c:param>
 	</c:import>
+	
 	<c:import url="/error/inline.jsp"></c:import>
-	<div class="container quiz_wrapper">
-		<div class="quiz_inner_wrapper">
-			<form action="${base}/user/register" class="form-horizontal" role="form" method="post" id="register-form">
+	
+	<div class="container">
+	<div class="row" style="clear:both;padding-top:40px;">
+		<form action="${base}/user/register" class="form-horizontal" role="form" method="post" id="register-form">
 				<input type="hidden" name="userId" value="${user.userId }" /> 
 				<input type="hidden" name="name" value="${user.name }" /> 
 				<input type="hidden" name="type" value="${user.type }" /> 
@@ -32,132 +33,132 @@ body {
 				<input type="hidden" name="segmentId" value="${user.segmentId }" /> 
 				<input type="hidden" name="code" value="${user.code }" />
 
-				<fieldset>
-					<div class="form-group">
-						<label class="col-sm-2 control-label">真实姓名<em>*</em></label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="realname" value="${user.realname}" />
-						</div>
-						<div class="col-sm-6">
-							<span><fmt:message key="user.add.realname.span" bundle="${i18n_auth}" /></span>
-						</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">真实姓名<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="realname" value="${user.realname}" />
 					</div>
-
-					<div class="form-group">
-						<label class="col-sm-2 control-label">密码<em>*</em></label>
-						<div class="col-sm-4">
-							<input type="password" class="form-control" name="password" id="password" value="" />
-						</div>
-						<div class="col-sm-6">
-							<span><fmt:message key="user.add.password.span" bundle="${i18n_auth}" /></span>
-						</div>
+					<div class="col-sm-6">
 					</div>
+				</div>
 
-					<div class="form-group">
-						<label class="col-sm-2 control-label"><fmt:message key="user.add.repassword" bundle="${i18n_auth}" /><em>*</em></label>
-						<div class="col-sm-4">
-							<input type="password" class="form-control" name="repassword" id="repassword" value="" />
-						</div>
-						<div class="col-sm-6">
-							<span><fmt:message key="user.add.repassword.span" bundle="${i18n_auth}" /></span>
-						</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">密码<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="password" class="form-control" name="password" id="password" value="" />
 					</div>
-
-					<div class="form-group">
-						<label class="col-sm-2 control-label">性别<em>*</em></label>
-						<div class="col-sm-4">
-							<select class="form-control" name="gender" id="sel-gender">
-								<option value="1">男</option>
-								<option value="0">女</option>
-							</select>
-						</div>
-						<div class="col-sm-6">
-						</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.password.span" bundle="${i18n_auth}" /></span>
 					</div>
+				</div>
 
-					<div class="form-group">
-						<label class="col-sm-2 control-label">年龄<em>*</em></label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="age" />
-						</div>
-						<div class="col-sm-6">
-						</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><fmt:message key="user.add.repassword" bundle="${i18n_auth}" /><em>*</em></label>
+					<div class="col-sm-4">
+						<input type="password" class="form-control" name="repassword" id="repassword" value="" />
 					</div>
-
-					<div class="form-group">
-						<label class="col-sm-2 control-label">工作年限<em>*</em></label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="workage" />
-						</div>
-						<div class="col-sm-6">
-						</div>
+					<div class="col-sm-6">
+						<span><fmt:message key="user.add.repassword.span" bundle="${i18n_auth}" /></span>
 					</div>
+				</div>
 
-
-
-
-					<div class="form-group">
-						<label class="col-sm-2 control-label">教育程度<em>*</em></label>
-						<div class="col-sm-4">
-							<select class="form-control" name="education" id="sel-education">
-								<option value="0">大专及以下</option>
-								<option value="1" selected>本科</option>
-								<option value="2">硕士及以上</option>
-							</select>
-						</div>
-						<div class="col-sm-6"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">性别<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="gender" id="sel-gender">
+							<option value="1" <c:if test="${user.gender == 1}">selected</c:if>>男</option>
+							<option value="0" <c:if test="${user.gender == 0}">selected</c:if>>女</option>
+						</select>
 					</div>
+					<div class="col-sm-6">
+					</div>
+				</div>
 
-					<div class="form-group">
-						<label class="col-sm-2 control-label">职位<em>*</em></label>
-						<div class="col-sm-4">
-							<select class="form-control" name="jobtitle" id="sel-jobtitle">
-								<option value="0" selected>普通员工</option>
-								<option value="1">中层管理人员</option>
-								<option value="2">高层管理人员</option>
-							</select>
-						</div>
-						<div class="col-sm-6">
-						</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">年龄<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="age" value="${user.age != 0 ? user.age : ''}"/>
 					</div>
+					<div class="col-sm-6">
+					</div>
+				</div>
 
-					<div class="form-group">
-						<label class="col-sm-2 control-label">邮箱</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="email" />
-						</div>
-						<div class="col-sm-6">
-						</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">工作年限<em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="workage" value="${user.workage != 0 ? user.workage : ''}"/>
 					</div>
+					<div class="col-sm-6">
+					</div>
+				</div>
 
-					<div class="form-group">
-						<label class="col-sm-2 control-label"><fmt:message
-								key="user.add.mobile" bundle="${i18n_auth}" /><em>*</em></label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="mobile" />
-						</div>
-						<div class="col-sm-6">
-						</div>
-					</div>
-					 
-					<div class="form-group">
-						<label class="col-sm-2 control-label"><fmt:message
-								key="user.add.validatecode" bundle="${i18n_auth}" /><em>*</em></label>
-						<div class="col-sm-2">
-							<input type="text" class="form-control" name="validateCode" />
-						</div>
-						<div class="col-sm-6">
-							 <button type="button" class="btn btn-primary" disabled="disabled">获取校验码</button>  
-						</div>
-					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-5 col-sm-10">
-							<button type="button" class="btn btn-primary" id="btn-submit">提交</button>  
-							<a href="${base}/signout" class="btn btn-default">取消</a>
-						</div>
+
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">教育程度<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="education" id="sel-education">
+							<option value="0" <c:if test="${user.education == 0}">selected</c:if>>大专及以下</option>
+							<option value="1" <c:if test="${user.education == 1}">selected</c:if>>本科</option>
+							<option value="2" <c:if test="${user.education == 2}">selected</c:if>>硕士及以上</option>
+						</select>
 					</div>
-				</fieldset>
+					<div class="col-sm-6"></div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">职位<em>*</em></label>
+					<div class="col-sm-4">
+						<select class="form-control" name="jobtitle" id="sel-jobtitle">
+							<option value="0" <c:if test="${user.jobtitle == 0}">selected</c:if>>普通员工</option>
+							<option value="1" <c:if test="${user.jobtitle == 1}">selected</c:if>>中层管理人员</option>
+							<option value="2" <c:if test="${user.jobtitle == 2}">selected</c:if>>高层管理人员</option>
+						</select>
+					</div>
+					<div class="col-sm-6">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">邮箱</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="email" value="${user.email}"/>
+					</div>
+					<div class="col-sm-6">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><fmt:message
+							key="user.add.mobile" bundle="${i18n_auth}" /><em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="mobile" id="mobile" value="${user.mobile}"/>
+					</div>
+					<div class="col-sm-6" id="mobile-help">
+					</div>
+				</div>
+				 
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><fmt:message
+							key="user.add.validatecode" bundle="${i18n_auth}" /><em>*</em></label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" name="validateCode"/>
+					</div>
+					<div class="col-sm-6">
+						 <button type="button" class="btn btn-primary" id="btn-validatecode">获取校验码</button>
+					</div>
+					<div class="col-sm-offset-2 col-sm-10">
+					<p class="help-block" id="validate-code-help" style="display: none">校验码发送成功，60秒内未收到请重新获取。</p>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-5 col-sm-10">
+						<button type="button" class="btn btn-primary" id="btn-submit">提交</button>  
+						<a href="${base}/signout" class="btn btn-default">取消</a>
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -180,32 +181,95 @@ body {
 	<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
 
 	<script type="text/javascript">
-		function validateMobileCode() {
-			var mobile = $('input[name=mobile]').val();
-			var userCode = $('input[name=code]').val();
-			//var obj = false;
+	var ValidateHandler = {
+			init : function() {
+				$("[name=repassword]").rules(
+						"add",
+						{
+							required : true,
+							equalTo : "#password",
+							messages : {
+								required : $.message("auth",
+										"user.add.repassword.span"),
+								equalTo : $.message("auth",
+										"user.add.repassword.span.pass")
+							}
+						});
+				$("[name=validateCode]").rules("add",
+						{
+							remote : {
+								type : "POST",
+								async : false,
+								url : "${base}/user/isValidVCode",
+								dataType : "json",
+								data : {
+									mobile : $('input[name=mobile]').val(),
+									validCode : $('input[name=validateCode]').val()
+								}
+							},
+							messages : {
+								remote : $.message("auth", "auth.signin.errors.validatecode")
+							}
+						});
+			}
+		};
+
+	var ValidateCodeHandler = {
+		wait : 60,
+		timer : function(){
+
+			if(ValidateCodeHandler.wait == 0){
+				$('#btn-validatecode').text('获取校验码');
+				$('#btn-validatecode').prop("disabled", false);
+				ValidateCodeHandler.wait = 60;
+			}else {
+				$('#btn-validatecode').prop("disabled", true);
+				$('#btn-validatecode').text(ValidateCodeHandler.wait + '秒后重新获取');
+				console.log(new Date() + ' -- ' + ValidateCodeHandler.wait)
+				ValidateCodeHandler.wait--;
+				setTimeout(ValidateCodeHandler.timer, 1000);
+			}
+		},
+		getValidateCode : function(){
+			if(!$("#register-form").valid()) return;
+
 			$.ajax({
-				async : false, //使用同步请求，因为异步请求不能将返回值传给全局变量；这里很重要  
 				url : "${base}/user/sendSMS",
-				type : "post",
+				type : 'post',
 				dataType : "json",
-				data : "mobile=" + mobile,
-				//data: "{mobile:'" + mobile + "',userCode:'" + userCode + "'}",
-				success : function(data) {
-					alert("ok:"+data);  
-					//obj = data;
+				data : {
+					mobile : $('input[name=mobile]').val()
+				},
+				success : function(result){
+					if(result == -1){  // 手机号已使用
+						$('#mobile-help').text('手机号已被使用').addClass('alert-danger');
+						return;
+					}else if(result == -2){  // 生成校验码出错
+						$('#mobile-help').text('生成校验码出错').addClass('alert-danger');
+						return;
+					}
+					$('#mobile-help').text('').removeClass('alert-danger');
+					ValidateCodeHandler.timer();
+				},
+				error : function(){
+					$('#validate-code-help').text('获取校验码失败!请稍后重试');
 				}
 			});
+			$('#validate-code-help').show();
 		}
-	</script>
-
-	<script type="text/javascript">
+	};
 		
 	$(document).ready(function() {
 		$('#btn-submit').click(function(){
+			$('#validate-code-help').hide();
+			
 			$('#register-form').submit();
 		});
-
+		
+		$('#btn-validatecode').click(function(){
+			ValidateCodeHandler.getValidateCode();
+		});
+		ValidateHandler.init();
 	});
 	</script>
 </body>

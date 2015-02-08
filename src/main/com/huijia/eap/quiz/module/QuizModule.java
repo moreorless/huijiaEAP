@@ -121,8 +121,7 @@ public class QuizModule {
 		// request.setAttribute("quizlist", list);
 
 		// User currentUser = Auths.getUser(request);
-		User currentUser = userService.fetchByName(Auths.getUser(request)
-				.getName());
+		User currentUser = userService.fetchByName(Auths.getUser(request).getName());
 		currentUser.setPassword(User.PASSWORD_FADE);
 		request.setAttribute("user", currentUser);
 		request.setAttribute("current_user", currentUser);

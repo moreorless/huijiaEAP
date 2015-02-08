@@ -23,6 +23,7 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.mvc.view.ForwardView;
 import org.nutz.mvc.view.JspView;
 import org.nutz.mvc.view.ServerRedirectView;
 import org.nutz.mvc.view.ViewWrapper;
@@ -116,8 +117,7 @@ public class Sign {
 			user.setPassword(userTemp.getPassword());
 			user.setType(User.TYPE_USER);
 			request.setAttribute("user", user);
-			session.setAttribute(Auths.USER_SESSION_KEY, user);
-			return new ServerRedirectView("/user/enregister");
+			return new JspView("jsp.quiz.test.register");
 		}
 
 		boolean authen = false;

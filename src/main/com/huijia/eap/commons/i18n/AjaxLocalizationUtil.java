@@ -33,7 +33,7 @@ import com.huijia.eap.annotation.AuthBy;
  */
 @IocBean
 @InjectName
-@AuthBy(check=false)
+@AuthBy(login=false)
 @At("/util")
 @Ok("json")
 public class AjaxLocalizationUtil {
