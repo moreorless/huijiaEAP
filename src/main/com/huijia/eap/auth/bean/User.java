@@ -94,7 +94,7 @@ public class User extends BaseTimedObject implements Serializable {
 
 	// 性别: 0女 1男
 	@Column
-	private long gender;
+	private long gender = 1;
 
 	// 年龄
 	@Validations(rules = {
@@ -115,7 +115,7 @@ public class User extends BaseTimedObject implements Serializable {
 	// 教育程度 0:大专及以下 1:本科 2:硕士及以上
 	@Column
 	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "user.add.education.span", resource = true, bundle = "auth") })
-	private long education;
+	private long education = 1;
 
 	// 职位信息 0:普通员工 1:中层管理 2:高层管理
 	@Column

@@ -11,7 +11,7 @@
 <link type="text/css" rel="stylesheet" href="${base }/css/ui/validate/jquery.validate.css" />
 <style type="text/css">
 body {
-	overflow: auto;	background-color: #f3f3f3;
+	overflow-y: auto;	background-color: #f3f3f3;
 }
 #container {width:1000px;}
 </style>
@@ -65,10 +65,12 @@ body {
 				<div class="form-group">
 					<label class="col-sm-2 control-label">性别<em>*</em></label>
 					<div class="col-sm-4">
-						<select class="form-control" name="gender" id="sel-gender">
-							<option value="1" <c:if test="${user.gender == 1}">selected</c:if>>男</option>
-							<option value="0" <c:if test="${user.gender == 0}">selected</c:if>>女</option>
-						</select>
+						<label class="radio-inline">
+							<input type="radio" value="1" name="gender"  <c:if test="${user.gender == 1}">checked</c:if>/>男
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="0" name="gender" <c:if test="${user.gender == 0}">checked</c:if>/>女
+						</label>
 					</div>
 					<div class="col-sm-6">
 					</div>
@@ -98,11 +100,15 @@ body {
 				<div class="form-group">
 					<label class="col-sm-2 control-label">教育程度<em>*</em></label>
 					<div class="col-sm-4">
-						<select class="form-control" name="education" id="sel-education">
-							<option value="0" <c:if test="${user.education == 0}">selected</c:if>>大专及以下</option>
-							<option value="1" <c:if test="${user.education == 1}">selected</c:if>>本科</option>
-							<option value="2" <c:if test="${user.education == 2}">selected</c:if>>硕士及以上</option>
-						</select>
+						<label class="radio-inline">
+							<input type="radio" value="0" name="education"  <c:if test="${user.education == 0}">checked</c:if>/>大专及以下
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="1" name="education"  <c:if test="${user.education == 1}">checked</c:if>/>本科
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="2" name="education"  <c:if test="${user.education == 2}">checked</c:if>/>硕士及以上
+						</label>
 					</div>
 					<div class="col-sm-6"></div>
 				</div>
@@ -110,11 +116,15 @@ body {
 				<div class="form-group">
 					<label class="col-sm-2 control-label">职位<em>*</em></label>
 					<div class="col-sm-4">
-						<select class="form-control" name="jobtitle" id="sel-jobtitle">
-							<option value="0" <c:if test="${user.jobtitle == 0}">selected</c:if>>普通员工</option>
-							<option value="1" <c:if test="${user.jobtitle == 1}">selected</c:if>>中层管理人员</option>
-							<option value="2" <c:if test="${user.jobtitle == 2}">selected</c:if>>高层管理人员</option>
-						</select>
+						<label class="radio-inline">
+							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 0}">checked</c:if>/>普通员工
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 1}">checked</c:if>/>中层管理人员
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 2}">checked</c:if>/>高层管理人员
+						</label>
 					</div>
 					<div class="col-sm-6">
 					</div>
@@ -143,7 +153,7 @@ body {
 					<label class="col-sm-2 control-label"><fmt:message
 							key="user.add.validatecode" bundle="${i18n_auth}" /><em>*</em></label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="validateCode"/>
+						<input type="text" class="form-control" name="validateCode" id="validateCode" disabled/>
 					</div>
 					<div class="col-sm-6">
 						 <button type="button" class="btn btn-primary" id="btn-validatecode">获取校验码</button>
@@ -195,16 +205,14 @@ body {
 										"user.add.repassword.span.pass")
 							}
 						});
-				$("[name=validateCode]").rules("add",
-						{
+				$("[name=validateCode]").rules("add", {
 							remote : {
 								type : "POST",
-								async : false,
 								url : "${base}/user/isValidVCode",
 								dataType : "json",
 								data : {
-									mobile : $('input[name=mobile]').val(),
-									validCode : $('input[name=validateCode]').val()
+									mobile : function(){ return $('input[name=mobile]').val()},
+									validCode : function(){ return $('#validateCode').val()}
 								}
 							},
 							messages : {
@@ -245,7 +253,6 @@ body {
 						$('#mobile-help').text('手机号已被使用').addClass('alert-danger');
 						return;
 					}else if(result == -2){  // 生成校验码出错
-						$('#mobile-help').text('生成校验码出错').addClass('alert-danger');
 						return;
 					}
 					$('#mobile-help').text('').removeClass('alert-danger');
@@ -268,6 +275,7 @@ body {
 		
 		$('#btn-validatecode').click(function(){
 			ValidateCodeHandler.getValidateCode();
+			$('#validateCode').prop("disabled", false);
 		});
 		ValidateHandler.init();
 	});
