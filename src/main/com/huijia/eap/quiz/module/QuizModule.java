@@ -121,7 +121,7 @@ public class QuizModule {
 		// request.setAttribute("quizlist", list);
 
 		// User currentUser = Auths.getUser(request);
-		User currentUser = userService.fetchByName(Auths.getUser(request).getName());
+		User currentUser = userService.fetch(Auths.getUser(request).getUserId());
 		currentUser.setPassword(User.PASSWORD_FADE);
 		request.setAttribute("user", currentUser);
 		request.setAttribute("current_user", currentUser);
@@ -586,16 +586,12 @@ public class QuizModule {
 	public void report(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		User user = null;
-		if(userId > 0){
-			user = userService.fetch(userId);
-		}
-		else {
-			user = Auths.getUser(request);
-		}
+		User currentUser = userService.fetch(Auths.getUser(request).getUserId());
+		currentUser.setPassword(User.PASSWORD_FADE);
+		request.setAttribute("user", currentUser);
+		request.setAttribute("current_user", currentUser);
 
-		List<QuizResult> resultList = quizResultService.getQuizResult(
-				user.getUserId(), quizId);
+		List<QuizResult> resultList = quizResultService.getQuizResult(userId, quizId);
 		request.setAttribute("resultlist", resultList);
 
 		List<Quiz> quizList = new ArrayList<Quiz>();

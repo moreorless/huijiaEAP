@@ -191,6 +191,7 @@ public class UserModule {
 	
 	@At
 	@Ok("json")
+	@Fail("json")
 	@Chain("validate")
 	public void editAjax(HttpServletRequest request, @Param("..") User user) {
 		userService.update(user);

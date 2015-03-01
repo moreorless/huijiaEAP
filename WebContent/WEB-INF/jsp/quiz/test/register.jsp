@@ -64,15 +64,13 @@ body {
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label">性别<em>*</em></label>
-					<div class="col-sm-4">
+					<div class="col-sm-10">
 						<label class="radio-inline">
 							<input type="radio" value="1" name="gender"  <c:if test="${user.gender == 1}">checked</c:if>/>男
 						</label>
 						<label class="radio-inline">
 							<input type="radio" value="0" name="gender" <c:if test="${user.gender == 0}">checked</c:if>/>女
 						</label>
-					</div>
-					<div class="col-sm-6">
 					</div>
 				</div>
 
@@ -99,7 +97,7 @@ body {
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label">教育程度<em>*</em></label>
-					<div class="col-sm-4">
+					<div class="col-sm-10">
 						<label class="radio-inline">
 							<input type="radio" value="0" name="education"  <c:if test="${user.education == 0}">checked</c:if>/>大专及以下
 						</label>
@@ -110,23 +108,20 @@ body {
 							<input type="radio" value="2" name="education"  <c:if test="${user.education == 2}">checked</c:if>/>硕士及以上
 						</label>
 					</div>
-					<div class="col-sm-6"></div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label">职位<em>*</em></label>
-					<div class="col-sm-4">
+					<div class="col-sm-10">
 						<label class="radio-inline">
 							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 0}">checked</c:if>/>普通员工
 						</label>
 						<label class="radio-inline">
-							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 1}">checked</c:if>/>中层管理人员
+							<input type="radio" value="1" name="jobtitle"  <c:if test="${user.jobtitle == 1}">checked</c:if>/>中层管理人员
 						</label>
 						<label class="radio-inline">
-							<input type="radio" value="0" name="jobtitle"  <c:if test="${user.jobtitle == 2}">checked</c:if>/>高层管理人员
+							<input type="radio" value="2" name="jobtitle"  <c:if test="${user.jobtitle == 2}">checked</c:if>/>高层管理人员
 						</label>
-					</div>
-					<div class="col-sm-6">
 					</div>
 				</div>
 

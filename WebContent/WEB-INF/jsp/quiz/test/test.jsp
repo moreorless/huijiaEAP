@@ -24,7 +24,7 @@
 <div class="container quiz_wrapper">
 	<p class="quiz-tip">温馨提示：请注意保护个人测评信息。</p>
 <div class="quiz_inner_wrapper">
-	<form class="form-horizontal" role="form" action="${base}/quiz/answer" method="post" id="quiz-form">
+	<form class="form-horizontal" role="form" action="${base}/quiz/answer" method="post" id="quiz-form" data-validate-type="client">
 	<input type="hidden" name="quizId" value="${quiz.id}"/>
 	<input type="hidden" name="answerJson" id="answerJson" value=""/>
 	
@@ -49,20 +49,20 @@
 	<div class="row">
     	<div style="text-align: center;height: 60px;line-height: 60px;margin-top: 20px;">
     	<c:if test="${fn:length(quizlist) > 1}">
-    		<button type="button" id="btn-next" class="btn btn-primary">继续答题</button>
-    		<button type="button" id="btn-submit" class="btn btn-primary" style="display:none">提交</button>
+    		<a type="button" id="btn-next" class="btn btn-primary">继续答题</a>
+    		<a type="button" id="btn-submit" class="btn btn-primary" style="display:none">提交</a>
     	</c:if>
       	<c:if test="${fn:length(quizlist) == 1}">
-      	<button type="button" id="btn-submit" class="btn btn-primary">提交</button>
+      	<a type="button" id="btn-submit" class="btn btn-primary">提交</a>
       	</c:if>
-      	<button type="button" id="btn-cancel" class="btn btn-default">取消答题</button>
+      	<a type="button" id="btn-cancel" class="btn btn-default">取消答题</a>
     	</div>
   	</div>
 	</form>
 </div>
 </div>
 
-<c:import url="/includes/footer_huijia.jsp"></c:import>
+<%@ include file="/includes/footer_huijia.jsp" %>
 </div>
 
 <div id="tip-dialog" class="alert alert-danger">
@@ -90,6 +90,11 @@
 <script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="${base }/js/cupid/core.js"></script>
+
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js"></script>
+<script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js"></script>
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
+
 <script type="text/javascript" src="${base}/js/huijia/index.js"></script>
 <script type="text/javascript">
 	var currentPage = 0;

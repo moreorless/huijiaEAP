@@ -12,16 +12,14 @@
     <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
     <style type="text/css">
         html {overflow: auto !important;}
-        body {overflow: auto !important; background-color: #fff; font-family: "微软雅黑","Arial","Helvetica","sans-serif";font-size:16px;}
+        body {overflow-y: auto !important; }
         <c:if test="${param.exportpdf == 'true'}">
-            body {font-size:16px !important;line-height:1.8em !important;}
+            body {font-size:16px !important;line-height:1.8em !important;font-family: "微软雅黑","Arial","Helvetica","sans-serif";}
             #export-btn-wrappwer {display:none}
             #nav{display:none}
             #footer{display:none}
             .report-wrapper{padding:0px; margin:40px auto;}
             p{line-height:1.8em !important;}
-            
-            */
         </c:if>
         <c:if test="${param.exportpdf != 'true'}">
             .report-wrapper {width: 1000px;}
@@ -43,13 +41,22 @@
         </c:import>
         </div>
     </div>
+    <c:if test="${param.exportpdf != 'true'}">
     <%@ include file="/includes/footer_huijia.jsp" %>
+    </c:if>
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${base}/js/echarts/echarts.js"></script>
 <script type="text/javascript" src="${base }/js/cupid/core.js"></script>
-<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
 
+<c:if test="${param.exportpdf != 'true'}">
+<!--验证脚本 -->
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js"></script>
+<script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js"></script>
+<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
+
+<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
+</c:if>
 <script type="text/javascript">
 var quizMap = {};
 <c:forEach items="${quizlist}" var="_quiz" varStatus="stat">

@@ -23,142 +23,130 @@
 					<strong></strong>
 				</div>
 				<div>
-					<c:import url="/error/inline.jsp" />
-					<form class="form-horizontal" id="userForm"
-						action="${base}/user/editAjax" method="post" role="form">
-						<input type="hidden" name="userId" value="${current_user.userId }" />
-						<input type="hidden" name="name" value="${current_user.name }" />
-						<input type="hidden" name="type" value="${current_user.type }" />
-						<input type="hidden" name="companyId" value="${current_user.companyId }" />
-						<input type="hidden" name="segmentId" value="${current_user.segmentId }" />
+					<c:import url="/error/inline.jsp">
+						<c:param name="errorPlacerId">error-for-userdialog</c:param>
+					</c:import>
+					<form class="form-horizontal" id="userForm" role="form">
+						<input type="hidden" name="userId" value="${current_user.userId }" /> 
+						<input type="hidden" name="name" value="${current_user.name }" /> 
+						<input type="hidden" name="type" value="${current_user.type }" /> 
+						<input type="hidden" name="companyId" value="${current_user.companyId }" /> 
+						<input type="hidden" name="segmentId" value="${current_user.segmentId }" /> 
 						<input type="hidden" name="code" value="${current_user.code }" />
-
+		
 						<div class="form-group">
-							<label class="control-label col-sm-2">真实姓名</label>
+							<label class="col-sm-2 control-label">真实姓名<em>*</em></label>
 							<div class="col-sm-4">
-								<input type="text" name="realname" class="form-control"
-									value="${current_user.realname}" />
+								<input type="text" class="form-control" name="realname" value="${current_user.realname}" />
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.realname.span"
-										bundle="${i18n_auth}" /></span>
 							</div>
 						</div>
+		
 						<div class="form-group">
-							<label class="control-label col-sm-2">密码</label>
+							<label class="col-sm-2 control-label">密码<em>*</em></label>
 							<div class="col-sm-4">
-								<input type="password" name="password" class="form-control"
-									value="${current_user.password}" />
+								<input type="password" class="form-control" name="password" id="password" value="#PassWord#" />
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.password.span"
-										bundle="${i18n_auth}" /></span>
+								<span><fmt:message key="user.add.password.span" bundle="${i18n_auth}" /></span>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
-							<label class="control-label col-sm-2">邮箱</label>
+							<label class="col-sm-2 control-label"><fmt:message key="user.add.repassword" bundle="${i18n_auth}" /><em>*</em></label>
 							<div class="col-sm-4">
-								<input type="text" name="email" class="form-control"
-									value="${current_user.email}" />
+								<input type="password" class="form-control" name="repassword" id="repassword" value="#PassWord#" />
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.email.span"
-										bundle="${i18n_auth}" /></span>
+								<span><fmt:message key="user.add.repassword.span" bundle="${i18n_auth}" /></span>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
-							<label class="col-sm-2 control-label">性别</label>
-							<div class="col-sm-4">
-								<select class="form-control" name="gender" id="sel-gender">
-									<option value="0"
-										<c:if test="${current_user.gender == 0}"> selected</c:if>>女</option>
-									<option value="1"
-										<c:if test="${current_user.gender == 1}"> selected</c:if>>男</option>
-								</select>
-							</div>
-							<div class="col-sm-6">
-								<span><fmt:message key="user.add.gender.span"
-										bundle="${i18n_auth}" /></span>
+							<label class="col-sm-2 control-label">性别<em>*</em></label>
+							<div class="col-sm-10">
+								<label class="radio-inline">
+									<input type="radio" value="1" name="gender"  <c:if test="${current_user.gender == 1}">checked</c:if>/>男
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="0" name="gender" <c:if test="${current_user.gender == 0}">checked</c:if>/>女
+								</label>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
 							<label class="col-sm-2 control-label">年龄<em>*</em></label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="age"
-									value="${current_user.age}" />
+								<input type="text" class="form-control" name="age" <c:if test='${current_user.age > 0}'>value="${current_user.age}"</c:if> />
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.age.span"
-										bundle="${i18n_auth}" /></span>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
 							<label class="col-sm-2 control-label">工作年限<em>*</em></label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="workage"
-									value="${current_user.workage}" />
+								<input type="text" class="form-control" name="workage" <c:if test='${current_user.workage > 0}'>value="${current_user.workage}"</c:if> />
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.workage.span"
-										bundle="${i18n_auth}" /></span>
 							</div>
 						</div>
-
-
-
-
+		
+		
+		
+		
 						<div class="form-group">
 							<label class="col-sm-2 control-label">教育程度<em>*</em></label>
-							<div class="col-sm-4">
-								<select class="form-control" name="education" id="sel-education">
-									<option value="0"<c:if test="${current_user.education == 0}"> selected</c:if>>大专及以下</option>
-									<option value="1"<c:if test="${current_user.education == 1}"> selected</c:if>>本科</option>
-									<option value="2"<c:if test="${current_user.education == 2}"> selected</c:if>>硕士及以上</option>
-								</select>
-							</div>
-							<div class="col-sm-6">
-								<span><fmt:message key="user.add.education.span"
-										bundle="${i18n_auth}" /></span>
+							<div class="col-sm-10">
+								<label class="radio-inline">
+									<input type="radio" value="0" name="education"  <c:if test="${current_user.education == 0}">checked</c:if>/>大专及以下
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="1" name="education"  <c:if test="${current_user.education == 1}">checked</c:if>/>本科
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="2" name="education"  <c:if test="${current_user.education == 2}">checked</c:if>/>硕士及以上
+								</label>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
 							<label class="col-sm-2 control-label">职位<em>*</em></label>
-							<div class="col-sm-4">
-								<select class="form-control" name="jobtitle" id="sel-jobtitle">
-									<option value="0"
-										<c:if test="${current_user.jobtitle == 0}"> selected</c:if>>普通员工</option>
-									<option value="1"
-										<c:if test="${current_user.jobtitle == 1}"> selected</c:if>>中层管理人员</option>
-									<option value="2"
-										<c:if test="${current_user.jobtitle == 2}"> selected</c:if>>高层管理人员</option>
-								</select>
-							</div>
-							<div class="col-sm-6">
-								<span><fmt:message key="user.add.jobtitle.span"
-										bundle="${i18n_auth}" /></span>
+							<div class="col-sm-10">
+								<label class="radio-inline">
+									<input type="radio" value="0" name="jobtitle"  <c:if test="${current_user.jobtitle == 0}">checked</c:if>/>普通员工
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="1" name="jobtitle"  <c:if test="${current_user.jobtitle == 1}">checked</c:if>/>中层管理人员
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="2" name="jobtitle"  <c:if test="${current_user.jobtitle == 2}">checked</c:if>/>高层管理人员
+								</label>
 							</div>
 						</div>
-
+		
 						<div class="form-group">
-							<label class="control-label col-sm-2"><fmt:message
-									key="user.add.mobile" bundle="${i18n_auth}" /></label>
+							<label class="col-sm-2 control-label">邮箱</label>
 							<div class="col-sm-4">
-								<input type="text" name="mobile" class="form-control"
-									value="${current_user.mobile}" readonly="readonly"/>
+								<input type="text" class="form-control" name="email" value="${current_user.email}"/>
 							</div>
 							<div class="col-sm-6">
-								<span><fmt:message key="user.add.mobile.span"
-										bundle="${i18n_auth}" /></span>
+							</div>
+						</div>
+		
+						<div class="form-group">
+							<label class="col-sm-2 control-label"><fmt:message
+									key="user.add.mobile" bundle="${i18n_auth}" /><em>*</em></label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" name="mobile" id="mobile" value="${current_user.mobile}"/>
+							</div>
+							<div class="col-sm-6" id="mobile-help">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button class="btn btn-primary">保存</button>
+								<a class="btn btn-primary" id="btn-save-user">保存</a>
 							</div>
 						</div>
 					</form>

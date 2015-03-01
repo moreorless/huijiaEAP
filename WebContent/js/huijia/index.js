@@ -12,10 +12,11 @@ $(document).ready(function(){
 	
 	$("#nav-items li").first().click();
 	
-	$('#btn-save').click(function(){
+	$('#btn-save-user').click(function(){
 		if(!$('#userForm').valid()) return;
 		$.ajax({
-			url : '${base}/user/editAjax',
+			errorPlacer : 'error-for-userdialog',
+			url : jQuery.context + '/user/editAjax',
 			dataType : 'json',
 			type : 'post',
 			data : $('#userForm').serialize(),
@@ -23,7 +24,10 @@ $(document).ready(function(){
 				$('#save-message').show();
 				$('#save-message strong').text('保存成功');
 				
-				setTimeout(function(){$('#save-message').hide();}, 5000);
+				setTimeout(function(){
+					$('#save-message').hide();
+					$("#user-dialog").modal('hide');
+				}, 1000);
 			}
 		});
 	});
