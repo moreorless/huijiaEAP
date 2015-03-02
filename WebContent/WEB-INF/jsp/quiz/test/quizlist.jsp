@@ -38,7 +38,7 @@
 			</div>
 			<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">
 			<div style="margin-bottom: 10px;">
-			<a href="${base}/quiz/report?quizId=${quiz.id}" class="btn btn-primary" role="button">查看报告</a>
+			<a href="${base}/quiz/report?quizId=${quiz.id}&userId=${current_user.userId}" class="btn btn-primary" role="button">查看报告</a>
 			</div>
 			</c:if>
 		</div>

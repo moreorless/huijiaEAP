@@ -586,11 +586,6 @@ public class QuizModule {
 	public void report(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		User currentUser = userService.fetch(Auths.getUser(request).getUserId());
-		currentUser.setPassword(User.PASSWORD_FADE);
-		request.setAttribute("user", currentUser);
-		request.setAttribute("current_user", currentUser);
-
 		List<QuizResult> resultList = quizResultService.getQuizResult(userId, quizId);
 		request.setAttribute("resultlist", resultList);
 
