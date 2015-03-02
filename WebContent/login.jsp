@@ -5,38 +5,51 @@
   <head>
     <title><fmt:message key="index.product.name" /></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
+    
     <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
     <link type="text/css" rel="stylesheet" href="${base}/css/login.css"/>
+	
   </head>
   <body>
 
     <div id="container">
-    	
+    	<div class="logo"></div>
+    	<div class="loginWrap">
+    	<div class="loginBox">
 		<form class="form-signin form-horizontal" role="form" action="${base}/signin" method="post">
-	        <h2 class="form-signin-heading"><fmt:message key="index.product.name" bundle="${i18n_main}"/></h2>
-	        
-	        <div class="control-group">
-	        	<%@ include file="/error/inline.jsp" %>
-	        </div>
-	         <div class="form-group">
-	         	<label class="col-sm-2 control-label" for="inputEmail">用户名</label>
-	         	<div class="col-sm-10">
-	         	<input type="text" id="inputEmail" class="form-control" placeholder="用户名" name="username">
-	         	</input>
-	         	</div>
-	         </div>
-	         
-	         <div class="form-group">
-	         	<label class="col-sm-2 control-label" for="inputPassword">密码</label>
-	         	<div class="col-sm-10">
-	         	<input type="password" id="inputPassword" class="form-control" placeholder="密码" name="password">
-	         	</input>
-	         	</div>
-	         </div>
-	         
-	        <button class="btn btn-large btn-primary" type="submit">登录</button>
+			<header>用户登录</header>
+			<div class="form-body">
+			
+		        <div class="form-group">
+		        	<%@ include file="/error/inline.jsp" %>
+		        </div>
+		         <div class="form-group">
+
+		         <div class="input-group">
+		         	<span class="input-group-addon" id="basic-addon1">
+		         		<span class="glyphicon glyphicon-user" aria-hidden="true" ></span>
+		         	</span>
+		         	<input type="text" id="inputEmail" class="form-control" placeholder="用户名" name="username" aria-describedby="basic-addon1" />
+		         </div>
+		         </div>
+
+		         <div class="form-group">
+			         <div class="input-group">
+			         	<span class="input-group-addon" id="basic-addon2">
+			         		<span class="glyphicon glyphicon-lock" aria-hidden="true" ></span>
+			         	</span>
+			         	<input type="password" id="inputPassword" class="form-control" placeholder="密码" name="password" aria-describedby="basic-addon2"/>
+			         </div>
+		         	<!--div class="note"><a href="${base}/user/findpwd" target="_blank">忘记密码?</a></div-->
+	     		</div>
+	     	</div>
+	         <footer>
+	         	&nbsp;
+	         	<button class="btn btn-large btn-primary" type="submit">登录</button>
+	         </footer>
       	</form>
-      	
+      	</div>
+      	</div>
     </div>
 
 
