@@ -25,18 +25,20 @@
 				<h2><img src="${base}/images/quiz/icons/${quiz.icon}" />${quiz.name}</h2>
 			</div>
 			<p class="desc">${quiz.description}</p>
-			<p class="expire">有效期截止至${segment.expireDate}</p>			
+
+			<c:set var="dateParts" value="${fn:split(segment.expireDate, '/')}" />
+			<p class="expire">有效期&nbsp;:&nbsp;${dateParts[2]}/${dateParts[0]}/${dateParts[1]}</p>			
 		</div>
 		<div class="col-md-2">
 			<div style="margin-bottom: 10px;">
-			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-info" role="button">
+			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-primary" role="button">
 				<c:if test="${fn:length(quizHistoryMap[quiz.id]) == 0}">开始测试</c:if>
 				<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">重新测试</c:if>
 				</a>
 			</div>
 			<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">
 			<div style="margin-bottom: 10px;">
-			<a href="${base}/quiz/report?quizId=${quiz.id}" class="btn btn-info" role="button">查看报告</a>
+			<a href="${base}/quiz/report?quizId=${quiz.id}" class="btn btn-primary" role="button">查看报告</a>
 			</div>
 			</c:if>
 		</div>
