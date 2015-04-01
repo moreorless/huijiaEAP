@@ -42,12 +42,14 @@ import com.huijia.eap.commons.mvc.view.exhandler.ExceptionWrapper.EC;
 import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizAnswerLog;
+import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.service.QuizAnswerLogService;
+import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
@@ -78,6 +80,9 @@ public class QuizModule {
 	private QuizEvaluationService quizEvaluationService;
 
 	@Inject
+	private QuizCategoryService quizCategoryService;
+
+	@Inject
 	private QuizResultService quizResultService;
 
 	@Inject
@@ -85,10 +90,10 @@ public class QuizModule {
 
 	@Inject
 	private UserService userService;
-	
+
 	@Inject
 	private SegmentService segmentService;
-	
+
 	@Inject
 	private QuizAnswerLogService quizAnswerLogService;
 
@@ -121,28 +126,29 @@ public class QuizModule {
 		// request.setAttribute("quizlist", list);
 
 		// User currentUser = Auths.getUser(request);
-		User currentUser = userService.fetch(Auths.getUser(request).getUserId());
+		User currentUser = userService
+				.fetch(Auths.getUser(request).getUserId());
 		currentUser.setPassword(User.PASSWORD_FADE);
 		request.setAttribute("user", currentUser);
 		request.setAttribute("current_user", currentUser);
-		
 
-		//按照用户拥有的问卷权限显示问卷列表
+		// 按照用户拥有的问卷权限显示问卷列表
 		List<Quiz> list = quizService.fetchQuizListBySegmentId(currentUser
 				.getSegmentId());
 		request.setAttribute("quizlist", list);
-		
+
 		// 答题历史记录
 		Map<Long, List<QuizAnswerLog>> quizHistoryMap = new HashMap<Long, List<QuizAnswerLog>>();
 		Iterator<Quiz> iter = list.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Quiz _quiz = iter.next();
-			List<QuizAnswerLog> history = quizAnswerLogService.getHistory(currentUser.getUserId(), _quiz.getId());
+			List<QuizAnswerLog> history = quizAnswerLogService.getHistory(
+					currentUser.getUserId(), _quiz.getId());
 			quizHistoryMap.put(_quiz.getId(), history);
 		}
 		request.setAttribute("quizHistoryMap", quizHistoryMap);
-		
-		//加载用户所在的号段
+
+		// 加载用户所在的号段
 		Segment segment = segmentService.fetch(currentUser.getSegmentId());
 		request.setAttribute("segment", segment);
 	}
@@ -170,7 +176,7 @@ public class QuizModule {
 			iconNames.add(f.getName());
 		}
 		request.setAttribute("iconNames", iconNames);
-		
+
 		request.setAttribute("templeMap", ReportTemple.getTemple());
 
 		Quiz quiz = new Quiz();
@@ -230,23 +236,48 @@ public class QuizModule {
 						.getQuizItems();
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
+				LinkedList<QuizCategory> quizCategories = quizImportHandler
+						.getQuizCategories();
 
-				request.setAttribute("quizItems", quizItems);
-				request.setAttribute("quizEvaluationsSingle",
-						quizImportHandler.getQuizEvaluationsSingle());
-				request.setAttribute("quizEvaluationsTeam",
-						quizImportHandler.getQuizEvaluationsTeam());
-
+				int currentTblMaxId = quizCategoryService.getMaxId();
+				for (Iterator<QuizCategory> it = quizCategories.iterator(); it
+						.hasNext();) {
+					QuizCategory quizCategory = it.next();
+					quizCategory.setId(currentTblMaxId + quizCategory.getId());
+					if (quizCategory.getLevel() == 2)
+						quizCategory.setParentId(currentTblMaxId
+								+ quizCategory.getParentId());
+					else
+						quizCategory.setParentId(0);
+					quizCategory.setQuizId((int) quiz.getId());
+					quizCategoryService.insert(quizCategory);
+					quizCategoryService.updateMaxId();
+				}
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
 					quizItem.setQuizId(quiz.getId());
+					quizItem.setOptionJson(quizItem
+							.addCategoryTblMaxIdForOptionJson(
+									quizItem.getOptionJson(), currentTblMaxId));
 					quizItemService.insert(quizItem);
 				}
 				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
 						.hasNext();) {
 					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluation.setCategoryId(quizEvaluation.getCategoryId()
+							+ currentTblMaxId);
 					quizEvaluationService.insert(quizEvaluation, quiz.getId());
 				}
+
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingleMain",
+						quizImportHandler.getQuizEvaluationsSingleMain());
+				request.setAttribute("quizEvaluationsSingleSub",
+						quizImportHandler.getQuizEvaluationsSingleSub());
+				request.setAttribute("quizEvaluationsTeamMain",
+						quizImportHandler.getQuizEvaluationsTeamMain());
+				request.setAttribute("quizEvaluationsTeamSub",
+						quizImportHandler.getQuizEvaluationsTeamSub());
 
 			} else {
 				// 向页面返回错误信息
@@ -273,22 +304,30 @@ public class QuizModule {
 
 		LinkedList<QuizItem> quizItems = (LinkedList<QuizItem>) quizItemService
 				.fetchListByQuizId(id);
-		LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
-		LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
+		LinkedList<QuizEvaluation> quizEvaluationsSingleMain = new LinkedList<QuizEvaluation>();
+		LinkedList<QuizEvaluation> quizEvaluationsTeamMain = new LinkedList<QuizEvaluation>();
+		LinkedList<QuizEvaluation> quizEvaluationsSingleSub = new LinkedList<QuizEvaluation>();
+		LinkedList<QuizEvaluation> quizEvaluationsTeamSub = new LinkedList<QuizEvaluation>();
 
 		for (Iterator<QuizEvaluation> it = this.quizEvaluationService
 				.fetchListByQuizId(quiz.getId()).iterator(); it.hasNext();) {
 			QuizEvaluation quizEvaluation = it.next();
-			if (quizEvaluation.getType().equals("single"))
-				quizEvaluationsSingle.add(quizEvaluation);
-			if (quizEvaluation.getType().equals("team"))
-				quizEvaluationsTeam.add(quizEvaluation);
+			if (quizEvaluation.getType().equals("singleMain"))
+				quizEvaluationsSingleMain.add(quizEvaluation);
+			if (quizEvaluation.getType().equals("singleSub"))
+				quizEvaluationsSingleSub.add(quizEvaluation);
+			if (quizEvaluation.getType().equals("teamMain"))
+				quizEvaluationsTeamMain.add(quizEvaluation);
+			if (quizEvaluation.getType().equals("teamSub"))
+				quizEvaluationsTeamSub.add(quizEvaluation);
 		}
 		// this.quizEvaluationService.
 
 		request.setAttribute("quizItems", quizItems);
-		request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
-		request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
+		request.setAttribute("quizEvaluationsSingleMain", quizEvaluationsSingleMain);
+		request.setAttribute("quizEvaluationsTeamMain", quizEvaluationsTeamMain);
+		request.setAttribute("quizEvaluationsSingleSub", quizEvaluationsSingleSub);
+		request.setAttribute("quizEvaluationsTeamSub", quizEvaluationsTeamSub);
 
 		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
 	}
@@ -335,24 +374,48 @@ public class QuizModule {
 						.getQuizItems();
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
+				LinkedList<QuizCategory> quizCategories = quizImportHandler
+						.getQuizCategories();
 
-				request.setAttribute("quizItems", quizItems);
-				request.setAttribute("quizEvaluationsSingle",
-						quizImportHandler.getQuizEvaluationsSingle());
-				request.setAttribute("quizEvaluationsTeam",
-						quizImportHandler.getQuizEvaluationsTeam());
-
+				int currentTblMaxId = quizCategoryService.getMaxId();
+				for (Iterator<QuizCategory> it = quizCategories.iterator(); it
+						.hasNext();) {
+					QuizCategory quizCategory = it.next();
+					quizCategory.setId(currentTblMaxId + quizCategory.getId());
+					if (quizCategory.getLevel() == 2)
+						quizCategory.setParentId(currentTblMaxId
+								+ quizCategory.getParentId());
+					else
+						quizCategory.setParentId(0);
+					quizCategory.setQuizId((int) quiz.getId());
+					quizCategoryService.insert(quizCategory);
+					quizCategoryService.updateMaxId();
+				}
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
-					quizItem.setQuizId(quizId);
+					quizItem.setQuizId(quiz.getId());
+					quizItem.setOptionJson(quizItem
+							.addCategoryTblMaxIdForOptionJson(
+									quizItem.getOptionJson(), currentTblMaxId));
 					quizItemService.insert(quizItem);
-
 				}
 				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
 						.hasNext();) {
 					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluation.setCategoryId(quizEvaluation.getCategoryId()
+							+ currentTblMaxId);
 					quizEvaluationService.insert(quizEvaluation, quiz.getId());
 				}
+
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingleMain",
+						quizImportHandler.getQuizEvaluationsSingleMain());
+				request.setAttribute("quizEvaluationsSingleSub",
+						quizImportHandler.getQuizEvaluationsSingleSub());
+				request.setAttribute("quizEvaluationsTeamMain",
+						quizImportHandler.getQuizEvaluationsTeamMain());
+				request.setAttribute("quizEvaluationsTeamSub",
+						quizImportHandler.getQuizEvaluationsTeamSub());
 
 			} else {
 				// 向页面返回错误信息
@@ -374,26 +437,35 @@ public class QuizModule {
 
 			LinkedList<QuizItem> quizItems = (LinkedList<QuizItem>) quizItemService
 					.fetchListByQuizId(quiz.getId());
-			LinkedList<QuizEvaluation> quizEvaluationsSingle = new LinkedList<QuizEvaluation>();
-			LinkedList<QuizEvaluation> quizEvaluationsTeam = new LinkedList<QuizEvaluation>();
+			LinkedList<QuizEvaluation> quizEvaluationsSingleMain = new LinkedList<QuizEvaluation>();
+			LinkedList<QuizEvaluation> quizEvaluationsTeamMain = new LinkedList<QuizEvaluation>();
+			LinkedList<QuizEvaluation> quizEvaluationsSingleSub = new LinkedList<QuizEvaluation>();
+			LinkedList<QuizEvaluation> quizEvaluationsTeamSub = new LinkedList<QuizEvaluation>();
 
 			for (Iterator<QuizEvaluation> it = this.quizEvaluationService
 					.fetchListByQuizId(quiz.getId()).iterator(); it.hasNext();) {
 				QuizEvaluation quizEvaluation = it.next();
-				if (quizEvaluation.getType().equals("single"))
-					quizEvaluationsSingle.add(quizEvaluation);
-				if (quizEvaluation.getType().equals("team"))
-					quizEvaluationsTeam.add(quizEvaluation);
+				if (quizEvaluation.getType().equals("singleMain"))
+					quizEvaluationsSingleMain.add(quizEvaluation);
+				if (quizEvaluation.getType().equals("singleSub"))
+					quizEvaluationsSingleSub.add(quizEvaluation);
+				if (quizEvaluation.getType().equals("teamMain"))
+					quizEvaluationsTeamMain.add(quizEvaluation);
+				if (quizEvaluation.getType().equals("teamSub"))
+					quizEvaluationsTeamSub.add(quizEvaluation);
 			}
+			// this.quizEvaluationService.
 
 			request.setAttribute("quizItems", quizItems);
-			request.setAttribute("quizEvaluationsSingle", quizEvaluationsSingle);
-			request.setAttribute("quizEvaluationsTeam", quizEvaluationsTeam);
+			request.setAttribute("quizEvaluationsSingleMain", quizEvaluationsSingleMain);
+			request.setAttribute("quizEvaluationsTeamMain", quizEvaluationsTeamMain);
+			request.setAttribute("quizEvaluationsSingleSub", quizEvaluationsSingleSub);
+			request.setAttribute("quizEvaluationsTeamSub", quizEvaluationsTeamSub);
 		}
 
 		// 更新缓存
 		QuizCache.me().update(quiz);
-		
+
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
 		}
@@ -415,7 +487,7 @@ public class QuizModule {
 			return new ViewWrapper(new ForwardView("/quiz/list"), null);
 
 		quizService.deleteByQuizId(id);
-		
+
 		// 更新缓存
 		QuizCache.me().delete(id);
 
@@ -463,23 +535,48 @@ public class QuizModule {
 						.getQuizItems();
 				LinkedList<QuizEvaluation> quizEvaluations = quizImportHandler
 						.getQuizEvaluations();
+				LinkedList<QuizCategory> quizCategories = quizImportHandler
+						.getQuizCategories();
 
-				request.setAttribute("quizItems", quizItems);
-				request.setAttribute("quizEvaluationsSingle",
-						quizImportHandler.getQuizEvaluationsSingle());
-				request.setAttribute("quizEvaluationsTeam",
-						quizImportHandler.getQuizEvaluationsTeam());
-
+				int currentTblMaxId = quizCategoryService.getMaxId();
+				for (Iterator<QuizCategory> it = quizCategories.iterator(); it
+						.hasNext();) {
+					QuizCategory quizCategory = it.next();
+					quizCategory.setId(currentTblMaxId + quizCategory.getId());
+					if (quizCategory.getLevel() == 2)
+						quizCategory.setParentId(currentTblMaxId
+								+ quizCategory.getParentId());
+					else
+						quizCategory.setParentId(0);
+					quizCategory.setQuizId((int) quiz.getId());
+					quizCategoryService.insert(quizCategory);
+					quizCategoryService.updateMaxId();
+				}
 				for (Iterator<QuizItem> it = quizItems.iterator(); it.hasNext();) {
 					QuizItem quizItem = it.next();
 					quizItem.setQuizId(quiz.getId());
+					quizItem.setOptionJson(quizItem
+							.addCategoryTblMaxIdForOptionJson(
+									quizItem.getOptionJson(), currentTblMaxId));
 					quizItemService.insert(quizItem);
 				}
 				for (Iterator<QuizEvaluation> it = quizEvaluations.iterator(); it
 						.hasNext();) {
 					QuizEvaluation quizEvaluation = it.next();
+					quizEvaluation.setCategoryId(quizEvaluation.getCategoryId()
+							+ currentTblMaxId);
 					quizEvaluationService.insert(quizEvaluation, quiz.getId());
 				}
+
+				request.setAttribute("quizItems", quizItems);
+				request.setAttribute("quizEvaluationsSingleMain",
+						quizImportHandler.getQuizEvaluationsSingleMain());
+				request.setAttribute("quizEvaluationsSingleSub",
+						quizImportHandler.getQuizEvaluationsSingleSub());
+				request.setAttribute("quizEvaluationsTeamMain",
+						quizImportHandler.getQuizEvaluationsTeamMain());
+				request.setAttribute("quizEvaluationsTeamSub",
+						quizImportHandler.getQuizEvaluationsTeamSub());
 
 			} else {
 				// 向页面返回错误信息
@@ -532,47 +629,48 @@ public class QuizModule {
 			long questionId = Long.parseLong(key);
 			answerMap.put(questionId, _answer.get(key));
 		}
-		
+
 		// 当前时间
 		long currentTime = System.currentTimeMillis();
-		
-		List<QuizResult> resultList = quizResultService.storeResult(user.getUserId(), quiz, answerMap, currentTime);
-		
+
+		List<QuizResult> resultList = quizResultService.storeResult(
+				user.getUserId(), quiz, answerMap, currentTime);
+
 		// 检测结果有效性
 		boolean isValid = true;
-		for(QuizResult result : resultList){
-			if(result.isValid() == false){
+		for (QuizResult result : resultList) {
+			if (result.isValid() == false) {
 				isValid = false;
 				break;
 			}
 		}
-		if(!isValid){
+		if (!isValid) {
 			// 无效作答，重新答题
 			// 回滚数据
 			quizResultService.deleteByX(user.getUserId(), quizId, currentTime);
-			
+
 			// 向页面返回错误信息
-			String redoPath = "/quiz/test?quizId=" +  quizId + "&redo=true";
+			String redoPath = "/quiz/test?quizId=" + quizId + "&redo=true";
 			return new ServerRedirectView(redoPath);
 		}
-		
+
 		QuizAnswerLog history = new QuizAnswerLog();
 		history.setQuizId(quizId);
 		history.setUserId(user.getUserId());
 		history.setCompanyId(user.getCompanyId());
 		history.setTimestamp(currentTime);
 		quizAnswerLogService.insert(history);
-		
+
 		request.setAttribute("resultlist", resultList);
-		
+
 		List<Quiz> quizList = new ArrayList<Quiz>();
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE){
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE) {
 			quizList.add(quiz);
-		}else if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+		} else if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			quizList.addAll(quiz.getChildList());
 		}
 		request.setAttribute("quizlist", quizList);
-		
+
 		request.setAttribute("quiz", quiz);
 		return new JspView("jsp.quiz.test.report");
 	}
@@ -582,11 +680,13 @@ public class QuizModule {
 	 */
 	@At
 	@Ok("jsp:jsp.quiz.test.report")
-	@AuthBy(login=false)
-	public void report(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId) {
+	@AuthBy(login = false)
+	public void report(HttpServletRequest request,
+			@Param("quizId") long quizId, @Param("userId") long userId) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		List<QuizResult> resultList = quizResultService.getQuizResult(userId, quizId);
+		List<QuizResult> resultList = quizResultService.getQuizResult(userId,
+				quizId);
 		request.setAttribute("resultlist", resultList);
 
 		List<Quiz> quizList = new ArrayList<Quiz>();
@@ -602,15 +702,18 @@ public class QuizModule {
 
 	@At
 	@Ok("raw")
-	public File reportexport(HttpServletRequest request, @Param("quizId") long quizId){
-		String url = request.getScheme() + "://127.0.0.1:" + request.getServerPort() + "/"
-				+ request.getContextPath() + "/quiz/report?quizId=" + quizId + "&userId=" + Auths.getUser(request).getUserId() + "&exportpdf=true";
-		
+	public File reportexport(HttpServletRequest request,
+			@Param("quizId") long quizId) {
+		String url = request.getScheme() + "://127.0.0.1:"
+				+ request.getServerPort() + "/" + request.getContextPath()
+				+ "/quiz/report?quizId=" + quizId + "&userId="
+				+ Auths.getUser(request).getUserId() + "&exportpdf=true";
+
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
-		
+
 		File pdf = PdfUtil.renderPdf(url);
 		// Files.rename(pdf, quiz.getName() + ".pdf");
 		return pdf;
 	}
-	
+
 }

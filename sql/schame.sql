@@ -87,8 +87,7 @@ CREATE TABLE `quiz` (
   `description` text,
   `icon` varchar(256) default NULL,
   `parentId` int(11) default NULL COMMENT '如果问卷类型为子试卷，填上父试卷的id',
-  `children` varchar(128) default '' COMMENT '如果问卷类型为父试卷，填写子试卷的id.格式为"1,3,5"',
-  `categoryJson` varchar(512) default NULL COMMENT '{维度ID,维度名称}的Json对象',
+  `children` varchar(128) default '' COMMENT '如果问卷类型为父试卷，填写子试卷的id.格式为"1,3,5"',  
   `createBy` int(11) unsigned default NULL,
   `createAt` bigint(11) unsigned default NULL,
   `updateBy` int(11) unsigned default NULL,
@@ -113,18 +112,29 @@ CREATE TABLE `quiz_evaluation` (
   `maxScore` int(10) NOT NULL,
   `evaluation` text COMMENT '结果评价',
   `suggestion` text COMMENT '建议',
-  `type` varchar(16) default '' COMMENT '个人报告还是团体报告,single or team?',
+  `type` varchar(16) default '' COMMENT '个人报告还是团体报告, 主维度还是子维度,singleMain singleSub or teamMain teamSub',
   `healthStatus` varchar(16) default '' COMMENT '健康状况',
   `explanation` text COMMENT '解释',
   `feature` text COMMENT '特征（关键词）'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题评价标准';
+
+DROP TABLE IF EXISTS `quiz_category`;
+CREATE TABLE `quiz_category` (
+  `id` int(11) NOT NULL,
+  `quizid` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL default '' COMMENT '维度名称' ,
+  `level` int(11) NOT NULL COMMENT '维度层级:主维度1，子维度2',
+  `priority` int(11) NOT NULL COMMENT '维度优先级，主要用于问卷2中',
+  `parentid` int(11) NOT NULL COMMENT '父维度ID，如果本身为主维度，该值为0',
+  `fullname` varchar(255) NOT NULL default '' COMMENT '维度全称，主要用于二级维度: 格式为 -> 职业发展/能力'   
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='试题维度';
 
 DROP TABLE IF EXISTS `quiz_item`;
 CREATE TABLE `quiz_item` (
   `id` int(10) NOT NULL,
   `question` text NOT NULL,
   `lieFlag` int(1) NOT NULL,
-  `optionJson` varchar(512) NOT NULL default '' COMMENT '{选项内容;选项维度;选项分值}',
+  `optionJson` varchar(8192) NOT NULL default '' COMMENT '{选项内容;选项维度ID;选项维度全称;选项分值}',
   `createBy` varchar(512) default NULL,
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,

@@ -9,21 +9,36 @@ public class QuizItemOption {
 	 * 选项内容，例如：非常符合/一般/非常不同意
 	 */
 	private String content;
+
 	/**
-	 * 维度名称：选项所属的维度
+	 * 维度Id
+	 */
+	private int categoryId;
+	/**
+	 * 维度全称：选项所属的维度
 	 */
 	private String categoryName;
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
 	/**
 	 * 分数
 	 */
 	private int value;
 
-	public QuizItemOption(String index, String content, String categoryName,
-			int value) {
+	public QuizItemOption(String index, String content, int categoryId,
+			String categoryName, int value) {
 		this.setIndex(index);
 		this.categoryName = categoryName;
 		this.content = content;
 		this.value = value;
+		this.categoryId = categoryId;
 	}
 
 	public String getContent() {

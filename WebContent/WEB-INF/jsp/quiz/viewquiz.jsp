@@ -39,8 +39,10 @@ em {
 			<ul>
 				<li><a href="#tabs-1">基本信息</a></li>
 				<li><a href="#tabs-2">題目信息</a></li>
-				<li><a href="#tabs-3">个人评价信息</a></li>
-				<li><a href="#tabs-4">团体评价信息</a></li>
+				<li><a href="#tabs-3">主维度个人评价</a></li>
+				<li><a href="#tabs-4">子维度个人评价</a></li>
+				<li><a href="#tabs-5">主维度团体评价</a></li>
+				<li><a href="#tabs-6">子维度团体评价</a></li>
 
 				<c:if test="${quiz.type == 0}">
 					<a href="${base}/quiz/list" class="btn btn-info"
@@ -117,7 +119,7 @@ em {
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${quizEvaluationsSingle}" var="item">
+						<c:forEach items="${quizEvaluationsSingleMain}" var="item">
 							<tr>
 								<td>${item.categoryName}</td>
 								<td>${item.minScore}-${item.maxScore}</td>
@@ -145,7 +147,63 @@ em {
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${quizEvaluationsTeam}" var="item">
+						<c:forEach items="${quizEvaluationsSingleSub}" var="item">
+							<tr>
+								<td>${item.categoryName}</td>
+								<td>${item.minScore}-${item.maxScore}</td>
+								<td>${item.healthStatus}</td>
+								<td>${item.evaluation}</td>
+								<td>${item.suggestion}</td>
+								<td>${item.explanation}</td>
+								<td>${item.feature}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+			<div id="tabs-5">
+				<table class="table table-striped table-hover table-bordered">
+					<thead>
+						<tr>
+							<th style="width: 8%">维度</th>
+							<th style="width: 8%">分数区间</th>
+							<th style="width: 8%">健康度</th>
+							<th style="width: 20%">评语</th>
+							<th style="width: 20%">建议</th>
+							<th style="width: 18%">解释</th>
+							<th style="width: 18%">特征</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${quizEvaluationsTeamMain}" var="item">
+							<tr>
+								<td>${item.categoryName}</td>
+								<td>${item.minScore}-${item.maxScore}</td>
+								<td>${item.healthStatus}</td>
+								<td>${item.evaluation}</td>
+								<td>${item.suggestion}</td>
+								<td>${item.explanation}</td>
+								<td>${item.feature}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+			<div id="tabs-6">
+				<table class="table table-striped table-hover table-bordered">
+					<thead>
+						<tr>
+							<th style="width: 8%">维度</th>
+							<th style="width: 8%">分数区间</th>
+							<th style="width: 8%">健康度</th>
+							<th style="width: 20%">评语</th>
+							<th style="width: 20%">建议</th>
+							<th style="width: 18%">解释</th>
+							<th style="width: 18%">特征</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${quizEvaluationsTeamSub}" var="item">
 							<tr>
 								<td>${item.categoryName}</td>
 								<td>${item.minScore}-${item.maxScore}</td>

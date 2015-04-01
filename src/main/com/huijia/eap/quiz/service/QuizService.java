@@ -37,6 +37,9 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	@Inject
 	private QuizAnswerLogService quizAnswerLogService;
 	
+	@Inject
+	private QuizCategoryService quizCategoryService;
+	
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
 		setDao(dao);
@@ -66,7 +69,8 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 			}
 		}
 		
-		
+		// Table: quiz_category
+		quizCategoryService.deleteByQuizId(id);
 		// Table: quiz_item
 		quizItemService.deleteByQuizId(id);
 		// Table: quiz_evaluation

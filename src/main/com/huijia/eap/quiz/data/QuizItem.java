@@ -38,7 +38,6 @@ public class QuizItem {
 	@Column
 	private String optionJson;
 
-	
 	private boolean _bConverted = false;
 	private LinkedList<QuizItemOption> options = new LinkedList<QuizItemOption>();
 
@@ -75,7 +74,7 @@ public class QuizItem {
 	}
 
 	public LinkedList<QuizItemOption> getOptions() {
-		if(!_bConverted) {
+		if (!_bConverted) {
 			this.convertOptions();
 		}
 		return options;
@@ -92,35 +91,63 @@ public class QuizItem {
 	public void setLieFlag(boolean lieFlag) {
 		this.lieFlag = lieFlag;
 	}
+
 	/**
 	 * 转换选项
 	 */
-	public void convertOptions(){
+	public void convertOptions() {
 		LinkedList<QuizItemOption> optionList = new LinkedList<QuizItemOption>();
-		List _list = (List)Json.fromJson(optionJson); 
+		List _list = (List) Json.fromJson(optionJson);
 		Iterator<Map> iter = _list.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Map optObj = iter.next();
-			String index = (String)optObj.get("index");
-			String content = (String)optObj.get("content");
-			String categoryName = (String)optObj.get("categoryName");
-			int value = (int)optObj.get("value");
-			QuizItemOption option = new QuizItemOption(index, content, categoryName, value);
+			String index = (String) optObj.get("index");
+			String content = (String) optObj.get("content");
+			String categoryName = (String) optObj.get("categoryName");
+			int value = (int) optObj.get("value");
+			int categoryId = (int) optObj.get("categoryId");
+
+			QuizItemOption option = new QuizItemOption(index, content,
+					categoryId, categoryName, value);
 			optionList.add(option);
 		}
-		
+
 		this.options = optionList;
 		_bConverted = true;
 	}
 	
-	public QuizItemOption getOption(String optIndex){
-		if(!_bConverted) {
+	public String addCategoryTblMaxIdForOptionJson(String currentJson, int categoryTblMaxId) {
+		LinkedList<QuizItemOption> optionList = new LinkedList<QuizItemOption>();
+		List _list = (List) Json.fromJson(currentJson);
+		Iterator<Map> iter = _list.iterator();
+		while (iter.hasNext()) {
+			Map optObj = iter.next();
+			String index = (String) optObj.get("index");
+			String content = (String) optObj.get("content");
+			String categoryName = (String) optObj.get("categoryName");
+			int value = (int) optObj.get("value");
+			int categoryId = (int) optObj.get("categoryId") + categoryTblMaxId;
+
+			QuizItemOption option = new QuizItemOption(index, content,
+					categoryId, categoryName, value);
+			optionList.add(option);
+		}
+		return Json.toJson(optionList);
+	}
+	
+	/**
+	 * 
+	 * @param optIndex
+	 * @return
+	 */
+	public QuizItemOption getOption(String optIndex) {
+		if (!_bConverted) {
 			this.convertOptions();
 		}
 		Iterator<QuizItemOption> iter = this.options.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			QuizItemOption option = iter.next();
-			if(option.getIndex().equals(optIndex)){
+			if (option.getIndex().equals(optIndex)) {
 				return option;
 			}
 		}

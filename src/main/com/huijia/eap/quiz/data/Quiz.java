@@ -64,7 +64,7 @@ public class Quiz {
 	@Column
 	private long updateAt;
 
-	@Column
+	
 	private String categoryJson;
 
 	@Column
