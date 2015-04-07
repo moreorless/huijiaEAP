@@ -23,6 +23,8 @@ body {
 }
 
 .huijia-header-nav .brand h4{
+	line-height:48px;
+	height:48px;
 	font-size: 14px;
 	font-weight : bold;
 	margin-left: 20px;

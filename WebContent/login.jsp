@@ -13,7 +13,10 @@
   <body>
 
     <div id="container">
-    	<div class="logo"></div>
+    	<div class="logo">
+    		<img src="${base}/images/logo.jpg"></img>
+    		<strong>心理测评系统</strong>
+    	</div>
     	<div class="loginWrap">
     	<div class="loginBox">
 		<form class="form-signin form-horizontal" role="form" action="${base}/signin" method="post">
