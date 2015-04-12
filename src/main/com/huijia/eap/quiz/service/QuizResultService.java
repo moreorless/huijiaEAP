@@ -30,6 +30,9 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 	@Inject
 	private UserService userService;
 	
+	@Inject
+	private QuizCategoryService quizCategoryService;
+	
 	@Inject("refer:quizResultDao")
 	public void setQuizResultDao(Dao dao) {
 		setDao(dao);
@@ -195,9 +198,9 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 			QuizItemOption qOption = qItem.getOption(answerIndex);
 			// 该答案对应的分值
 			int optScore = qOption.getValue();
+			
 			String categoryName = qOption.getCategoryName();
-			QuizCategory category = quiz.getCategoryByName(categoryName);
-			int categoryId = category.getId();
+			int categoryId = qOption.getCategoryId();
 			
 			// 如果是测谎题目
 			if(qItem.isLieFlag()){
@@ -229,7 +232,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		for(int categoryId : scoreByCategory.keySet()){
 			int _score = scoreByCategory.get(categoryId);
 			if(_score == maxCategoryScore){
-				_maxCategories.add(quiz.getCategoryById(categoryId));
+				_maxCategories.add(quizCategoryService.fetch(categoryId));
 			}
 		}
 		
@@ -289,7 +292,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		quizResult.setScore(totalScore);
 		quizResult.setScoreJson(Json.toJson(scoreByCategory));
 		quizResult.setCategoryId(myCategoryId);
-		quizResult.setCategoryName(quiz.getCategoryById(myCategoryId).getName());
+		quizResult.setCategoryName(quizCategoryService.fetch(myCategoryId).getName());
 		quizResult.setValid(isValid);
 		
 		quizResult = this.dao().insert(quizResult);

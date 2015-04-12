@@ -298,26 +298,26 @@ public class Quiz {
 		
 		return categoryList;
 	}
-	public QuizCategory getCategoryByName(String categoryName){
-		List<QuizCategory> categoryList = this.getCategoryList();
-		Iterator<QuizCategory> iter = categoryList.iterator();
-		while(iter.hasNext()){
-			QuizCategory category = iter.next();
-			if(category.getName().equals(categoryName)){
-				return category;
-			}
-		}
-		return null;
-	}
-	public QuizCategory getCategoryById(int categoryId){
-		List<QuizCategory> categoryList = this.getCategoryList();
-		Iterator<QuizCategory> iter = categoryList.iterator();
-		while(iter.hasNext()){
-			QuizCategory category = iter.next();
-			if(category.getId() == categoryId){
-				return category;
-			}
-		}
-		return null;
-	}
+//	public QuizCategory getCategoryByName(String categoryName){
+//		List<QuizCategory> categoryList = this.getCategoryList();
+//		Iterator<QuizCategory> iter = categoryList.iterator();
+//		while(iter.hasNext()){
+//			QuizCategory category = iter.next();
+//			if(category.getName().equals(categoryName)){
+//				return category;
+//			}
+//		}
+//		return null;
+//	}
+//	public QuizCategory getCategoryById(int categoryId){
+//		List<QuizCategory> categoryList = this.getCategoryList();
+//		Iterator<QuizCategory> iter = categoryList.iterator();
+//		while(iter.hasNext()){
+//			QuizCategory category = iter.next();
+//			if(category.getId() == categoryId){
+//				return category;
+//			}
+//		}
+//		return null;
+//	}
 }

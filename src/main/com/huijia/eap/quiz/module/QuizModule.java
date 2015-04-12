@@ -1,6 +1,7 @@
 package com.huijia.eap.quiz.module;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +49,8 @@ import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.data.Segment;
+import com.huijia.eap.quiz.report.PdfReportRender;
+import com.huijia.eap.quiz.report.ReportRenderException;
 import com.huijia.eap.quiz.service.QuizAnswerLogService;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
@@ -59,6 +62,7 @@ import com.huijia.eap.quiz.service.SegmentQuizRelationService;
 import com.huijia.eap.quiz.service.SegmentService;
 import com.huijia.eap.quiz.service.handler.QuizImportHandler;
 import com.huijia.eap.quiz.util.PdfUtil;
+import com.itextpdf.text.DocumentException;
 
 @IocBean
 @InjectName
@@ -704,16 +708,30 @@ public class QuizModule {
 	@Ok("raw")
 	public File reportexport(HttpServletRequest request,
 			@Param("quizId") long quizId) {
-		String url = request.getScheme() + "://127.0.0.1:"
-				+ request.getServerPort() + "/" + request.getContextPath()
-				+ "/quiz/report?quizId=" + quizId + "&userId="
-				+ Auths.getUser(request).getUserId() + "&exportpdf=true";
 
+		User user = Auths.getUser(request);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		File pdf = PdfUtil.renderPdf(url);
-		// Files.rename(pdf, quiz.getName() + ".pdf");
-		return pdf;
+		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator + "download"
+				+ File.separator + "report_" + quizId + "_" + user.getUserId() + ".pdf";
+		try {
+		PdfReportRender render = new PdfReportRender();
+		String tpFileName = GlobalConfig.getContextValueAs(String.class, "conf.dir")
+				+ File.separator + "report" + File.separator + "person" + File.separator
+				+ File.separator + quiz.getReporttpl() + ".report";
+		
+			render.render(dest, new File(tpFileName));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReportRenderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new File(dest);
 	}
 
 }

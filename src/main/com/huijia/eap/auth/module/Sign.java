@@ -132,7 +132,7 @@ public class Sign {
 				UserCheckBean.CUPID_CONTEXT_KEY);
 		if (uc == null) {
 			uc = new UserCheckBean();
-			uc.setCountLock(3);
+			uc.setCountLock(10);
 			uc.setTimeLock(5);
 		}
 

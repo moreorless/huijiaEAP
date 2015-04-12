@@ -19,8 +19,8 @@ public class ReportTemple {
 	public static Map<String, String> getTemple(){
 		Map<String, String> tplMap = new HashMap<String, String>();
 		
-		String tplIndex = GlobalConfig.getContextValueAs(String.class, "web.dir") 
-				+ File.separator + "includes" + File.separator + "report" + File.separator + "index";
+		String tplIndex = GlobalConfig.getContextValueAs(String.class, "conf.dir") 
+				+ File.separator + "report" + File.separator + "index.properties";
 		BufferedReader reader = null;
 		
 		try{

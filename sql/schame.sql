@@ -134,7 +134,7 @@ CREATE TABLE `quiz_item` (
   `id` int(10) NOT NULL,
   `question` text NOT NULL,
   `lieFlag` int(1) NOT NULL,
-  `optionJson` varchar(8192) NOT NULL default '' COMMENT '{选项内容;选项维度ID;选项维度全称;选项分值}',
+  `optionJson` Text NOT NULL default '' COMMENT '{选项内容;选项维度ID;选项维度全称;选项分值}',
   `createBy` varchar(512) default NULL,
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,
@@ -179,7 +179,7 @@ CREATE TABLE `quiz_result` (
 	`companyId` INT(11) NOT NULL COMMENT '答题者公司id',
 	`quizid` INT(11) NOT NULL COMMENT '试卷id',
 	`timestamp` BIGINT(20) NOT NULL COMMENT '答题时间',
-	`answer` VARCHAR(512) NOT NULL COMMENT '答案明细',
+	`answer` Text NOT NULL COMMENT '答案明细',
 	`score` INT(10) NOT NULL COMMENT '总分',
 	`scoreJson` VARCHAR(512) NOT NULL COMMENT '各类型得分',
 	`valid` TINYINT(1) NOT NULL COMMENT '是否有效',
@@ -210,5 +210,5 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 
 
 # admin / admin
-INSERT INTO auth_user VALUES (1,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0);
+INSERT INTO auth_user VALUES (0,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0);
 INSERT INTO sys_tblids VALUES ('auth_user', 1);

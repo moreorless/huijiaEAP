@@ -25,7 +25,7 @@ public class UserCheckBean implements Serializable{
 	
 	private int timeLock = 5;
 	
-	private int countLock = 3;
+	private int countLock = 10;
 	
 	private int sessionLock;
 
