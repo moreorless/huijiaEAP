@@ -135,6 +135,7 @@ CREATE TABLE `quiz_item` (
   `question` text NOT NULL,
   `lieFlag` int(1) NOT NULL,
   `optionJson` Text NOT NULL default '' COMMENT '{选项内容;选项维度ID;选项维度全称;选项分值}',
+  `groupId` INT(10) NOT NULL DEFAULT '0' COMMENT '问题所在的组，主要用于问卷4',
   `createBy` varchar(512) default NULL,
   `createAt` varchar(512) default NULL,
   `updateBy` varchar(512) default NULL,
