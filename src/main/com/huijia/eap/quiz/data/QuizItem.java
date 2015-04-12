@@ -20,6 +20,17 @@ public class QuizItem {
 	@Column
 	private long quizId;
 
+	@Column
+	private long groupId;
+
+	public long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
+	}
+
 	/**
 	 * 题目内容
 	 */
@@ -115,8 +126,9 @@ public class QuizItem {
 		this.options = optionList;
 		_bConverted = true;
 	}
-	
-	public String addCategoryTblMaxIdForOptionJson(String currentJson, int categoryTblMaxId) {
+
+	public String addCategoryTblMaxIdForOptionJson(String currentJson,
+			int categoryTblMaxId) {
 		LinkedList<QuizItemOption> optionList = new LinkedList<QuizItemOption>();
 		List _list = (List) Json.fromJson(currentJson);
 		Iterator<Map> iter = _list.iterator();
@@ -134,7 +146,7 @@ public class QuizItem {
 		}
 		return Json.toJson(optionList);
 	}
-	
+
 	/**
 	 * 
 	 * @param optIndex

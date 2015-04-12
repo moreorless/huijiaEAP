@@ -72,7 +72,8 @@ public class QuizImportHandler {
 	class ItemMeta {
 		int sheetIndex; // 题目所在的表单号
 		int rowIndex; // 标题行所在的行号
-		int serialColumnIndex; // 题目编号所在的
+		int serialColumnIndex; // 题目编号所在的列号
+		int groupColumnIndex; // 题目组号所在的列号
 		int lieColumnIndex; // 是否测谎题所在的列号
 		int questionColumnIndex; // 题目内容所在的列号
 		int optionColumnIndex; // 第一个选项所在的列号
@@ -324,7 +325,7 @@ public class QuizImportHandler {
 			return -1;
 		}
 		// 初始化主维度信息
-		int	currentTblMaxId = 0; //当时测试代码遗留，不必修改
+		int currentTblMaxId = 0; // 当时测试代码遗留，不必修改
 		for (int i = 0; i < this.meta.categoryNum; i++) {
 			Category category = new Category();
 			category.quizId = -1; // 在quizCategoryService中插入数据库时再赋予真正的quizId
@@ -427,6 +428,7 @@ public class QuizImportHandler {
 		this.meta.itemMeta.serialColumnIndex = position.columnIndex;
 
 		String value;
+
 		for (int i = 0;; i++) {
 			value = this.getCellValue(this.meta.itemMeta.sheetIndex,
 					this.meta.itemMeta.rowIndex, i);
@@ -437,6 +439,20 @@ public class QuizImportHandler {
 			}
 			if (value.equals("是否测谎题")) {
 				this.meta.itemMeta.lieColumnIndex = i;
+				break;
+			}
+		}
+
+		for (int i = 0;; i++) {
+			value = this.getCellValue(this.meta.itemMeta.sheetIndex,
+					this.meta.itemMeta.rowIndex, i);
+			if (i == FORMAX) {
+				// 循环一直没有停止，出错
+				logger.error("解析个人评估表单失败：表单0中找不到<题目组号>单元格，循环超过最大次数。");
+				return -1;
+			}
+			if (value.equals("题目组号")) {
+				this.meta.itemMeta.groupColumnIndex = i;
 				break;
 			}
 		}
@@ -1057,6 +1073,15 @@ public class QuizImportHandler {
 			}
 			item.setId(Integer.parseInt(value));
 
+			// 解析 题目组号
+			value = this.getCellValue(this.meta.itemMeta.sheetIndex,
+					itemRowIndex, this.meta.itemMeta.groupColumnIndex);
+			if (value.equals("")) {
+				logger.error("解析题目表单失败：在第" + itemRowIndex + "行中找不到题目组号" + i + 1);
+				return -1;
+			}
+			item.setGroupId(Integer.parseInt(value));
+
 			// 解析 是否测谎题
 			value = this.getCellValue(this.meta.itemMeta.sheetIndex,
 					itemRowIndex, this.meta.itemMeta.lieColumnIndex);
@@ -1594,7 +1619,7 @@ public class QuizImportHandler {
 		// quizImportHandler.process("D:\\20140312_quiz2.1_沟通风格.xls");
 		// quizImportHandler.process("D:\\20140312_quiz2.2_冲突处理.xls");
 		// quizImportHandler.process("D:\\20150316_quiz3_企业员工调研问卷.xls");
-		quizImportHandler.process("D:\\20150316_quiz4_情绪管理倾向.xls");
+		quizImportHandler.process("D:\\20140401_quiz1_个人心理分析.xls");
 
 		// quizImportHandler.initSheetPositions
 		// System.out.println(quizImportHandler.getOptionNum());
