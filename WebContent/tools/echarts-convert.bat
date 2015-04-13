@@ -1,0 +1,1 @@
+phantomjs.exe echarts\echarts-convert.js -infile echarts\option -outfile test.png

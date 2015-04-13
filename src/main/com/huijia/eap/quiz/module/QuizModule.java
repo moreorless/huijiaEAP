@@ -618,7 +618,7 @@ public class QuizModule {
 	 * @param request
 	 */
 	@At
-	@Ok("jsp:jsp.quiz.test.report")
+	@Ok("jsp:jsp.quiz.test.answerok")
 	public View answer(HttpServletRequest request,
 			@Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
