@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.nutz.dao.Cnd;
+import org.nutz.ioc.Ioc;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -49,8 +50,9 @@ import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.data.Segment;
-import com.huijia.eap.quiz.report.PdfReportRender;
-import com.huijia.eap.quiz.report.ReportRenderException;
+import com.huijia.eap.quiz.report.ReportPreProcessor;
+import com.huijia.eap.quiz.report.render.PdfReportRender;
+import com.huijia.eap.quiz.report.render.ReportRenderException;
 import com.huijia.eap.quiz.service.QuizAnswerLogService;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
@@ -706,21 +708,32 @@ public class QuizModule {
 
 	@At
 	@Ok("raw")
-	public File reportexport(HttpServletRequest request,
+	public File reportexport(HttpServletRequest request, Ioc ioc,
 			@Param("quizId") long quizId) {
 
 		User user = Auths.getUser(request);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
+		List<QuizResult> resultList = quizResultService.getQuizResult(user.getUserId(), quizId);
+		if(resultList.size() < 1) {
+			// 向页面返回错误信息
+			EC error = new EC("quiz.report.no.answer", bundle);
+			throw ExceptionWrapper.wrapError(error);
+		}
+		QuizResult result = resultList.get(0);
+		
 		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator + "download"
 				+ File.separator + "report_" + quizId + "_" + user.getUserId() + ".pdf";
 		try {
-		PdfReportRender render = new PdfReportRender();
-		String tpFileName = GlobalConfig.getContextValueAs(String.class, "conf.dir")
-				+ File.separator + "report" + File.separator + "person" + File.separator
-				+ File.separator + quiz.getReporttpl() + ".report";
-		
-			render.render(dest, new File(tpFileName));
+			PdfReportRender render = new PdfReportRender();
+			String tpFileName = GlobalConfig.getContextValueAs(String.class, "conf.dir")
+					+ File.separator + "report" + File.separator + "person" + File.separator
+					+ File.separator + quiz.getReporttpl() + ".report";
+			
+			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
+			File tempReport = reportPreProcessor.process(new File(tpFileName), result);
+			render.render(dest, tempReport);
+			Files.deleteFile(tempReport);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

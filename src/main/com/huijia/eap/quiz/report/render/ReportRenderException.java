@@ -1,4 +1,4 @@
-package com.huijia.eap.quiz.report;
+package com.huijia.eap.quiz.report.render;
 
 @SuppressWarnings("serial")
 public class ReportRenderException extends Exception{

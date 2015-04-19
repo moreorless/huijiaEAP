@@ -1,4 +1,4 @@
-package com.huijia.eap.quiz.report;
+package com.huijia.eap.quiz.report.render;
 
 import java.io.File;
 import java.io.IOException;

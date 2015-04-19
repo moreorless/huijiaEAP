@@ -9,13 +9,13 @@
 	<br/>
 	<br/>
 	<br/>
-	<p fontsize="12" leftindent="40">姓名：</p>
+	<p fontsize="12" leftindent="40">姓名：$parseVar(user.name)</p>
 	<br/>
-	<p fontsize="12" leftindent="40">性别：</p>
+	<p fontsize="12" leftindent="40">性别：$parseVar(user.gender)</p>
 	<br/>
-	<p fontsize="12" leftindent="40">年龄：</p>
+	<p fontsize="12" leftindent="40">年龄：$parseVar(user.age)</p>
 	<br/>
-	<p fontsize="12" leftindent="40">测试日期：</p>
+	<p fontsize="12" leftindent="40">测试日期：$parseVar(test.date)</p>
 </cover>
 <preface>
 	<p>恭喜您已经完成了“沟通风格与冲突处理方式”测评。</p>
@@ -70,7 +70,7 @@
 	<h1>Ⅳ  您的沟通风格状况详解</h1>
 		<h2>一、	各个维度得分图</h2>	
 		<p>所有维度的总分之和为100分。您在各个维度上的得分如下图所示：</p>
-		<img src=""></img>
+		<chart type="bar" groupby="category" dataprovider=""/>
 		<p>在各个维度中，支配维度得分最高，得分为80分，说明您的沟通风格为支配型(此处为最高分维度类型)。</p>
 		
 		<h2>二． 您的特点关键词</h2>
