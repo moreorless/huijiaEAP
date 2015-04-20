@@ -13,6 +13,7 @@ import org.nutz.lang.Xmls;
 import org.nutz.lang.util.Disks;
 
 import com.huijia.eap.quiz.report.ReportTemplate;
+import com.huijia.eap.quiz.report.provider.ChartProvider;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -157,24 +158,44 @@ public class PdfReportRender implements ReportRender{
 			doc.add(new Paragraph(Chunk.NEWLINE));
 			break;
 		case "img":
-			String imageUrl = Xmls.getAttr(element, "src");
-			String widthAttr = Xmls.getAttr(element, "width");
-			String heightAttr = Xmls.getAttr(element, "height");
-			
-			try{
-				Image img = Image.getInstance(imageUrl);
-				if(widthAttr != null && heightAttr != null){
-					img.scaleToFit(Float.parseFloat(widthAttr), Float.parseFloat(heightAttr));
-				}
-				img.setAlignment(Image.ALIGN_CENTER);
-				img.scaleToFit(400, 300);
-				doc.add(img);
-			}catch (Exception e) {
-				logger.error("add Image failed, src = " + imageUrl);
-			}
+			renderImage(doc, element);
+			break;
+		case "chart":
+			renderChart(doc, element);
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void renderChart(Document doc, org.w3c.dom.Element element) {
+		String dataProvider = Xmls.getAttr(element, "dataprovider");
+		String quizKey = Xmls.getAttr(element, "quiz");
+		ChartProvider chartProvider = new ChartProvider();
+		String chartPath = chartProvider.genChart(dataProvider, quizKey);
+		try{
+			Image img = Image.getInstance(chartPath);
+			img.setAlignment(Image.ALIGN_CENTER);
+			img.scalePercent(50);
+			doc.add(img);
+		}catch (Exception e) {
+			logger.error("add Image failed, src = " + chartPath);
+		}
+	}
+	private void renderImage(Document doc, org.w3c.dom.Element element) {
+		String imageUrl = Xmls.getAttr(element, "src");
+		String widthAttr = Xmls.getAttr(element, "width");
+		String heightAttr = Xmls.getAttr(element, "height");
+		
+		try{
+			Image img = Image.getInstance(imageUrl);
+			if(widthAttr != null && heightAttr != null){
+				img.scaleAbsolute(Float.parseFloat(widthAttr), Float.parseFloat(heightAttr));
+			}
+			img.setAlignment(Image.ALIGN_CENTER);
+			doc.add(img);
+		}catch (Exception e) {
+			logger.error("add Image failed, src = " + imageUrl, e);
 		}
 	}
 
