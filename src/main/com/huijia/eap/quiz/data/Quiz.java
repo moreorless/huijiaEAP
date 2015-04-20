@@ -34,6 +34,18 @@ public class Quiz {
 			@ValidateType(type = Type.maxlength, parameters = { "512" }, errorMsg = "quiz.add.name.span", resource = true, bundle = "quiz") })
 	private String name;
 
+	/**
+	 * 标识符，生成报告时通过该字段判断是哪个试卷
+	 * 已支持的试卷
+	 * 	mental_checkup	心理健康体检
+	 *  communicate_style	沟通风格
+	 *  conflict_style  	冲突处理
+	 *  employee_survey	企业员工调研
+	 *  emotion_management	情绪管理倾向
+	 */
+	@Column
+	private String key;
+	
 	@Column
 	private short type;
 
@@ -168,6 +180,14 @@ public class Quiz {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public short getType() {

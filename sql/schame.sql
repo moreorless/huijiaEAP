@@ -83,6 +83,7 @@ DROP TABLE IF EXISTS `quiz`;
 CREATE TABLE `quiz` (
   `id` int(11) unsigned NOT NULL,
   `name` varchar(256) NOT NULL,
+  `key` varchar(256) NOT NULL,
   `type` tinyint(4) NOT NULL default '0' COMMENT '0,独立试卷;1,父试卷;2,子试卷',
   `description` text,
   `icon` varchar(256) default NULL,
