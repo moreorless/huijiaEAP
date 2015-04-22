@@ -44,7 +44,7 @@ public class Quiz {
 	 *  emotion_management	情绪管理倾向
 	 */
 	@Column
-	private String key;
+	private String tag;
 	
 	@Column
 	private short type;
@@ -182,12 +182,12 @@ public class Quiz {
 		this.name = name;
 	}
 	
-	public String getKey() {
-		return key;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public short getType() {

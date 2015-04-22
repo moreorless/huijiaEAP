@@ -123,6 +123,7 @@ public class QuizImportHandler {
 		int categoryNum; // 主维度个数
 		LinkedList<Category> categories;
 		int lieBorder;
+		String tag;
 		ItemMeta itemMeta;
 
 		SingleMeta singleMainMeta; // 个人评价表单->主维度评价信息
@@ -215,6 +216,10 @@ public class QuizImportHandler {
 	public int getLieBorder() {
 		return this.meta.lieBorder;
 	}
+	
+	public String getTag() {
+		return this.meta.tag;
+	}
 
 	/***************************************** 公共函数区 *****************************************/
 
@@ -225,6 +230,7 @@ public class QuizImportHandler {
 		this.meta.categoryNum = 0;
 		this.meta.categories = new LinkedList<Category>();
 		this.meta.lieBorder = 0;
+		this.meta.tag = "";
 		this.meta.itemMeta = new ItemMeta();
 		this.meta.singleMainMeta = new SingleMeta();
 		this.meta.singleSubMeta = new SingleMeta();
@@ -309,6 +315,16 @@ public class QuizImportHandler {
 		this.meta.lieBorder = Integer.parseInt(this.getCellValue(
 				position.sheetIndex, position.rowIndex,
 				position.columnIndex + 1));
+		
+		if (locatePositionByString("问卷标记", SHEETINDEXFORITEM, position) == -1) {
+			// 执行到这里，说明初始化表单0失败
+			logger.error("处理题目表单失败：找不到问卷标记。");
+			this.meta = null;
+			return -1;
+		}
+		this.meta.tag = this.getCellValue(position.sheetIndex,
+				position.rowIndex, position.columnIndex + 1);
+		
 		if (locatePositionByString("维度个数", SHEETINDEXFORITEM, position) == -1) {
 			// 执行到这里，说明初始化表单0失败
 			logger.error("处理题目表单失败：找不到主维度个数。");

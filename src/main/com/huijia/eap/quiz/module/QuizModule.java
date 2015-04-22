@@ -233,6 +233,7 @@ public class QuizModule {
 			if (quizImportHandler.process(path) == 0) {
 				quiz.setItemNum(quizImportHandler.getItemNum());
 				quiz.setLieBorder(quizImportHandler.getLieBorder());
+				quiz.setTag(quizImportHandler.getTag());
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 				quiz = quizService.insert(quiz);
@@ -330,9 +331,11 @@ public class QuizModule {
 		// this.quizEvaluationService.
 
 		request.setAttribute("quizItems", quizItems);
-		request.setAttribute("quizEvaluationsSingleMain", quizEvaluationsSingleMain);
+		request.setAttribute("quizEvaluationsSingleMain",
+				quizEvaluationsSingleMain);
 		request.setAttribute("quizEvaluationsTeamMain", quizEvaluationsTeamMain);
-		request.setAttribute("quizEvaluationsSingleSub", quizEvaluationsSingleSub);
+		request.setAttribute("quizEvaluationsSingleSub",
+				quizEvaluationsSingleSub);
 		request.setAttribute("quizEvaluationsTeamSub", quizEvaluationsTeamSub);
 
 		return new ViewWrapper(new JspView("jsp.quiz.viewquiz"), null);
@@ -370,6 +373,7 @@ public class QuizModule {
 
 				quiz.setItemNum(quizImportHandler.getItemNum());
 				quiz.setLieBorder(quizImportHandler.getLieBorder());
+				quiz.setTag(quizImportHandler.getTag());
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 
@@ -436,6 +440,7 @@ public class QuizModule {
 					.getCategoryNum());
 			quiz.setItemNum(quizService.fetch(quiz.getId()).getItemNum());
 			quiz.setLieBorder(quizService.fetch(quiz.getId()).getLieBorder());
+			quiz.setTag(quizService.fetch(quiz.getId()).getTag());
 			quiz.setChildList(quizService.fetchListByParentId(quiz.getId()));
 
 			quizService.update(quiz);
@@ -463,10 +468,14 @@ public class QuizModule {
 			// this.quizEvaluationService.
 
 			request.setAttribute("quizItems", quizItems);
-			request.setAttribute("quizEvaluationsSingleMain", quizEvaluationsSingleMain);
-			request.setAttribute("quizEvaluationsTeamMain", quizEvaluationsTeamMain);
-			request.setAttribute("quizEvaluationsSingleSub", quizEvaluationsSingleSub);
-			request.setAttribute("quizEvaluationsTeamSub", quizEvaluationsTeamSub);
+			request.setAttribute("quizEvaluationsSingleMain",
+					quizEvaluationsSingleMain);
+			request.setAttribute("quizEvaluationsTeamMain",
+					quizEvaluationsTeamMain);
+			request.setAttribute("quizEvaluationsSingleSub",
+					quizEvaluationsSingleSub);
+			request.setAttribute("quizEvaluationsTeamSub",
+					quizEvaluationsTeamSub);
 		}
 
 		// 更新缓存
@@ -532,6 +541,7 @@ public class QuizModule {
 			if (quizImportHandler.process(path) == 0) {
 				quiz.setItemNum(quizImportHandler.getItemNum());
 				quiz.setLieBorder(quizImportHandler.getLieBorder());
+				quiz.setTag(quizImportHandler.getTag());
 				quiz.setCategoryJson(quizImportHandler.getCategoryJson());
 				quiz.setCategoryNum(quizImportHandler.getCategoryNum());
 				quiz = quizService.insert(quiz);
@@ -714,24 +724,34 @@ public class QuizModule {
 		User user = Auths.getUser(request);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
-		List<QuizResult> resultList = quizResultService.getQuizResult(user.getUserId(), quizId);
-		if(resultList.size() < 1) {
+		List<QuizResult> resultList = quizResultService.getQuizResult(
+				user.getUserId(), quizId);
+		if (resultList.size() < 1) {
 			// 向页面返回错误信息
 			EC error = new EC("quiz.report.no.answer", bundle);
 			throw ExceptionWrapper.wrapError(error);
 		}
 		QuizResult result = resultList.get(0);
-		
-		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator + "download"
-				+ File.separator + "report_" + quizId + "_" + user.getUserId() + ".pdf";
+
+		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir")
+				+ File.separator + "download" + File.separator + "report_"
+				+ quizId + "_" + user.getUserId() + ".pdf";
 		try {
 			PdfReportRender render = new PdfReportRender();
-			String tpFileName = GlobalConfig.getContextValueAs(String.class, "conf.dir")
-					+ File.separator + "report" + File.separator + "person" + File.separator
-					+ File.separator + quiz.getReporttpl() + ".report";
-			
-			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
-			File tempReport = reportPreProcessor.process(new File(tpFileName), result);
+			String tpFileName = GlobalConfig.getContextValueAs(String.class,
+					"conf.dir")
+					+ File.separator
+					+ "report"
+					+ File.separator
+					+ "person"
+					+ File.separator
+					+ File.separator
+					+ quiz.getReporttpl() + ".report";
+
+			ReportPreProcessor reportPreProcessor = ioc
+					.get(ReportPreProcessor.class);
+			File tempReport = reportPreProcessor.process(new File(tpFileName),
+					result);
 			render.render(dest, tempReport);
 			Files.deleteFile(tempReport);
 		} catch (IOException e) {
