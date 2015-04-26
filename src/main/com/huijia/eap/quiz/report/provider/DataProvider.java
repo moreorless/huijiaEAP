@@ -1,17 +1,16 @@
 package com.huijia.eap.quiz.report.provider;
 
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
+import org.nutz.dao.Cnd;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.auth.bean.User;
-import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizResult;
-import com.huijia.eap.quiz.service.QuizService;
+import com.huijia.eap.quiz.service.QuizEvaluationService;
 
 
 /**
@@ -22,15 +21,22 @@ import com.huijia.eap.quiz.service.QuizService;
 @IocBean
 public class DataProvider {
 	@Inject
-	private QuizService quizService;
-	@Inject
-	private UserService userService;
+	private QuizEvaluationService quizEvaluationService;
 	
-	public String getData(String variableName, QuizResult result){
-		Quiz quiz = quizService.fetch(result.getQuizId());
-		User user = userService.fetch(result.getUserId());
+	/**
+	 * 
+	 * @param variableParam
+	 * 		变量规则 $parseVar(varname, param1, param2 | quiztag)
+	 * @param quiz
+	 * @param user
+	 * @param resultLists
+	 * @return
+	 */
+	public String getData(String variableParam, Quiz quiz, User user, QuizResult result){
 		
-		switch (variableName) {
+		if(result == null) return "NaN";
+		
+		switch (variableParam) {
 		case "quiz.name":
 			return quiz.getName();
 		case "user.name":
@@ -42,7 +48,16 @@ public class DataProvider {
 			return String.valueOf(user.getAge());
 		case "test.date":
 			return getTestDate(result);
-			
+		case "category.maxscore.name":
+			return getCategoryName(result);
+		case "category.maxscore.score":
+			return getCategoryScore(result);
+		case "category.feature":
+			return getCategoryFeature(result);
+		case "category.evaluation":
+			return getCategoryEvaluation(result);
+		case "category.suggestion":
+			return getCategorySuggestion(result);
 		default:
 			break;
 		}
@@ -56,5 +71,41 @@ public class DataProvider {
 			(calendar.get(Calendar.MONTH) + 1) + "月" +
 			calendar.get(Calendar.DAY_OF_MONTH) + "日";
 	}
-	
+	/**
+	 * 获取主维度名称
+	 * @param result
+	 * @return
+	 */
+	private String getCategoryName(QuizResult result){
+		return result.getCategoryName();
+	}
+	/**
+	 * 获取主维度得分
+	 * @param result
+	 * @return
+	 */
+	private String getCategoryScore(QuizResult result){
+		int score = result.getScoreMap().get(String.valueOf(result.getCategoryId()));
+		return String.valueOf(score);
+	}
+	private String getCategoryFeature(QuizResult result){
+		QuizEvaluation eva = getEvaluation(result);
+		if(eva == null) return "NaN";
+		return eva.getFeature();
+	}
+	private String getCategoryEvaluation(QuizResult result){
+		QuizEvaluation eva = getEvaluation(result);
+		if(eva == null) return "NaN";
+		return eva.getEvaluation();
+	}
+	private String getCategorySuggestion(QuizResult result){
+		QuizEvaluation eva = getEvaluation(result);
+		if(eva == null) return "NaN";
+		return eva.getSuggestion();
+	}
+	private QuizEvaluation getEvaluation(QuizResult result){
+		QuizEvaluation eva = quizEvaluationService.fetch(Cnd.where("quizid", "=", result.getQuizId())
+				.and("categoryid", "=", result.getCategoryId()));
+		return eva;
+	}
 }

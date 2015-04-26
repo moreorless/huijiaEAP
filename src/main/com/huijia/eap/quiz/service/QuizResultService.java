@@ -83,6 +83,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 	
 	/**
 	 * 获取答题结果，只获取最近一次记录
+	 * 如果是复合问卷，返回每个自问卷的结果集合
 	 * @param userId
 	 * @param quizId
 	 * @param timestamp

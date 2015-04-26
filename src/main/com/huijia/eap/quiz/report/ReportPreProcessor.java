@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -14,8 +15,11 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
 
 import com.huijia.eap.GlobalConfig;
+import com.huijia.eap.auth.bean.User;
+import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.report.provider.DataProvider;
+import com.huijia.eap.quiz.service.QuizService;
 
 /**
  * 报表模板预处理
@@ -29,11 +33,13 @@ public class ReportPreProcessor {
 	
 	@Inject
 	private DataProvider dataProvider;
+	@Inject
+	private QuizService quizService;
 	
 	public ReportPreProcessor(){
 	}
 	
-	public File process(File reportTemplate, QuizResult result){
+	public File process(File reportTemplate, Quiz quiz, User user, List<QuizResult> resultList){
 		if(!reportTemplate.exists()) return null;
 		
 		// 创建临时文件
@@ -59,7 +65,7 @@ public class ReportPreProcessor {
 			String line = null;
 			try{
 				while((line = reader.readLine()) != null){
-					String newLine = parseLine(line, result);
+					String newLine = parseLine(line, quiz, user, resultList);
 					writer.write(newLine);
 				}
 				
@@ -89,8 +95,13 @@ public class ReportPreProcessor {
 		return tmpReport;
 	}
 	
-	
-	public String parseLine(String line, QuizResult result){
+	/**
+	 * 解析模板中的变量值
+	 * @param line
+	 * @param result
+	 * @return
+	 */
+	public String parseLine(String line, Quiz quiz, User user, List<QuizResult> resultLists){
 		
 		int varIndex = line.indexOf("$parseVar(");
 		int bufferStart = 0;
@@ -105,8 +116,32 @@ public class ReportPreProcessor {
 				break;
 			}
 			
-			String variableName = line.substring(startAt, endAt);
-			String varValue = dataProvider.getData(variableName, result);
+			String variableParam = line.substring(startAt, endAt);
+			
+			String varValue = "NaN";
+			QuizResult quizResult = null;
+			// 解析变量
+			// 变量规则 $parseVar(varname, param1, param2 | quiztag)
+			if(variableParam.indexOf("|") != -1){
+				String tagName = variableParam.split("\\|")[1].trim();
+				Quiz subQuiz = quizService.getQuizByTag(tagName);
+				if(subQuiz == null){
+					logger.error("报表模板解析错误 variable = " + variableParam);
+				}else{
+					for(QuizResult _result : resultLists){
+						if(_result.getQuizId() == subQuiz.getId()){
+							quizResult = _result;
+							break;
+						}
+					}
+					variableParam = variableParam.split("\\|")[0].trim();
+					varValue = dataProvider.getData(variableParam, quiz, user, quizResult);
+				}
+			}else{
+				quizResult = resultLists.get(0);
+				varValue = dataProvider.getData(variableParam, quiz, user, quizResult);
+			}
+			
 			buffer.append(varValue);
 			
 			bufferStart = endAt + 1;

@@ -9,6 +9,7 @@ import org.nutz.mvc.NutConfig;
 import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.SetupListener;
 import com.huijia.eap.quiz.cache.QuizCache;
+import com.huijia.eap.quiz.report.provider.ChartDataFactory;
 import com.huijia.eap.quiz.service.handler.SMSHandler;
 import com.huijia.eap.quiz.task.ReportClearTask;
 import com.huijia.eap.schedule.DefaultScheduleIterator;
@@ -23,8 +24,9 @@ public class QuizSetupListener implements SetupListener{
 		logger.info("QuizSetupListener init start");
 		Ioc ioc = config.getIoc();
 		
-		// 加载单例类 QuizCache
+		// 加载单例类 QuizCache, ChartDataFactory
 		ioc.get(QuizCache.class);
+		ioc.get(ChartDataFactory.class);
 		
 		// 初始化短信服务
 		initSMSService();

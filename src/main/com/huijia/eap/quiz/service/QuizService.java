@@ -89,6 +89,18 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	}
 
 	/**
+	 * 根据tag获取试卷
+	 * @param tag
+	 * @return
+	 */
+	public Quiz getQuizByTag(String tag){
+		List<Quiz> list = super.query(Cnd.where("tag", "=", tag), null);
+		if(list != null && list.size() > 0) return list.get(0);
+		return null;
+	}
+	
+	
+	/**
 	 * 显示多有可见的试卷 (独立试卷、复合试卷)
 	 * 
 	 * @return

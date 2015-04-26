@@ -724,6 +724,13 @@ public class QuizModule {
 		User user = Auths.getUser(request);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
+		String ctxPath = request.getContextPath();
+		String fullUrl = request.getRequestURL().toString();
+		int _index = fullUrl.indexOf(ctxPath);
+		String rootUrl = fullUrl.substring(0, _index) + ctxPath;
+		GlobalConfig.addContextValue("app.root.url", rootUrl);
+				
+		// 
 		List<QuizResult> resultList = quizResultService.getQuizResult(
 				user.getUserId(), quizId);
 		if (resultList.size() < 1) {
@@ -731,13 +738,11 @@ public class QuizModule {
 			EC error = new EC("quiz.report.no.answer", bundle);
 			throw ExceptionWrapper.wrapError(error);
 		}
-		QuizResult result = resultList.get(0);
 
 		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir")
 				+ File.separator + "download" + File.separator + "report_"
 				+ quizId + "_" + user.getUserId() + ".pdf";
 		try {
-			PdfReportRender render = new PdfReportRender();
 			String tpFileName = GlobalConfig.getContextValueAs(String.class,
 					"conf.dir")
 					+ File.separator
@@ -745,13 +750,11 @@ public class QuizModule {
 					+ File.separator
 					+ "person"
 					+ File.separator
-					+ File.separator
 					+ quiz.getReporttpl() + ".report";
 
-			ReportPreProcessor reportPreProcessor = ioc
-					.get(ReportPreProcessor.class);
-			File tempReport = reportPreProcessor.process(new File(tpFileName),
-					result);
+			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
+			File tempReport = reportPreProcessor.process(new File(tpFileName), quiz, user, resultList);
+			PdfReportRender render = new PdfReportRender(quiz, user, resultList);
 			render.render(dest, tempReport);
 			Files.deleteFile(tempReport);
 		} catch (IOException e) {

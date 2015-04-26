@@ -20,7 +20,7 @@ public class ReportTemple {
 		Map<String, String> tplMap = new HashMap<String, String>();
 		
 		String tplIndex = GlobalConfig.getContextValueAs(String.class, "conf.dir") 
-				+ File.separator + "report" + File.separator + "index.properties";
+				+ File.separator + "report" + File.separator + "index";
 		BufferedReader reader = null;
 		
 		try{

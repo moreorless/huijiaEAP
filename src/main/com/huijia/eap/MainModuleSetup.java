@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import org.apache.log4j.Logger;
 import org.nutz.mvc.NutConfig;
 import org.nutz.mvc.Setup;

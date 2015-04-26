@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.service;
 
 import java.util.List;
 
+import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -37,5 +38,9 @@ public class QuizCategoryService extends TblIdsEntityService<QuizCategory> {
 
 	public void deleteByQuizId(long quizId) {
 		((QuizCategoryDao) this.dao()).deleteByQuizId(quizId);
+	}
+	
+	public List<QuizCategory> getByQuizId(long quizId){
+		return super.query(Cnd.where("quizId", "=", quizId), null);
 	}
 }

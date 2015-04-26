@@ -161,11 +161,11 @@ public class QuizResult {
 		this.categoryName = categoryName;
 	}
 
-	private Map<Integer, Integer> scoreMap = null;
+	private Map<String, Integer> scoreMap = null;
 	
-	public Map<Integer, Integer> getScoreMap(){
+	public Map<String, Integer> getScoreMap(){
 		if(scoreMap != null) return scoreMap;
-		scoreMap = (Map<Integer, Integer>)Json.fromJson(scoreJson);
+		scoreMap = (Map<String, Integer>)Json.fromJson(scoreJson);
 		return scoreMap;
 	}
 	

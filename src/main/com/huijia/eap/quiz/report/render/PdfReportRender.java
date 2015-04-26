@@ -11,7 +11,11 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.Streams;
 import org.nutz.lang.Xmls;
 import org.nutz.lang.util.Disks;
+import org.nutz.mvc.Mvcs;
 
+import com.huijia.eap.auth.bean.User;
+import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.report.ReportTemplate;
 import com.huijia.eap.quiz.report.provider.ChartProvider;
 import com.itextpdf.text.Chunk;
@@ -20,6 +24,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -32,7 +37,15 @@ public class PdfReportRender implements ReportRender{
 	private BaseFont basefont;
 	private Font chapterFont;
 
-	public PdfReportRender() throws ReportRenderException, DocumentException, IOException{
+	private Quiz quiz;
+	private User user;
+	private List<QuizResult> resultList;
+	
+	public PdfReportRender(Quiz quiz, User user, List<QuizResult> resultList) throws ReportRenderException, DocumentException, IOException{
+		this.quiz = quiz;
+		this.user = user;
+		this.resultList = resultList;
+		
 		initFont();
 	}
 	
@@ -58,9 +71,10 @@ public class PdfReportRender implements ReportRender{
 		
 		try {
 			// 创建 PDF 文档
-			Document doc = new Document();
+			Document doc = new Document(PageSize.A4);
 			
 			PdfWriter writer = PdfWriter.getInstance(doc, Streams.fileOut(dest));
+			writer.setStrictImageSequence(true);
 			
 			doc.open();
 			doc.addCreator("北京会佳心语健康科技有限公司");
@@ -171,12 +185,11 @@ public class PdfReportRender implements ReportRender{
 	private void renderChart(Document doc, org.w3c.dom.Element element) {
 		String dataProvider = Xmls.getAttr(element, "dataprovider");
 		String quizKey = Xmls.getAttr(element, "quiz");
-		ChartProvider chartProvider = new ChartProvider();
-		String chartPath = chartProvider.genChart(dataProvider, quizKey);
+		ChartProvider chartProvider = Mvcs.getIoc().get(ChartProvider.class, "chartProvider");
+		String chartPath = chartProvider.genChart(dataProvider, quizKey, quiz, user, resultList);
 		try{
 			Image img = Image.getInstance(chartPath);
 			img.setAlignment(Image.ALIGN_CENTER);
-			img.scalePercent(50);
 			doc.add(img);
 		}catch (Exception e) {
 			logger.error("add Image failed, src = " + chartPath);
@@ -254,7 +267,7 @@ public class PdfReportRender implements ReportRender{
 				+ File.separator + "report" + File.separator + "person" + File.separator
 				+ "communicate_conflict.report";
 		
-		PdfReportRender render = new PdfReportRender();
+		PdfReportRender render = new PdfReportRender(null, null, null);
 		render.render(dest, new File(reportTemplate));
 	}
 
