@@ -76,7 +76,7 @@ public class ChartProvider {
 		String options = ChartDataFactory.me().getChartOptions(dataProvider, result);
 		
 		String cmd = "cmd /c phantomjs.exe echarts\\echarts-convert.js -infile " + options + " -outfile " + chartImgPath
-				+ " -width 500 -height 400";
+				+ " -width 500 -height 350";
 		String contextPath = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator + "tools";
 		try {
 			Process process = Runtime.getRuntime().exec(cmd, null, new File(contextPath));
