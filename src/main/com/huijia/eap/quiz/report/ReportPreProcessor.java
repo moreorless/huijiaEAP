@@ -10,9 +10,11 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.nutz.ioc.Ioc;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
+import org.nutz.mvc.Mvcs;
 
 import com.huijia.eap.GlobalConfig;
 import com.huijia.eap.auth.bean.User;
@@ -32,15 +34,14 @@ public class ReportPreProcessor {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Inject
-	private DataProvider dataProvider;
-	@Inject
 	private QuizService quizService;
+	
 	
 	public ReportPreProcessor(){
 	}
 	
-	public File process(File reportTemplate, Quiz quiz, User user, List<QuizResult> resultList){
-		if(!reportTemplate.exists()) return null;
+	public File process(ReportTemplate template, Quiz quiz, User user, List<QuizResult> resultList){
+		if(template == null) return null;
 		
 		// 创建临时文件
 		String fileName = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator
@@ -58,14 +59,14 @@ public class ReportPreProcessor {
 		BufferedWriter writer = null;
 		try{
 			
-			InputStreamReader isr = new InputStreamReader(new FileInputStream(reportTemplate));
+			InputStreamReader isr = new InputStreamReader(new FileInputStream(template.getTpFile()));
 			 reader = new BufferedReader(isr);
 			
 			writer = new BufferedWriter(new FileWriter(tmpReport));
 			String line = null;
 			try{
 				while((line = reader.readLine()) != null){
-					String newLine = parseLine(line, quiz, user, resultList);
+					String newLine = parseLine(template, line, quiz, user, resultList);
 					writer.write(newLine);
 				}
 				
@@ -101,11 +102,17 @@ public class ReportPreProcessor {
 	 * @param result
 	 * @return
 	 */
-	public String parseLine(String line, Quiz quiz, User user, List<QuizResult> resultLists){
+	public String parseLine(ReportTemplate template, String line, Quiz quiz, User user, List<QuizResult> resultLists){
 		
 		int varIndex = line.indexOf("$parseVar(");
 		int bufferStart = 0;
 		StringBuffer buffer = new StringBuffer();
+		
+		Ioc ioc = Mvcs.getActionContext().getIoc();
+		
+		String dataProviderName = template.getDataProvider();
+		DataProvider dataProvider = ioc.get(DataProvider.class, dataProviderName);
+		
 		while(varIndex != -1){
 			buffer.append(line.substring(bufferStart, varIndex));
 			

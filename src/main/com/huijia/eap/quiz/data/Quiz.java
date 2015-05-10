@@ -1,19 +1,15 @@
 package com.huijia.eap.quiz.data;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
-import org.nutz.json.Json;
 
 import com.huijia.eap.commons.mvc.validate.annotation.ValidateType;
-import com.huijia.eap.commons.mvc.validate.annotation.Validations;
 import com.huijia.eap.commons.mvc.validate.annotation.ValidateType.Type;
+import com.huijia.eap.commons.mvc.validate.annotation.Validations;
 
 @Table("quiz")
 public class Quiz {
@@ -44,7 +40,7 @@ public class Quiz {
 	 *  emotion_management	情绪管理倾向
 	 */
 	@Column
-	private String tag;
+	private String tag = "";
 	
 	@Column
 	private short type;

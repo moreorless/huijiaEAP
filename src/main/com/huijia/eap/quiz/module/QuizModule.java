@@ -51,6 +51,7 @@ import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.report.ReportPreProcessor;
+import com.huijia.eap.quiz.report.ReportTemplate;
 import com.huijia.eap.quiz.report.render.PdfReportRender;
 import com.huijia.eap.quiz.report.render.ReportRenderException;
 import com.huijia.eap.quiz.service.QuizAnswerLogService;
@@ -688,7 +689,7 @@ public class QuizModule {
 		request.setAttribute("quizlist", quizList);
 
 		request.setAttribute("quiz", quiz);
-		return new JspView("jsp.quiz.test.report");
+		return new JspView("jsp.quiz.test.answerok");
 	}
 
 	/**
@@ -753,7 +754,8 @@ public class QuizModule {
 					+ quiz.getReporttpl() + ".report";
 
 			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
-			File tempReport = reportPreProcessor.process(new File(tpFileName), quiz, user, resultList);
+			ReportTemplate template = new ReportTemplate(new File(tpFileName));
+			File tempReport = reportPreProcessor.process(template, quiz, user, resultList);
 			PdfReportRender render = new PdfReportRender(quiz, user, resultList);
 			render.render(dest, tempReport);
 			Files.deleteFile(tempReport);

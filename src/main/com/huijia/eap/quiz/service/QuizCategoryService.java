@@ -43,4 +43,26 @@ public class QuizCategoryService extends TblIdsEntityService<QuizCategory> {
 	public List<QuizCategory> getByQuizId(long quizId){
 		return super.query(Cnd.where("quizId", "=", quizId), null);
 	}
+	
+	/**
+	 * 获取总分的categoryId
+	 * @param quizId
+	 * @return
+	 */
+	public QuizCategory getTotalCategory(long quizId){
+		List<QuizCategory> list = super.query(Cnd.where("quizId", "=", quizId)
+				.and("name", "=", "总分"), null);
+		if(list ==null || list.size() == 0) return null;
+		return list.get(0);
+	}
+	/**
+	 * 获取维度列表（剔除总分）
+	 * @param quizId
+	 * @return
+	 */
+	public List<QuizCategory> getCategoryList(long quizId){
+		List<QuizCategory> list = super.query(Cnd.where("quizId", "=", quizId)
+				.and("name", "<>", "总分"), null);
+		return list;
+	}
 }

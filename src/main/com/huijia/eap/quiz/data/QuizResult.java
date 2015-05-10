@@ -43,6 +43,13 @@ public class QuizResult {
 	 */
 	@Column
 	private String answer;
+	
+	/**
+	 * 测谎题总分
+	 */
+	@Column
+	private int lieScore;
+	
 	/**
 	 * 总分
 	 */
@@ -167,6 +174,14 @@ public class QuizResult {
 		if(scoreMap != null) return scoreMap;
 		scoreMap = (Map<String, Integer>)Json.fromJson(scoreJson);
 		return scoreMap;
+	}
+
+	public int getLieScore() {
+		return lieScore;
+	}
+
+	public void setLieScore(int lieScore) {
+		this.lieScore = lieScore;
 	}
 	
 }

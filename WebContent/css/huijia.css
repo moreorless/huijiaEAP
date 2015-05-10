@@ -22,18 +22,25 @@ body {
 	background-color: #fff;
 }
 
-.huijia-header-nav .brand h4{
+.huijia-header-nav h4{
 	line-height:48px;
 	height:48px;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight : bold;
-	margin-left: 20px;
-	margin-top: 20px;
+	margin-left: 0 0 0 20px;
 	color: #505050;
 }
 .huijia-header-nav .brand-right label{
 	margin-right: 10px;
 	color: #505050;
+}
+
+.huijia-header-nav a{
+	cursor: pointer;
+}
+
+.huijia-header-nav a label{
+	cursor: pointer;
 }
 
 #logo_bar{

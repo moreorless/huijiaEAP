@@ -13,7 +13,6 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
 
 import com.huijia.eap.GlobalConfig;
-import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.service.QuizService;
 
@@ -44,7 +43,8 @@ public class ChartDataFactory {
 		switch (dataprovider) {
 		case "stat_by_category":
 			return statByCategory(result);
-
+		case "radar_by_category":
+			return radarByCategory(result);
 		default:
 			break;
 		}
@@ -62,6 +62,23 @@ public class ChartDataFactory {
 		long quizId = result.getQuizId();
 		String urlpath = GlobalConfig.getContextValueAs(String.class, "app.root.url") + "/quiz/report/chart/statByCategory"
 				+ "?userId=" + userId + "&quizId=" + quizId;
+		return createOptionFile(userId, quizId, urlpath);
+	}
+
+	/**
+	 * 按维度统计，各维度得分；生成雷达图
+	 * @param quizKey
+	 * @return
+	 */
+	public String radarByCategory(QuizResult result){
+		long userId = result.getUserId();
+		long quizId = result.getQuizId();
+		String urlpath = GlobalConfig.getContextValueAs(String.class, "app.root.url") + "/quiz/report/chart/radarByCategory"
+				+ "?userId=" + userId + "&quizId=" + quizId;
+		return createOptionFile(userId, quizId, urlpath);
+	}
+	
+	private String createOptionFile(long userId, long quizId, String urlpath) {
 		String saveFile = GlobalConfig.getContextValueAs(String.class, "web.dir") + File.separator
 				+ "temp" + File.separator + userId + "_" + quizId + ".option";
 		try {
@@ -96,4 +113,6 @@ public class ChartDataFactory {
 		}
 		return saveFile;
 	}
+	
+	
 }

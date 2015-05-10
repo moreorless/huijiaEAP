@@ -290,6 +290,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		quizResult.setCompanyId(user.getCompanyId());
 		quizResult.setTimestamp(timestamp);
 		quizResult.setAnswer(Json.toJson(quizAnswer));
+		quizResult.setLieScore(lieScore);
 		quizResult.setScore(totalScore);
 		quizResult.setScoreJson(Json.toJson(scoreByCategory));
 		quizResult.setCategoryId(myCategoryId);

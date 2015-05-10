@@ -21,10 +21,19 @@ public class ReportTemplate {
 	 */
 	private File tpFile;
 	
+	public File getTpFile() {
+		return tpFile;
+	}
+
 	private Element cover;
 	private Element preface;
 	private Element body;
 	
+	/**
+	 * 数据提供者类
+	 */
+	private String dataProvider;
+
 	private String title;
 	
 	public ReportTemplate(File tpFile){
@@ -39,6 +48,7 @@ public class ReportTemplate {
 			
 			Document document = Xmls.xml(tpFile);
 			Element reportEle = document.getDocumentElement();
+			this.dataProvider = Xmls.getAttr(reportEle, "dataprovider");
 			this.cover = Xmls.firstChild(reportEle, "cover");
 			this.preface = Xmls.firstChild(reportEle, "preface");
 			this.body = Xmls.firstChild(reportEle, "body");
@@ -67,4 +77,10 @@ public class ReportTemplate {
 	public String getTitle(){
 		return title;
 	}
+
+	public String getDataProvider() {
+		return dataProvider;
+	}
+	
+	
 }

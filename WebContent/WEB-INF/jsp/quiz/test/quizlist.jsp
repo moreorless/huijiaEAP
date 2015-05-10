@@ -38,7 +38,8 @@
 			</div>
 			<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">
 			<div style="margin-bottom: 10px;">
-			<a href="${base}/quiz/reportexport?quizId=${quiz.id}" target="_blank" class="btn btn-primary" role="button">查看报告</a>
+			<a href="${base}/quiz/reportexport?quizId=${quiz.id}" target="_blank" class="btn btn-primary" role="button"
+				<c:if test="${quiz.reporttpl == 'employee_survey'}">disabled</c:if>>查看报告</a>
 			</div>
 			</c:if>
 		</div>

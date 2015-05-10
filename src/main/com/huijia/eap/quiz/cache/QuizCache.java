@@ -8,6 +8,8 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizCategory;
+import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizService;
 
 /**
@@ -21,8 +23,12 @@ public class QuizCache {
 	
 	private Map<Long, Quiz> _cache = new HashMap<Long, Quiz>();
 	
+	private Map<Long, List<QuizCategory>> _categoryMap = new HashMap<Long, List<QuizCategory>>();
+	
 	@Inject
 	private QuizService quizService;
+	@Inject
+	private QuizCategoryService quizCategoryService;
 	
 	private QuizCache(){};
 	public static QuizCache me(){
@@ -58,5 +64,19 @@ public class QuizCache {
 	}
 	public void delete(long quizId){
 		_cache.remove(quizId);
+	}
+	
+	/**
+	 * 获取试卷的维度列表
+	 * @param quizId
+	 * @return
+	 */
+	public List<QuizCategory> getCategoryList(long quizId){
+		if(_categoryMap.containsKey(quizId)){
+			return _categoryMap.get(quizId);
+		}
+		List<QuizCategory> list = quizCategoryService.getCategoryList(quizId);
+		_categoryMap.put(quizId, list);
+		return list;
 	}
 }
