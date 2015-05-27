@@ -65,4 +65,14 @@ public class CompanyModule {
 	public void delete(HttpServletRequest request, @Param("id") long id) {
 		companyService.deleteByCompanyId(id);
 	}
+	
+	
+	@At
+	@Ok("forward:/company/report")
+	public void report(HttpServletRequest request, @Param("companyId") long companyId) {
+		// 获取company关联的试卷列表，及答题情况。
+		
+		
+		
+	}
 }
