@@ -1,7 +1,10 @@
 package com.huijia.eap.quiz.module;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.nutz.dao.Cnd;
 import org.nutz.ioc.Ioc;
@@ -719,8 +723,8 @@ public class QuizModule {
 
 	@At
 	@Ok("raw")
-	public File reportexport(HttpServletRequest request, Ioc ioc,
-			@Param("quizId") long quizId) {
+	public File reportexport(HttpServletRequest request, HttpServletResponse response, Ioc ioc,
+			@Param("quizId") long quizId) throws IOException {
 
 		User user = Auths.getUser(request);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
@@ -742,7 +746,7 @@ public class QuizModule {
 
 		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir")
 				+ File.separator + "download" + File.separator + "report_"
-				+ quizId + "_" + user.getUserId() + ".pdf";
+				+ quizId + "_" + user.getUserId() + File.separator + quiz.getName() + ".pdf";
 		try {
 			String tpFileName = GlobalConfig.getContextValueAs(String.class,
 					"conf.dir")
@@ -769,6 +773,7 @@ public class QuizModule {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return new File(dest);
 	}
 
