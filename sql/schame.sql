@@ -182,6 +182,7 @@ CREATE TABLE `quiz_result` (
 	`quizid` INT(11) NOT NULL COMMENT '试卷id',
 	`timestamp` BIGINT(20) NOT NULL COMMENT '答题时间',
 	`answer` Text NOT NULL COMMENT '答案明细',
+	`lieScore` INT(10) NOT NULL COMMENT '总分',
 	`score` INT(10) NOT NULL COMMENT '总分',
 	`scoreJson` VARCHAR(512) NOT NULL COMMENT '各类型得分',
 	`valid` TINYINT(1) NOT NULL COMMENT '是否有效',
