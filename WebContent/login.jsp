@@ -53,6 +53,10 @@
       	</form>
       	</div>
       	</div>
+      	<div id="footer">
+      		<p>服务电话：010-85325943</p>
+      		<p>Copyright© 2012-2015 北京会佳心语健康科技有限公司.All Rights Reserved</p>
+      	</div>
     </div>
 
 

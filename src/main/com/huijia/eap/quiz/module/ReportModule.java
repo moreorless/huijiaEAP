@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.module;
 
 import java.util.Map;
 
+import org.jaxen.function.FalseFunction;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
@@ -28,5 +29,12 @@ public class ReportModule {
 	@Fail("json")
 	public Map<String, String> listTemple(){
 		return ReportTemple.getTemple();
+	}
+	
+	@At
+	@Ok("jsp:jsp.quiz.report.demo")
+	@AuthBy(login=false)
+	public void demo(){
+		
 	}
 }

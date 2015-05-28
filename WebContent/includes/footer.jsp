@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=utf-8" language="java" %>
 <div id="footer">
   <div>
-    <p>版权所有@2015 <a href="#" target="_blank"></a></p>
+    <p>Copyright© 2012-2015 北京会佳心语健康科技有限公司.All Rights Reserved <a href="#" target="_blank"></a></p>
   </div>
 </div>

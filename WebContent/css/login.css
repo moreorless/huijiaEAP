@@ -1,6 +1,6 @@
 
       body {
-        background: url(../images/Bg01.png) repeat-x;
+        /*background: url(../images/Bg01.png) repeat-x;*/
         background-color: #f6f6f6;
         background-position: 50% 100px; 
       }
@@ -26,8 +26,8 @@
       }
 
       .loginWrap{
-        background-image: url(../images/login_hg.jpg);
-        background-position: 0px 40px;
+        background-image: url(../images/login_bg.png);
+        background-position: 0px 20px;
         background-repeat: no-repeat;
         width: 960px;
         min-height: 500px;
@@ -39,6 +39,7 @@
         z-index:99;
         position:relative;
         margin-top:80px;
+        margin-right:40px; 
         background-color: #fff;
         border: 1px solid #e5e5e5;
       }
@@ -78,3 +79,4 @@
        font-size: 13px;
       }
  
+      #footer{text-align: center;color: #666}
