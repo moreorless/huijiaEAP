@@ -166,4 +166,25 @@ public class SegmentModule {
 		// 组合问卷1,个人性格分析
 		segmentService.deleteBySegmentId(id);
 	}
+	
+	@At
+	@Ok("jsp:jsp.segment.quizlist")
+	public void quizlist(HttpServletRequest request, @Param("id") long segmentId){
+		Segment segment = segmentService.fetch(segmentId);
+		Company company = companyService.fetch(segment.getCompanyId());
+		
+		List<Quiz> quizList = quizService.fetchQuizListBySegmentId(segmentId);
+		request.setAttribute("quizList", quizList);
+		request.setAttribute("segmentId", segmentId);
+		request.setAttribute("company", company);
+	}
+	@At
+	@Ok("jsp:jsp.segment.report")
+	public void report(HttpServletRequest request, @Param("segentId") long segmentId, @Param("quizId") long quizId){
+		
+		Quiz quiz = quizService.fetch(quizId);
+		request.setAttribute("quiz", quiz);
+		
+	}
+	
 }

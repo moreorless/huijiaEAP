@@ -56,8 +56,9 @@ body {
 						<c:if test="${segment.status == '1' }">
 							<td>使用中</td>
 						</c:if>
-						<td><a href="${base}/segment/exportUsers?id=${segment.id}">导出</a>&nbsp;|&nbsp;
+						<td><a href="${base}/segment/exportUsers?id=${segment.id}">下载号段</a>&nbsp;|&nbsp;
 							<a href="${base}/segment/listUsers?id=${segment.id}">查看用户</a>&nbsp;|&nbsp;
+							<a href="${base}/segment/quizlist?id=${segment.id}">查看报告</a>&nbsp;|&nbsp;
 							<a href="${base}/segment/prepare?operation=edit&id=${segment.id}&companyId=${company.id}">修改</a>
 							&nbsp;|&nbsp; <a href="${base}/segment/delete?id=${segment.id}&companyId=${company.id}">删除</a>
 						</td>
