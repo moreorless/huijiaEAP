@@ -11,7 +11,7 @@
     <style type="text/css">
         html {overflow: auto !important;}
         body {overflow-y: auto !important; }
-        
+        .chart{width:600px;height: 400px}
     </style>
 </head>
 <body>
@@ -34,22 +34,22 @@
         	
         	<h1>标题2</h1>
         	<h2>标题2.1</h2>
-        	<c:forEach  var="i" begin="1" end="8" step="1">
+        	<c:forEach  var="i" begin="1" end="2" step="1">
         		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
         	</c:forEach>
         	<div class="chart"></div>
         	
         	<h2>标题2.2</h2>
         	<div class="chart"></div>
-        	<c:forEach  var="i" begin="1" end="7" step="1">
+        	<c:forEach  var="i" begin="1" end="2" step="1">
         		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
         	</c:forEach>
         	<h1>标题3</h1>
-        	<c:forEach  var="i" begin="1" end="6" step="1">
+        	<c:forEach  var="i" begin="1" end="3" step="1">
         		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
         	</c:forEach>
         	<h2>标题3.1</h2>
-        	<c:forEach  var="i" begin="1" end="5" step="1">
+        	<c:forEach  var="i" begin="1" end="1" step="1">
         		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
         	</c:forEach>
         	<h2>标题3.2</h2>
@@ -85,7 +85,7 @@ var chartOption = {
 	        data:['蒸发量','降水量']
 	    },
 	    toolbox: {
-	        show : true,
+	        show : false,
 	        feature : {
 	            mark : {show: true},
 	            dataView : {show: true, readOnly: false},
