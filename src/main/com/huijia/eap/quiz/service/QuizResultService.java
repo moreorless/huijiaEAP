@@ -63,6 +63,16 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 	}
 	
 	/**
+	 * 根据用户id, 试卷id删除
+	 * @param userId
+	 * @param quizId
+	 * @return
+	 */
+	public int deleteByX(long userId, long quizId){
+		return this.dao().clear(getEntityClass(), Cnd.where("quizId", "=", quizId).and("userId", "=", userId));
+	}
+	
+	/**
 	 * 根据用户id, 试卷id, 答题时间删除
 	 * @param userId
 	 * @param quizId
@@ -158,10 +168,17 @@ public class QuizResultService extends TblIdsEntityService<QuizResult>{
 		List<QuizResult> resultList = new ArrayList<QuizResult>();
 		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			for(Quiz _quiz : quiz.getChildList()){
+				
+				// 写入结果前，删除历史答题结果
+				deleteByX(userId, _quiz.getId());
+				
 				QuizResult _result = _storeResult(userId, _quiz, answerMap, timestamp);
 				resultList.add(_result);
 			}
 		}else{
+			// 写入结果前，删除历史答题结果
+			deleteByX(userId, quiz.getId());
+			
 			QuizResult _result = _storeResult(userId, quiz, answerMap, timestamp);
 			resultList.add(_result);
 		}

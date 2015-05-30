@@ -16,6 +16,7 @@ import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.SegmentService;
 
@@ -37,6 +38,8 @@ public class CompanyReportModule {
 	@Inject
 	private UserService userService;
 	
+	@Inject
+	private QuizResultService quizResultService;
 	/**
 	 * 个人心理分析团体报告
 	 */
@@ -84,7 +87,10 @@ public class CompanyReportModule {
 		request.setAttribute("quiz", quiz);
 		
 		request.setAttribute("usercount", getUserCountInCompany(company.getId()));
-		
+		// 已答题人数
+		request.setAttribute("testedUsercount", getTestedUserCount(company.getId(), quizId));
+		// 测谎题未通过人数
+		request.setAttribute("liedUserCount", getLiedUserCount(company.getId(), quizId));
 	}
 	
 	/**
@@ -96,4 +102,20 @@ public class CompanyReportModule {
 		return userService.count(Cnd.where("companyid", "=", companyId));
 	}
 	
+	/**
+	 * 获取已答题人数
+	 * @return
+	 */
+	private int getTestedUserCount(long companyId, long quizId){
+		return quizResultService.count(Cnd.where("companyId", "=", companyId).and("quizId", "=", quizId));
+	}
+	/**
+	 * 获取测谎题未通过人数
+	 * @param companyId
+	 * @param quizId
+	 * @return
+	 */
+	private int getLiedUserCount(long companyId, long quizId){
+		return quizResultService.count(Cnd.where("companyId", "=", companyId).and("quizId", "=", quizId).and("valid", "=", 0));
+	}
 }

@@ -144,9 +144,9 @@ public class UserService extends TblIdsEntityService<User> {
 			newCondition = Cnd.where("type", ">", 0).and("userId", ">", 1);
 		} else if (where.matcher(con).find()) {
 			newCondition = Cnd.wrap(con.replaceFirst("^[ \t]*WHERE[ \t]+",
-					" WHERE type>0 AND userId>1 AND "));
+					" WHERE type>0 AND "));
 		} else {
-			newCondition = Cnd.wrap(" WHERE type>0 AND userId>1 " + con);
+			newCondition = Cnd.wrap(" WHERE type>0 " + con);
 		}
 		return newCondition;
 	}
