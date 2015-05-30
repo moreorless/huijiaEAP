@@ -14,8 +14,7 @@
 <body>
 <div class="container">
 <h2>沟通风格与冲突处理报表</h2>
-	<p>单位 ：${company.name}</p>
-
+	<c:import url="/WEB-INF/jsp/report/company/includes/common.jsp"></c:import>
 </div>
 
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>

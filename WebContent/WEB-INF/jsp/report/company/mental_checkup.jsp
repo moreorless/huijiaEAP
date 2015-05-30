@@ -14,7 +14,7 @@
 <body>
 <div class="container">
 <h2>个人心理分析报表</h2>
-	<p>单位 ：${company.name}</p>
+	<c:import url="/WEB-INF/jsp/report/company/includes/common.jsp"></c:import>
 
 </div>
 

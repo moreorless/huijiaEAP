@@ -14,7 +14,7 @@
 <body>
 <div class="container">
 <h2>情绪倾向管理报表</h2>
-	<p>单位 ：${company.name}</p>
+	<c:import url="/WEB-INF/jsp/report/company/includes/common.jsp"></c:import>
 
 </div>
 

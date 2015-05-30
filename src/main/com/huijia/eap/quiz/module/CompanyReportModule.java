@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.module;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.nutz.dao.Cnd;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -10,6 +11,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import com.huijia.eap.annotation.AuthBy;
+import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.Segment;
@@ -31,6 +33,9 @@ public class CompanyReportModule {
 	
 	@Inject
 	private QuizService quizService;
+	
+	@Inject
+	private UserService userService;
 	
 	/**
 	 * 个人心理分析团体报告
@@ -77,5 +82,18 @@ public class CompanyReportModule {
 		request.setAttribute("segment", segment);
 		request.setAttribute("company", company);
 		request.setAttribute("quiz", quiz);
+		
+		request.setAttribute("usercount", getUserCountInCompany(company.getId()));
+		
 	}
+	
+	/**
+	 * 按公司获取用户数量
+	 * @param companyId
+	 * @return
+	 */
+	private int getUserCountInCompany(long companyId){
+		return userService.count(Cnd.where("companyid", "=", companyId));
+	}
+	
 }
