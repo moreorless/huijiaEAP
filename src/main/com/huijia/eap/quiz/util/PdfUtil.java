@@ -22,21 +22,15 @@ public class PdfUtil {
 	 * @param url
 	 * @return
 	 */
-	public static File renderPdf(String url){
+	public static File renderPdf(String url, String filePath){
 		String webdir = GlobalConfig.getContextValueAs(String.class, "web.dir");
 		String phantomjsPath = webdir + File.separator + "tools";
 		String phantomjs = phantomjsPath + File.separator + "phantomjs.exe";
 		String rasterizejs = phantomjsPath + File.separator + "rasterize.js";
 		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String dateStr = df.format(new Date());
-		String storePath = webdir + File.separator + "download" + File.separator + "report" + File.separator + dateStr;
-		Files.createDirIfNoExists(storePath);
-		
-		String pdfFile = storePath  + File.separator + System.currentTimeMillis() + ".pdf";
 		
 		// command : phantomjs rasterize.js 'url' xxx.pdf
-		String cmd = "cmd /c " + phantomjs + " " + rasterizejs + " \"" + url + "\" " + pdfFile + " A4";
+		String cmd = "cmd /c " + phantomjs + " " + rasterizejs + " \"" + url + "\" " + filePath + " A4";
 		try {
 			Process process = Runtime.getRuntime().exec(cmd);
 			process.waitFor();
@@ -47,9 +41,9 @@ public class PdfUtil {
 			e.printStackTrace();
 		}
 		
-		File file = new File(pdfFile);
+		File file = new File(filePath);
 		if(file.exists()){
-			logger.info("render pdf file. url = " + url + ", pdf = " + pdfFile);
+			logger.info("render pdf file. url = " + url + ", pdf = " + filePath);
 			return file;
 		}
 		
@@ -60,7 +54,8 @@ public class PdfUtil {
 	public static void main(String[] args){
 		GlobalConfig.addContextValue("web.dir", "E:\\dev\\workspace\\git_repositories\\huijiaEAP\\WebContent");
 		String url = "http://www.baidu.com";
-		File f = PdfUtil.renderPdf(url);
+		String filePath = "test.pdf";
+		File f = PdfUtil.renderPdf(url, filePath);
 		if(f == null) {
 			System.out.println("render file failed");
 		}else{

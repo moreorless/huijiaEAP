@@ -4,163 +4,122 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title><fmt:message key="index.product.name" bundle="${i18n_main}"/></title>
-    <link type="text/css" rel="stylesheet" href="${base}/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
-    <link type="text/css" rel="stylesheet" href="${base}/css/huijia.css"/>
-    <link type="text/css" rel="stylesheet" href="${base}/css/quiz/report.css" />
     <style type="text/css">
-        html {overflow: auto !important;}
-        body {overflow-y: auto !important; }
-        .chart{width:600px;height: 400px}
+    	html body{margin: 0; background-color: #565656;}
+
+    	.pdf-page{page-break-before: always;width: 210mm; height: 297mm; background-color: #565656; margin: 0 auto;}
+        .chart{min-width: 310px; height: 400px; margin: 0 auto}
+        
+        .pdf-header{height: 40mm; background-color: #9edfff}
+        .pdf-body  {height: 300mm;padding: 20px;overflow: hidden;}
+        .pdf-footer{height: 10mm; background-color: #1f2f9a}
+
+
+        #page1 .pdf-body{background-color: #a4c2e9}
+        #page2 .pdf-body{background-color: #b18dc0}
+        #page3 .pdf-body{background-color: #bef57c}
     </style>
 </head>
 <body>
-    <c:import url="/includes/header_huijia.jsp"></c:import>
-    <div class="container report-wrapper">
+
+
+
         
-        <div style="text-align:right" id="export-btn-wrappwer">
-            <a href="${base}/quiz/enquizlist" class="btn btn-link"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
-            <a href="${base}/quiz/reportexport?quizId=${param.quizId}" class="btn btn-link" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;导出报告</a>
-        </div>
-        
-        <div>
-        	<h1>标题1</h1>
-        	<h2>标题1.1</h2>
-        	<h2>标题1.2</h2>
-        	<c:forEach  var="i" begin="1" end="9" step="1">
-        		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
-        	</c:forEach>
-        	<div class="chart"></div>
-        	
-        	<h1>标题2</h1>
-        	<h2>标题2.1</h2>
-        	<c:forEach  var="i" begin="1" end="2" step="1">
-        		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
-        	</c:forEach>
-        	<div class="chart"></div>
-        	
-        	<h2>标题2.2</h2>
-        	<div class="chart"></div>
-        	<c:forEach  var="i" begin="1" end="2" step="1">
-        		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
-        	</c:forEach>
-        	<h1>标题3</h1>
-        	<c:forEach  var="i" begin="1" end="3" step="1">
-        		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
-        	</c:forEach>
-        	<h2>标题3.1</h2>
-        	<c:forEach  var="i" begin="1" end="1" step="1">
-        		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
-        	</c:forEach>
-        	<h2>标题3.2</h2>
-        </div>
+    <div class="pdf-page" id="page1">
+    	<div class="pdf-header">标题</div>
+    	<div class="pdf-body">
+    		<h1>第一页</h1>
+	    	<h2>标题1.1</h2>
+	    	<h2>标题1.2</h2>
+	    	<c:forEach  var="i" begin="1" end="3" step="1">
+	    		<p> p${i} : 本文用识别由域名生成算法Domain Generation Algorithm: DGA生成的C&C域名作为例子，目的是给白帽安全专家们介绍一下机器学习在安全领域的应用，演示一下机器学习模型的一般流程。机器的力量可以用来辅助白帽专家们更有效率的工作。</p>
+	    	</c:forEach>
+	    	
+	    	<div class="chart"></div>
+	    	
+	    	<h1>标题2</h1>
+	    	<h2>标题2.1</h2>
+    	</div>
+    	
+    	<div class="pdf-footer"></div>
+    </div>    	
+
+    <div class="pdf-page" id="page2">
+    	<div class="pdf-header">标题</div>
+    	<div class="pdf-body">
+    		<h1>第二页</h1>
+    	</div>
+    	<div class="pdf-footer"></div>
     </div>
-    <c:if test="${param.exportpdf != 'true'}">
-    <%@ include file="/includes/footer_huijia.jsp" %>
-    </c:if>
+
+    <div class="pdf-page" id="page3">
+    	<div class="pdf-header">标题</div>
+    	<div class="pdf-body">
+    		<h1>第三页</h1>
+    	</div>
+    	<div class="pdf-footer"></div>
+    </div>
+
+
 <script type="text/javascript" src="${base}/js/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${base}/js/echarts/echarts.js"></script>
-<script type="text/javascript" src="${base }/js/cupid/core.js"></script>
+<script type="text/javascript" src="${base}/js/highcharts/highcharts.js"></script>
 
-<c:if test="${param.exportpdf != 'true'}">
-<!--验证脚本 -->
-<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.js"></script>
-<script type="text/javascript" src="${base }/js/ui/validate/messages_cn.js"></script>
-<script type="text/javascript" src="${base }/js/ui/validate/jquery.validate.ext.methods.js"></script>
-
-<script type="text/javascript" src="${base}/js/huijia/index.js"></script>
-</c:if>
 <script type="text/javascript">
-
-var chartOption = {
-	    title : {
-	        text: '某地区蒸发量和降水量',
-	        subtext: '纯属虚构'
-	    },
-	    tooltip : {
-	        trigger: 'axis'
-	    },
-	    legend: {
-	        data:['蒸发量','降水量']
-	    },
-	    toolbox: {
-	        show : false,
-	        feature : {
-	            mark : {show: true},
-	            dataView : {show: true, readOnly: false},
-	            magicType : {show: true, type: ['line', 'bar']},
-	            restore : {show: true},
-	            saveAsImage : {show: true}
+$(function(){
+	$('.chart').highcharts({
+		plotOptions: {
+        	line: {
+	          animation: false,
+	          shadow: false,
+	          enableMouseTracking: false
 	        }
 	    },
-	    calculable : true,
-	    xAxis : [
-	        {
-	            type : 'category',
-	            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
-	        }
-	    ],
-	    yAxis : [
-	        {
-	            type : 'value'
-	        }
-	    ],
-	    series : [
-	        {
-	            name:'蒸发量',
-	            type:'bar',
-	            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-	            markPoint : {
-	                data : [
-	                    {type : 'max', name: '最大值'},
-	                    {type : 'min', name: '最小值'}
-	                ]
-	            },
-	            markLine : {
-	                data : [
-	                    {type : 'average', name: '平均值'}
-	                ]
-	            }
-	        },
-	        {
-	            name:'降水量',
-	            type:'bar',
-	            data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-	            markPoint : {
-	                data : [
-	                    {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183, symbolSize:18},
-	                    {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
-	                ]
-	            },
-	            markLine : {
-	                data : [
-	                    {type : 'average', name : '平均值'}
-	                ]
-	            }
-	        }
-	    ]
-	};
-	                    
-    
-    require.config({
-        paths: {
-            echarts: '${base}/js/echarts'
-        }
+        title: {
+            text: '每月平均气温',
+            x: -20 //center
+        },
+        subtitle: {
+            text: 'Source: WorldClimate.com',
+            x: -20
+        },
+        xAxis: {
+            categories: ['一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            title: {
+                text: '温度 (°C)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            enable: false
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: '东京',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+        }, {
+            name: 'New York',
+            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+        }, {
+            name: 'Berlin',
+            data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+        }, {
+            name: 'London',
+            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+        }]
     });
-
-    
-    require([
-         'echarts',
-         'echarts/theme/green',
-         'echarts/chart/bar'
-         ],
-         function(echarts, theme){
-            $('.chart').each(function(){
-                var myChart = echarts.init($(this).get(0), theme);
-                myChart.setOption(chartOption);
-            });
-         });
+});
 
 </script>
 </body>

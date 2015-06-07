@@ -734,47 +734,70 @@ public class QuizModule {
 		int _index = fullUrl.indexOf(ctxPath);
 		String rootUrl = fullUrl.substring(0, _index) + ctxPath;
 		GlobalConfig.addContextValue("app.root.url", rootUrl);
-				
-		// 
-		List<QuizResult> resultList = quizResultService.getQuizResult(
-				user.getUserId(), quizId);
-		if (resultList.size() < 1) {
-			// 向页面返回错误信息
-			EC error = new EC("quiz.report.no.answer", bundle);
-			throw ExceptionWrapper.wrapError(error);
-		}
-
-		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir")
+		
+		String reporttpl = quiz.getReporttpl();
+		String url = rootUrl + "/report/person/" + reporttpl + "?quizId=" + quizId + "&userId=" + user.getUserId();
+		String filePath = GlobalConfig.getContextValueAs(String.class, "web.dir")
 				+ File.separator + "download" + File.separator + "report_"
 				+ quizId + "_" + user.getUserId() + File.separator + quiz.getName() + ".pdf";
-		try {
-			String tpFileName = GlobalConfig.getContextValueAs(String.class,
-					"conf.dir")
-					+ File.separator
-					+ "report"
-					+ File.separator
-					+ "person"
-					+ File.separator
-					+ quiz.getReporttpl() + ".report";
-
-			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
-			ReportTemplate template = new ReportTemplate(new File(tpFileName));
-			File tempReport = reportPreProcessor.process(template, quiz, user, resultList);
-			PdfReportRender render = new PdfReportRender(quiz, user, resultList);
-			render.render(dest, tempReport);
-			Files.deleteFile(tempReport);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ReportRenderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return new File(dest);
+		File reportFile = PdfUtil.renderPdf(url, filePath);
+		return reportFile;
 	}
+	
+//	@At
+//	@Ok("raw")
+//	public File reportexport(HttpServletRequest request, HttpServletResponse response, Ioc ioc,
+//			@Param("quizId") long quizId) throws IOException {
+//
+//		User user = Auths.getUser(request);
+//		Quiz quiz = QuizCache.me().getQuiz(quizId);
+//
+//		String ctxPath = request.getContextPath();
+//		String fullUrl = request.getRequestURL().toString();
+//		int _index = fullUrl.indexOf(ctxPath);
+//		String rootUrl = fullUrl.substring(0, _index) + ctxPath;
+//		GlobalConfig.addContextValue("app.root.url", rootUrl);
+//				
+//		// 
+//		List<QuizResult> resultList = quizResultService.getQuizResult(
+//				user.getUserId(), quizId);
+//		if (resultList.size() < 1) {
+//			// 向页面返回错误信息
+//			EC error = new EC("quiz.report.no.answer", bundle);
+//			throw ExceptionWrapper.wrapError(error);
+//		}
+//
+//		String dest = GlobalConfig.getContextValueAs(String.class, "web.dir")
+//				+ File.separator + "download" + File.separator + "report_"
+//				+ quizId + "_" + user.getUserId() + File.separator + quiz.getName() + ".pdf";
+//		try {
+//			String tpFileName = GlobalConfig.getContextValueAs(String.class,
+//					"conf.dir")
+//					+ File.separator
+//					+ "report"
+//					+ File.separator
+//					+ "person"
+//					+ File.separator
+//					+ quiz.getReporttpl() + ".report";
+//
+//			ReportPreProcessor reportPreProcessor = ioc.get(ReportPreProcessor.class);
+//			ReportTemplate template = new ReportTemplate(new File(tpFileName));
+//			File tempReport = reportPreProcessor.process(template, quiz, user, resultList);
+//			PdfReportRender render = new PdfReportRender(quiz, user, resultList);
+//			render.render(dest, tempReport);
+//			Files.deleteFile(tempReport);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ReportRenderException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (DocumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return new File(dest);
+//	}
 
 }

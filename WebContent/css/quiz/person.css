@@ -1,0 +1,132 @@
+html body{margin: 0; background-color: #fff;}
+h1, h2, h3, h4 {color: #21329d;}
+
+.pdf-page{page-break-before: always;width: 230mm; height: 340mm; 
+			background-color: #fff; margin: 0 auto;overflow: hidden;}
+
+.pdf-header{height: 80px; border-bottom:solid 2px #21329d;}
+.pdf-header img{
+	float:right; margin-right:20px;margin-top: 10px;
+}
+.pdf-body  {height: 300mm;overflow: hidden;background-color: #fff; margin: 10px 40px;}
+.pdf-footer{height: 10mm; background-color: #1f2f9a}
+
+
+#cover {background-color: #fff}
+#cover-upper {
+	height: 150mm;
+	background-color: #9EDFFF;
+}
+#cover-upper .logo{
+	height: 50mm;
+}
+#cover-upper .logo img{
+	margin-top: 30px;
+	float: right;
+	margin-right: 80px;
+}
+#cover-upper .title{
+	background: url(../../images/report/border.png) no-repeat;
+	height: 180px;
+	margin-top: 40px;
+	margin-left: 120px;
+	padding-left: 28px;
+}
+#cover-upper .title .tag{
+	height: 70px;
+	color: #fff;
+	font-size: 40px;
+	font-weight: bold;
+	
+}
+#cover-upper .title .tag span{
+	height: 60px;
+	line-height: 60px;
+	border-bottom: dotted 2px #2639a1;
+}
+#cover-upper .title .quizname{
+	height: 40px;
+	font-size: 30px;
+	font-weight: bold;
+	color: #2537a0;
+}
+
+#cover-middle {
+	height: 40mm;
+	background: url(../../images/report/splitter.png) no-repeat;
+}
+#cover-under {
+	height: 130mm;
+	padding-left: 130px;
+	padding-top: 30px;
+}
+#cover-under p{
+	height: 44px;
+	font-size: 28px;
+	font-weight: bold;
+	color: #2537a0;
+}
+#cover-footer {
+	height: 16mm;
+	background-color: #1f2f9a;
+}
+
+#preface {
+	background-color: #fff;
+}
+#preface .header{
+	height: 100mm;
+	
+}
+#preface .header .logo{
+	height: 160px;
+	background-color: #1043aa;
+}
+#preface .header .logo img{
+	float: right; margin-right: 40px; margin-top: 20px;
+}
+
+#preface .header .report{
+	text-align: center;
+	height: 100px;
+	line-height: 100px;
+	background-color: #1043aa;
+	color: #fff;
+	font-weight: bolder;
+	font-size: 40px;
+	}
+
+#preface .header .split1{
+	background-color: #fff;
+	height: 5px;
+}
+
+#preface .header .split2{
+	background-color: #1043aa;
+	height: 15px;
+}
+
+#preface .welcome{
+	height: 80mm;
+	padding-left: 40px;
+}
+#preface .welcome p{
+	height: 44px;
+	font-size: 22px;
+	font-weight: bold;
+	color: #2537a0;
+}
+
+#preface .catalog {
+	height: 140mm;
+	padding-left: 40px;
+}
+#preface .catalog ul li {
+	height: 30px;
+	font-size: 20px;
+	color: #333;
+}
+#preface .footer{
+	height: 16mm;
+	background-color: #1f2f9a;
+}

@@ -12,8 +12,8 @@ if (system.args.length < 3 || system.args.length > 5) {
     page.viewportSize = { width: 600, height: 600 };
     if (system.args.length > 3 && system.args[2].substr(-4) === ".pdf") {
         size = system.args[3].split('*');
-        page.paperSize = size.length === 2 ? { width: size[0], height: size[1], margin: '0px' }
-                                           : { format: system.args[3], orientation: 'portrait', margin: '1cm' };
+        page.paperSize = size.length === 2 ? { width: size[0], height: size[1], margin: {top:'50px',bottom:'50px',left:0,right:0} }
+                                           : { format: system.args[3], orientation: 'portrait', margin: {top:'1cm',bottom:'1cm',left:0,right:0} };
     }
     if (system.args.length > 4) {
         page.zoomFactor = system.args[4];
