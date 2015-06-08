@@ -3,6 +3,7 @@ package com.huijia.eap.quiz.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -73,6 +74,8 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 	public Segment fetchSegmentById(long id) {
 		Segment segment = this.fetch(id);
 
+		segment.setUserCountRegistered(this.getUserCountInSegment(segment.getId()));
+		
 		segment.setMyQuizList((LinkedList<Quiz>) quizService
 				.fetchQuizListBySegmentId(id));
 
@@ -172,13 +175,26 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 	}
 
 	/**
+	 * 按号段获取用户数量
+	 * 
+	 * @param companyId
+	 * @return
+	 */
+	private long getUserCountInSegment(long segmentId) {
+		return userService.count(Cnd.where("segmentid", "=", segmentId));
+	}
+
+	/**
 	 * 分页返回所有用户列表
 	 */
 	public Pager<Segment> paging(Condition condition, Pager<Segment> pager) {
-		List<Segment> users = query(condition,
+		List<Segment> segments = query(condition,
 				this.dao().createPager(pager.getPage(), pager.getPageSize()));
+		for (Segment s : segments) {
+			s.setUserCountRegistered(this.getUserCountInSegment(s.getId()));
+		}
 		pager.setRecords(this.count(condition));
-		pager.setData(users);
+		pager.setData(segments);
 
 		return pager;
 	}
@@ -187,5 +203,7 @@ public class SegmentService extends TblIdsEntityService<Segment> {
 
 		return ((SegmentDao) this.dao()).getMaxEndIdByCompanyId(companyId);
 	}
+
+
 
 }

@@ -14,8 +14,6 @@ import com.huijia.eap.commons.mvc.validate.annotation.Validations;
 @Table("quiz")
 public class Quiz {
 
-	
-
 	@Column
 	@Id(auto = false)
 	private long id;
@@ -31,17 +29,12 @@ public class Quiz {
 	private String name;
 
 	/**
-	 * 标识符，生成报告时通过该字段判断是哪个试卷
-	 * 已支持的试卷
-	 * 	mental_checkup	心理健康体检
-	 *  communicate_style	沟通风格
-	 *  conflict_style  	冲突处理
-	 *  employee_survey	企业员工调研
-	 *  emotion_management	情绪管理倾向
+	 * 标识符，生成报告时通过该字段判断是哪个试卷 已支持的试卷 mental_checkup 心理健康体检 communicate_style 沟通风格
+	 * conflict_style 冲突处理 employee_survey 企业员工调研 emotion_management 情绪管理倾向
 	 */
 	@Column
 	private String tag = "";
-	
+
 	@Column
 	private short type;
 
@@ -72,7 +65,6 @@ public class Quiz {
 	@Column
 	private long updateAt;
 
-	
 	private String categoryJson;
 
 	@Column
@@ -92,12 +84,25 @@ public class Quiz {
 	 */
 	@Column
 	private String guideline;
-	
+
 	/**
 	 * 报告模板
 	 */
 	@Column
 	private String reporttpl;
+
+	/**
+	 * 某号段中完成本问卷的用户数量 界面显示使用
+	 */
+	private long userCountFinished;
+
+	public long getUserCountFinished() {
+		return userCountFinished;
+	}
+
+	public void setUserCountFinished(long userCountFinished) {
+		this.userCountFinished = userCountFinished;
+	}
 
 	public List<Quiz> getChildList() {
 		return childList;
@@ -177,7 +182,7 @@ public class Quiz {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getTag() {
 		return tag;
 	}
@@ -273,8 +278,6 @@ public class Quiz {
 	public void setEvaluations(List<QuizEvaluation> evaluations) {
 		this.evaluations = evaluations;
 	}
-	
-	
 
 	public String getReporttpl() {
 		return reporttpl;

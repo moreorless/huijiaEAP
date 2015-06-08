@@ -179,6 +179,7 @@ CREATE TABLE `quiz_result` (
 	`id` INT(11) NOT NULL,
 	`userid` INT(11) NOT NULL COMMENT '答题者id',
 	`companyId` INT(11) NOT NULL COMMENT '答题者公司id',
+	`segmentId` INT(11) NOT NULL COMMENT '号段id',
 	`quizid` INT(11) NOT NULL COMMENT '试卷id',
 	`timestamp` BIGINT(20) NOT NULL COMMENT '答题时间',
 	`answer` Text NOT NULL COMMENT '答案明细',

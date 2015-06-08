@@ -9,14 +9,16 @@ import org.nutz.json.Json;
 
 /**
  * 答题结果
+ * 
  * @author leon
- *
+ * 
  */
 @Table("quiz_result")
 public class QuizResult {
 	@Column
-	@Id(auto=false)
+	@Id(auto = false)
 	private long id;
+
 	/**
 	 * 答题者id
 	 */
@@ -27,12 +29,18 @@ public class QuizResult {
 	 */
 	@Column
 	private long companyId;
+
+	/**
+	 * 答题者所属号段
+	 */
+	@Column
+	private long segmentId;
 	/**
 	 * 试卷id
 	 */
 	@Column
 	private long quizId;
-	
+
 	/**
 	 * 答题时间
 	 */
@@ -43,13 +51,13 @@ public class QuizResult {
 	 */
 	@Column
 	private String answer;
-	
+
 	/**
 	 * 测谎题总分
 	 */
 	@Column
 	private int lieScore;
-	
+
 	/**
 	 * 总分
 	 */
@@ -60,26 +68,25 @@ public class QuizResult {
 	 */
 	@Column
 	private String scoreJson;
-	
+
 	/**
 	 * 是否为有效样本
 	 */
 	@Column
 	private boolean valid = true;
-	
+
 	/**
 	 * 判定的维度类型id
 	 */
 	@Column
 	private int categoryId;
-	
+
 	/**
 	 * 判定的维度类型名称
 	 */
 	@Column
 	private String categoryName;
 
-	
 	public long getId() {
 		return id;
 	}
@@ -102,6 +109,14 @@ public class QuizResult {
 
 	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
+	}
+
+	public long getSegmentId() {
+		return segmentId;
+	}
+
+	public void setSegmentId(long segmentId) {
+		this.segmentId = segmentId;
 	}
 
 	public long getQuizId() {
@@ -169,10 +184,11 @@ public class QuizResult {
 	}
 
 	private Map<String, Integer> scoreMap = null;
-	
-	public Map<String, Integer> getScoreMap(){
-		if(scoreMap != null) return scoreMap;
-		scoreMap = (Map<String, Integer>)Json.fromJson(scoreJson);
+
+	public Map<String, Integer> getScoreMap() {
+		if (scoreMap != null)
+			return scoreMap;
+		scoreMap = (Map<String, Integer>) Json.fromJson(scoreJson);
 		return scoreMap;
 	}
 
@@ -183,5 +199,5 @@ public class QuizResult {
 	public void setLieScore(int lieScore) {
 		this.lieScore = lieScore;
 	}
-	
+
 }

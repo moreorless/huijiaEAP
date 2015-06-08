@@ -38,8 +38,8 @@
 		        <td>
 		        	<a href="${base}/company/prepare?operation=edit&id=${company.id}">修改</a> &nbsp;|&nbsp;
 		        	<a href="${base}/company/delete?id=${company.id}">删除</a> &nbsp;|&nbsp;
-		        	<a href="${base}/segment/list?companyId=${company.id}">号段</a> &nbsp;|&nbsp;
-		        	<a href="${base}/company/report?companyId=${company.id}">报告</a>
+		        	<a href="${base}/segment/list?companyId=${company.id}">号段</a> 
+		        	<!-- &nbsp;|&nbsp;<a href="${base}/company/report?companyId=${company.id}">报告</a> -->
 				</td>
 		      </tr>
 		    </c:forEach>

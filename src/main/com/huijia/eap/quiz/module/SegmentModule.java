@@ -27,6 +27,7 @@ import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.data.UserTemp;
 import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.SegmentQuizRelationService;
 import com.huijia.eap.quiz.service.SegmentService;
@@ -54,6 +55,9 @@ public class SegmentModule {
 	private QuizService quizService;
 
 	@Inject
+	private QuizResultService quizResultService;
+
+	@Inject
 	private UserService userService;
 
 	@Inject
@@ -72,6 +76,9 @@ public class SegmentModule {
 		return segmentService.paging(Cnd.where("companyId", "=", companyId),
 				pager);
 	}
+	
+
+	
 
 	@At
 	@Ok("raw")
@@ -166,25 +173,29 @@ public class SegmentModule {
 		// 组合问卷1,个人性格分析
 		segmentService.deleteBySegmentId(id);
 	}
-	
+
 	@At
 	@Ok("jsp:jsp.segment.quizlist")
-	public void quizlist(HttpServletRequest request, @Param("id") long segmentId){
-		Segment segment = segmentService.fetch(segmentId);
+	public void quizlist(HttpServletRequest request, @Param("id") long segmentId) {
+		Segment segment = segmentService.fetchSegmentById(segmentId);
 		Company company = companyService.fetch(segment.getCompanyId());
-		
+
 		List<Quiz> quizList = quizService.fetchQuizListBySegmentId(segmentId);
 		request.setAttribute("quizList", quizList);
-		request.setAttribute("segmentId", segmentId);
+		//request.setAttribute("countFinished",
+			//	quizResultService.userFinishedCount(segment.getId()));
 		request.setAttribute("company", company);
+		request.setAttribute("segment", segment);
 	}
+
 	@At
 	@Ok("jsp:jsp.segment.report")
-	public void report(HttpServletRequest request, @Param("segentId") long segmentId, @Param("quizId") long quizId){
-		
+	public void report(HttpServletRequest request,
+			@Param("segentId") long segmentId, @Param("quizId") long quizId) {
+
 		Quiz quiz = quizService.fetch(quizId);
 		request.setAttribute("quiz", quiz);
-		
+
 	}
-	
+
 }

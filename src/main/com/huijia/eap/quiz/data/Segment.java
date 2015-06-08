@@ -20,7 +20,7 @@ public class Segment {
 	@Column
 	private long companyId;
 
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.description.span", resource=true, bundle="segment")})
+	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "segment.add.description.span", resource = true, bundle = "segment") })
 	@Column
 	private String description;
 
@@ -28,7 +28,7 @@ public class Segment {
 	private short status;
 
 	@Column
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.expireDate.span", resource=true, bundle="segment")})
+	@Validations(rules = { @ValidateType(type = Type.required, errorMsg = "segment.add.expireDate.span", resource = true, bundle = "segment") })
 	private String expireDate;
 
 	@Column
@@ -37,7 +37,19 @@ public class Segment {
 	@Column
 	private long endId;
 
-	
+	/**
+	 * 该号段中已注册用户的数量
+	 */
+	private long userCountRegistered;
+
+	public long getUserCountRegistered() {
+		return userCountRegistered;
+	}
+
+	public void setUserCountRegistered(long userCountRegistered) {
+		this.userCountRegistered = userCountRegistered;
+	}
+
 	@Column
 	@Validations(rules = {
 			@ValidateType(type = Type.required, errorMsg = "segment.add.size.span", resource = true, bundle = "segment"),
@@ -46,8 +58,9 @@ public class Segment {
 	private long size;
 
 	@Column
-	@Validations(rules = {@ValidateType(type=Type.required, errorMsg="segment.add.initPassword.span", resource=true, bundle="segment"),
-			@ValidateType(type = Type.pwd, errorMsg = "segment.add.initPassword.span", resource = true, bundle = "segment")})
+	@Validations(rules = {
+			@ValidateType(type = Type.required, errorMsg = "segment.add.initPassword.span", resource = true, bundle = "segment"),
+			@ValidateType(type = Type.pwd, errorMsg = "segment.add.initPassword.span", resource = true, bundle = "segment") })
 	private String initPassword;
 
 	private LinkedList<Quiz> myQuizList = new LinkedList<Quiz>();

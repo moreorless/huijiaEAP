@@ -106,6 +106,7 @@ public class UserService extends TblIdsEntityService<User> {
 		((UserDao) this.dao()).deleteByCompanyId(companyId);
 	}
 
+
 	/**
 	 * 分页返回所有用户列表
 	 */
@@ -165,6 +166,7 @@ public class UserService extends TblIdsEntityService<User> {
 	public int count() {
 		return this.count(mergeCondition(null));
 	}
+	
 
 	public boolean isUserValid(User user) {
 		if (user.getType() == User.TYPE_ADMIN

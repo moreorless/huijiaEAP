@@ -30,16 +30,16 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 
 	@Inject
 	private SegmentQuizRelationService segmentQuizRelationService;
-	
+
 	@Inject
 	private QuizResultService quizResultService;
-	
+
 	@Inject
 	private QuizAnswerLogService quizAnswerLogService;
-	
+
 	@Inject
 	private QuizCategoryService quizCategoryService;
-	
+
 	@Inject("refer:quizDao")
 	public void setQuizDao(Dao dao) {
 		setDao(dao);
@@ -60,15 +60,16 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 
 	public void deleteByQuizId(long id) {
 		Quiz quiz = QuizCache.me().getQuiz(id);
-		if(quiz == null) return;
-		if(quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT){
+		if (quiz == null)
+			return;
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			Iterator<Quiz> iter = quiz.getChildList().iterator();
-			while(iter.hasNext()){
+			while (iter.hasNext()) {
 				Quiz _quiz = iter.next();
 				deleteByQuizId(_quiz.getId());
 			}
 		}
-		
+
 		// Table: quiz_category
 		quizCategoryService.deleteByQuizId(id);
 		// Table: quiz_item
@@ -83,23 +84,24 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 		quizAnswerLogService.deleteByQuizId(id);
 		// Table: quiz
 		this.delete(id);
-		
+
 		// 从缓存中删除
 		QuizCache.me().delete(id);
 	}
 
 	/**
 	 * 根据tag获取试卷
+	 * 
 	 * @param tag
 	 * @return
 	 */
-	public Quiz getQuizByTag(String tag){
+	public Quiz getQuizByTag(String tag) {
 		List<Quiz> list = super.query(Cnd.where("tag", "=", tag), null);
-		if(list != null && list.size() > 0) return list.get(0);
+		if (list != null && list.size() > 0)
+			return list.get(0);
 		return null;
 	}
-	
-	
+
 	/**
 	 * 显示多有可见的试卷 (独立试卷、复合试卷)
 	 * 
@@ -110,7 +112,6 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 				Cnd.where("type", "=", QuizConstant.QUIZ_TYPE_STANDALONE).or(
 						"type", "=", QuizConstant.QUIZ_TYPE_PARENT), null);
 	}
-	
 
 	public List<Quiz> fetchListByParentId(long parentId) {
 		return ((QuizDao) this.dao()).fetchListByParentId(parentId);
@@ -120,9 +121,14 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 		LinkedList<Quiz> quizList = new LinkedList<Quiz>();
 		List<SegmentQuizRelation> list = segmentQuizRelationService
 				.fetchListBySegmentId(segmentId);
+
 		for (SegmentQuizRelation r : list) {
 			Quiz q = this.fetch(r.getQuizId());
 			quizList.add(q);
+		}
+		for (Quiz q : quizList) {
+			q.setUserCountFinished(quizResultService.userFinishedCount(
+					segmentId, q.getId()));
 		}
 		return quizList;
 	}
@@ -152,7 +158,8 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	public Quiz fetchFullQuiz(long id) {
 		Quiz quiz = this.fetch(id);
 
-		if(quiz == null) return null;
+		if (quiz == null)
+			return null;
 		// 如果是复合试卷，递归获取子试卷
 		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
 			List<Quiz> children = this.fetchListByParentId(id);

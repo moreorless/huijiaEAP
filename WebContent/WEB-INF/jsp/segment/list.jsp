@@ -31,7 +31,7 @@ body {
 			<a
 				href="${base}/segment/prepare?operation=add&companyId=${company.id}"
 				class="btn"> <img src="${base}/images/add_default.gif" />&nbsp;添加
-			</a>
+			</a>&nbsp;&nbsp;&nbsp;(所属企业:${company.name})
 		</div>
 		<table id="segment-table"
 			class="table table-striped table-bordered table-hover">
@@ -41,6 +41,7 @@ body {
 					<th id="startId">号段范围</th>
 					<th id="size">号段长度</th>
 					<th id="status">状态</th>
+					<th id="status">注册用户数</th>
 					<th id="operation">操作</th>
 				</tr>
 			</thead>
@@ -56,6 +57,7 @@ body {
 						<c:if test="${segment.status == '1' }">
 							<td>使用中</td>
 						</c:if>
+						<td>${segment.userCountRegistered}</td>
 						<td><a href="${base}/segment/exportUsers?id=${segment.id}">下载号段</a>&nbsp;|&nbsp;
 							<a href="${base}/segment/listUsers?id=${segment.id}">查看用户</a>&nbsp;|&nbsp;
 							<a href="${base}/segment/quizlist?id=${segment.id}">查看报告</a>&nbsp;|&nbsp;
