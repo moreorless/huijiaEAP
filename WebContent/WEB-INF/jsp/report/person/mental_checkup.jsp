@@ -6,7 +6,7 @@
     <title><fmt:message key="index.product.name" /></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/quiz/person.css" />
     <style type="text/css">
-        .chart{min-width: 310px; height: 400px; margin: 0 auto}
+        .chart{width: 600px; height: 400px; margin: 0 auto}
         .progress {height: 50px; width: 500px;}
     </style>
     
