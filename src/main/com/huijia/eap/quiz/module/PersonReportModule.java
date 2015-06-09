@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.module;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.quiz.cache.QuizCache;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizCategory;
+import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.service.QuizCategoryService;
@@ -110,6 +112,36 @@ public class PersonReportModule {
 		User user = userService.fetch(userId);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		preProcess(request, user, quiz);
+		
+		List<Quiz> quizList = new ArrayList<Quiz>();
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_STANDALONE) {
+			quizList.add(quiz);
+		} else if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
+			quizList.addAll(quiz.getChildList());
+		}
+		request.setAttribute("quizlist", quizList);
+		
+		List<QuizResult> resultlist = quizResultService.getQuizResult(user.getUserId(), quiz.getId());
+		for(int i= 0; i < resultlist.size(); i++){
+			QuizResult result = resultlist.get(i);
+			Map<String, Integer> scoreMap = result.getScoreMap();
+			List<QuizCategory> categoryList = quizCategoryService.getByQuizId(result.getQuizId());
+			List<String> categoryNames = new LinkedList<String>();
+			List<Integer> scoreList = new LinkedList<Integer>();
+			Iterator<QuizCategory> iter = categoryList.iterator();
+			while(iter.hasNext()){
+				QuizCategory category = iter.next();
+				String categoryId = String.valueOf(category.getId());
+				if(scoreMap.containsKey(categoryId)){
+					int score = scoreMap.get(categoryId);
+					scoreList.add(score);
+					categoryNames.add(category.getName());
+				}
+			}
+			request.setAttribute("categorieNames_" + i, categoryNames);		// 各维度名称
+			request.setAttribute("scoreArray_" + i, scoreList);				// 各维度得分
+		}
+		
 	}
 	
 
@@ -132,12 +164,12 @@ public class PersonReportModule {
 		request.setAttribute("user", user);
 		request.setAttribute("quiz", quiz);
 		
-		List<QuizResult> resultList = quizResultService.getQuizResult(user.getUserId(), quiz.getId());
-		request.setAttribute("resultList", resultList);
+		List<QuizResult> resultlist = quizResultService.getQuizResult(user.getUserId(), quiz.getId());
+		request.setAttribute("resultlist", resultlist);
 		
-		if(resultList != null && resultList.size() > 0){
+		if(resultlist != null && resultlist.size() > 0){
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(resultList.get(0).getTimestamp());
+			calendar.setTimeInMillis(resultlist.get(0).getTimestamp());
 			String testDate = calendar.get(Calendar.YEAR) + "年" + 
 				(calendar.get(Calendar.MONTH) + 1) + "月" +
 				calendar.get(Calendar.DAY_OF_MONTH) + "日";
