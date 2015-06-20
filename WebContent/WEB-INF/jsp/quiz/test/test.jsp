@@ -49,7 +49,26 @@
 	</c:forEach>
 	</div>
 	</c:forEach>
-	<div style="position:absolute;right:100px;top:300px;margin:20px;">
+
+
+	<div style="text-align: center;height: 60px;line-height: 60px;">
+		<p id="pager">第&nbsp;<span id="pager-page"></span>&nbsp;页，共&nbsp;<span id="pager-total"></span>&nbsp;页</p>
+		<a type="button" id="btn-pre-page" class="btn btn-primary">上一页</a>
+    	<a type="button" id="btn-next-page" class="btn btn-primary">下一页</a>
+
+    	<c:if test="${fn:length(quizlist) > 1}">
+    		<a type="button" id="btn-next-quiz" class="btn btn-primary" disabled>继续答题</a>
+    		<a type="button" id="btn-submit" class="btn btn-success" style="display:none" disabled>提交</a>
+    	</c:if>
+      	<c:if test="${fn:length(quizlist) == 1}">
+      	<a type="button" id="btn-submit" class="btn btn-success" disabled style="display:none">提交</a>
+      	</c:if>
+      	
+      	<a type="button" id="btn-cancel" class="btn btn-danger" style="float:right;margin-top:10px;margin-right:50px">退出答题</a>
+      	
+    </div>
+
+	<!--div style="position:absolute;right:100px;top:300px;margin:20px;">
 		<p id="pager">第&nbsp;<span id="pager-page"></span>&nbsp;页，共&nbsp;<span id="pager-total"></span>&nbsp;页</p>
     	<div style="text-align: center;height: 60px;line-height: 60px;margin-top: 20px; width:100px;">
     		<a type="button" id="btn-pre-page" class="btn btn-primary btn-block">上一页</a>
@@ -64,7 +83,7 @@
 
       	<a type="button" id="btn-cancel" class="btn btn-danger btn-block">退出答题</a>
     	</div>
-  	</div>
+  	</div -->
 	</form>
 
 </div>
@@ -243,6 +262,7 @@
 
 				$('#btn-next-quiz').attr('disabled', false);
 				$('#btn-submit').attr('disabled', false);
+				$('#btn-submit').show();
 
 			}else{
 				$('#btn-next-page').attr('disabled', false);

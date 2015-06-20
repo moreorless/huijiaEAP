@@ -246,7 +246,8 @@
                 line: {
                   animation: false,
                   shadow: false,
-                  enableMouseTracking: false
+                  enableMouseTracking: false,
+                  color: '#21329d'
                 }
             },
 

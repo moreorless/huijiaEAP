@@ -223,10 +223,11 @@
                         bar: {
                             animation: false,
                             shadow: false,
-                            enableMouseTracking: false,                                                         
-                            dataLabels: {                                              
-                                enabled: true                                          
-                            }                                                          
+                            enableMouseTracking: false,
+                            color: '#21329d',
+                            dataLabels: {                                          
+                                enabled: true
+                            }                                          
                         }                                                              
                     },
                     legend: {
