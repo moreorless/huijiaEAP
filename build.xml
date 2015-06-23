@@ -1,25 +1,50 @@
 <project name="huijiaEAP" default="deploy-debug" basedir="." xmlns:prop="antlib:it.haefelinger.flaka.prop">
 
 	<property file="build.properties" />
-	
-	<property name="appName" value="eap"/>
+	<property name="app.name" value="eap"/>
 
+	<property name="src.home" value="${basedir}/src" />
+	<property name="build.home" value="${basedir}/build" />
+	<property name="compile.home" value="${build.home}/compile" />
+	<property name="web.home" value="${basedir}/WebContent" />
+	
+	<property name="webapp.home" value="${catalina.home}/webapps" />
+	
+	<property name="lib.runtime.home" value="${web.home}/WEB-INF/lib" />
+	<property name="lib.compile.home" value="${basedir}/lib" />
+	<property name="anttaskdef.home" value="${lib.compile.home}/cupid-ant.jar" />
+	<property name="antcontrib.home" value="${lib.compile.home}/ant-contrib-1.0b3.jar" />
+	
+	<condition property="deploy.path" value="${webapp.home}/${app.name}">
+		<not>
+			<isset property="${deploy.path}" />
+		</not>
+	</condition>
+	<property name="distribute.war.path" value="${build.home}/distribute" />
 	
 	<!-- 发布任务 -->
-	<target name="deploy-debug">
-		<echo>创建${catalina.home}/webapps/${appName}</echo>
-		<mkdir dir="${catalina.home}/webapps/${appName}"/>
-		<copy todir="${catalina.home}/webapps/${appName}/" preservelastmodified="true">
+	<target name="deploy-debug" description="调试模式，不打包eap.jar">
+		<echo>创建${catalina.home}/webapps/${app.name}</echo>
+		<mkdir dir="${catalina.home}/webapps/${app.name}"/>
+		<copy todir="${catalina.home}/webapps/${app.name}/" preservelastmodified="true">
 			<fileset dir="${basedir}/WebContent/"></fileset>
 		</copy>
-		<copy todir="${catalina.home}/webapps/${appName}/WEB-INF/classes" preservelastmodified="true">
+		<copy todir="${catalina.home}/webapps/${app.name}/WEB-INF/classes" preservelastmodified="true">
 			<fileset dir="${basedir}/build/"></fileset>
 		</copy>
 	</target>
 	
+	<target name="deploy-release" depends="clean,-prepare,-compile,-copy-web,-package-web,-copy-conf" description="发布模式：打包eap.jar">
+		<war destfile="${distribute.war.path}/${app.name}.war" >
+			<fileset dir="${deploy.path}">
+				<!--exclude name="WEB-INF/classes/**"/-->
+			</fileset>
+		</war>
+	</target>
+	
 	<!-- 清理任务 -->
 	<target name="clean">
-		<delete dir="${catalina.home}/webapps/${appName}"></delete>
+		<delete dir="${catalina.home}/webapps/${app.name}"></delete>
 	</target>
 	
 	<!-- ================================= 
@@ -33,4 +58,98 @@
 		<echo>数据库服务器已启动</echo>
     </target>
 
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${antcontrib.home}" />
+	
+	<target name="-prepare" description="为发布工作进行准备">
+		<mkdir dir="${build.home}/compile" />
+		<mkdir dir="${deploy.path}/WEB-INF/classes" />
+	</target>
+	
+	<!-- ==================== Compilation Classpath =========================== -->
+
+	<path id="compile.web.classpath">
+		<fileset dir="${lib.compile.home}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${lib.runtime.home}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${catalina.home}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="webapp.target">
+		<pathelement location="${basedir}/WebContent" />
+	</path>
+
+	<path id="jspc.classpath">
+		<path refid="compile.web.classpath" />
+		<path location="${classes.home}" />
+		<fileset file="${catalina.home}/bin/tomcat-juli.jar" />
+	</path>
+	
+	<taskdef resource="net/jtools/classloadertask/antlib.xml" classpath="lib/ant-classloadertask.jar" />
+	<!-- 编译需要的Java类(增量)，并直接将编译后的结果复制(仅更新文件)到发布路径 -->
+	<target name="-compile" depends="-prepare" description="">
+		<for param="dir">
+			<dirset dir="${src.home}">
+				<include name="*" />
+				<exclude name="**/CVS/" />
+				<exclude name="**/SVN/" />
+				<exclude name="test" />
+			</dirset>
+			<sequential>
+				<copy todir="${compile.home}" preservelastmodified="true" encoding="UTF-8" outputencoding="UTF-8">
+					<!--fileset dir="@{dir}" includes="${modulable-includes.resource}"-->
+					<!-- 第二阶段模块化开发不对java代码进行过滤 -->
+					<fileset dir="@{dir}">
+						<include name="**/*.java" />
+						<include name="com/huijia/eap/*" />
+					</fileset>
+				</copy>
+			</sequential>
+		</for>
+
+		<classloader loader="thread" classpath="lib/ecj-3.7.2.jar" />
+		<javac srcdir="${compile.home}" destdir="${deploy.path}/WEB-INF/classes" nowarn="true" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}" encoding="UTF-8" compiler="org.eclipse.jdt.core.JDTCompilerAdapter" source="1.7" target="1.7">
+			<classpath refid="compile.web.classpath" />
+		</javac>
+
+	</target>
+	
+	<target name="-copy-web" description="">
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir="${web.home}">
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- 注意：本任务不负责编译和复制class文件 -->
+	<target name="-package-web" description="打包生成eap.jar，并复制到发布路径，同时删除classes目录">
+		<delete file="${deploy.path}/WEB-INF/lib/eap.jar" />
+
+		<mkdir dir="${deploy.path}/WEB-INF/lib" />
+		<jar destfile="${deploy.path}/WEB-INF/lib/eap.jar">
+			<fileset dir="${deploy.path}/WEB-INF/classes" excludes="${web-inf-classes-reserved-files}">
+			</fileset>
+		</jar>
+
+		
+		<echo>excludes : ${web-inf-classes-reserved-files}</echo>
+		<delete includeemptydirs="true">
+			<fileset dir="${deploy.path}/WEB-INF/classes" excludes="${web-inf-classes-reserved-files}">
+				<!--include name="**/*" /-->
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="-copy-conf">
+		<mkdir dir="${deploy.path}/WEB-INF/classes" />
+		<copy todir="${deploy.path}/WEB-INF/classes" preservelastmodified="true">
+			<fileset dir="${basedir}/conf/" excludes="db.properties,db_huijia.properties">
+			</fileset>
+		</copy>
+		<copy tofile="${deploy.path}/WEB-INF/classes/db.properties" file="${basedir}/conf/db_huijia.properties" />
+	</target>
 </project>
