@@ -3,6 +3,7 @@
 <p>单位 ：${commonParamSet.companyName}</p>
 <p>注册人数 ： ${commonParamSet.registeredUserCount}</p>
 
+<h1>一、心理健康体检数据分析</h1>
 <h2>（一）心理健康体检样本构成</h2>
 
 <p>
@@ -29,7 +30,8 @@
 
 <h3>4．工作年限构成</h3>
 <p>
-	在${commonParamSet.validUserCount}有效数据中，样本工作年限分布为：工作1-3年的员工有${commonParamSet.workage1to3UserCount}人，占${commonParamSet.workage1to3Ratio}；3-5年的有${commonParamSet.workage3to5UserCount}人，占${commonParamSet.workage3to5Ratio}；5-10年的有${commonParamSet.workage5to10UserCount}人，占${commonParamSet.workage5to10Ratio}；10年以上的有${commonParamSet.workage10to99UserCount}人，占${commonParamSet.workage10to99Ratio}。具体有效样本的工作年龄构成百分比如图4所示。
+	在${commonParamSet.validUserCount}有效数据中，样本工作年限分布为：工作1-3年的员工有${commonParamSet.workage1to3UserCount}人，占${commonParamSet.workage1to3Ratio}；3-5年的有${commonParamSet.workage3to5UserCount}人，占${commonParamSet.workage3to5Ratio}；5-10年的有${commonParamSet.workage5to10UserCount}人，占${commonParamSet.workage5to10Ratio}；10年以上的有${commonParamSet.workage10to99UserCount}人，占${commonParamSet.workage10to99Ratio}。
+可见，此样本中，${commonParamSet.workageComment}。具体有效样本的工作年龄构成百分比如图4所示。
 </p>
 
 <h3>5．职位状况构成</h3>

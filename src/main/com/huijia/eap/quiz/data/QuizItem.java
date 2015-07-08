@@ -22,6 +22,54 @@ public class QuizItem {
 
 	@Column
 	private long groupId;
+	
+	/**
+	 * add by jianglei
+	 * 
+	 * 所有答案的题目得分总和
+	 * 用于第三套问卷团体报告生成
+	 */
+	private long totalScoresAllResults;
+	
+	/**
+	 * add by jianglei
+	 * 
+	 * EXCEL中的题目编号
+	 * 用于第三套问卷团体报告生成
+	 */
+	private long index;
+	
+	/**
+	 * add by jianglei
+	 * 
+	 * 题目对应的因素
+	 * 用于第三套问卷团体报告生成
+	 */
+	private String factor;
+
+	public long getIndex() {
+		return index;
+	}
+
+	public void setIndex(long index) {
+		this.index = index;
+	}
+
+	public String getFactor() {
+		return factor;
+	}
+
+	public void setFactor(String factor) {
+		this.factor = factor;
+	}
+
+	public long getTotalScoresAllResults() {
+		return totalScoresAllResults;
+	}
+
+	public void setTotalScoresAllResults(long totalScoresAllResults) {
+		this.totalScoresAllResults = totalScoresAllResults;
+	}
 
 	public long getGroupId() {
 		return groupId;

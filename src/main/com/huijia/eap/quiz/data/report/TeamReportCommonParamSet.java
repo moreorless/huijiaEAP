@@ -1,4 +1,4 @@
-package com.huijia.eap.quiz.data;
+package com.huijia.eap.quiz.data.report;
 
 /**
  * 报告页面显示的通用变量集合
@@ -15,6 +15,7 @@ public class TeamReportCommonParamSet {
 	public long testedUserCount = 0; // 该号段中已完成测试用户数
 	public long liedUserCount = 0; // 测谎题没过的用户数/答案数
 	public long validUserCount = 0; // 测谎题通过的用户数/答案数
+	public String validUserRatio;
 
 	/********** 以下统计数据均针对通过测试的用户 *****************/
 	/********* 1．性别构成 *************/
@@ -62,6 +63,53 @@ public class TeamReportCommonParamSet {
 	public String jobtitleGeneralRatio;
 	public String jobtitleMiddleRatio;
 	public String jobtitleSeniorRatio;
+
+	public void init() {
+		segmentUserCount = 0; // 号段总人数
+		registeredUserCount = 0; // 该号段中已注册用户数
+		testedUserCount = 0; // 该号段中已完成测试用户数
+		liedUserCount = 0; // 测谎题没过的用户数/答案数
+		validUserCount = 0; // 测谎题通过的用户数/答案数
+		genderFemaleUserCount = 0; // 测谎题通过的女性用户数量
+		genderMaleUserCount = 0; // 测谎题通过的男性用户数量
+		age0to30UserCount = 0; // 0到30用户数量
+		age31to40UserCount = 0; // 31到40用户数量
+		age41to50UserCount = 0; // 41到50用户数量
+		age51to99UserCount = 0; // 50以上用户数量
+		educationDazhuanUserCount = 0;
+		educationBenkeUserCount = 0;
+		educationShuoshiUserCount = 0;
+		workage1to3UserCount = 0;
+		workage3to5UserCount = 0;
+		workage5to10UserCount = 0;
+		workage10to99UserCount = 0;
+		jobtitleGeneralUserCount = 0; // 普通员工数量
+		jobtitleMiddleUserCount = 0; // 中层领导数量
+		jobtitleSeniorUserCount = 0; // 高级领导数量
+
+		companyName = ""; // 公司名称
+		validUserRatio = "";
+		genderFemaleRatio = "";
+		genderMaleRatio = "";
+		genderRatio = ""; // 男女比例1:ratio
+		age0to30Ratio = ""; // 0到30用户比例
+		age31to40Ratio = ""; // 31到40用户比例
+		age41to50Ratio = ""; // 41到50用户比例
+		age51to99Ratio = ""; // 50以上用户比例
+		ageMaxName = "";
+		educationDazhuanRatio = "";
+		educationBenkeRatio = "";
+		educationShuoshiRatio = "";
+		educationBenkeShuoshiRatio = "";
+		workage1to3Ratio = "";
+		workage3to5Ratio = "";
+		workage5to10Ratio = "";
+		workage10to99Ratio = "";
+		workageComment = ""; // 此样本中，员工普遍工作经验较少,工作1-3年以上的员工接近七成
+		jobtitleGeneralRatio = "";
+		jobtitleMiddleRatio = "";
+		jobtitleSeniorRatio = "";
+	}
 
 	public long getQuizId() {
 		return quizId;
@@ -125,6 +173,14 @@ public class TeamReportCommonParamSet {
 
 	public void setValidUserCount(long validUserCount) {
 		this.validUserCount = validUserCount;
+	}
+
+	public String getValidUserRatio() {
+		return validUserRatio;
+	}
+
+	public void setValidUserRatio(String validUserRatio) {
+		this.validUserRatio = validUserRatio;
 	}
 
 	public long getGenderFemaleUserCount() {

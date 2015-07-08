@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,9 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 
 	@Inject
 	private QuizCategoryService quizCategoryService;
+
+	@Inject
+	private QuizService quizService;
 
 	@Inject("refer:quizResultDao")
 	public void setQuizResultDao(Dao dao) {
@@ -105,7 +109,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 				.fetchTestedList(segmentId, quizId);
 		return resultList;
 	}
-	
+
 	public List<QuizResult> getValidQuizResultList(long segmentId, long quizId) {
 		List<QuizResult> resultList = ((QuizResultDao) this.dao())
 				.fetchValidList(segmentId, quizId);
@@ -189,6 +193,24 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 	}
 
 	/**
+	 * 根据号段和问卷号获取答案列表
+	 * 
+	 * 用于团体报告
+	 * 
+	 * @param segmentId
+	 * @param quizId
+	 * @return
+	 */
+	public List<QuizResult> getQuizResultList(long segmentId, long quizId) {
+
+		List<QuizResult> tmpList = this.dao().query(
+				getEntityClass(),
+				Cnd.where("quizId", "=", quizId).and("segmentId", "=",
+						segmentId));
+		return tmpList;
+	}
+
+	/**
 	 * 获取某号段答完某套题完毕的用户数量
 	 * 
 	 * @param segmentId
@@ -196,8 +218,43 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 	 * @return
 	 */
 	public int userFinishedCount(long segmentId, long quizId) {
-		return this.count(Cnd.where("segmentid", "=", segmentId).and("quizid",
-				"=", quizId));
+
+		Quiz quiz = quizService.fetch(quizId);
+		int ret = 0;
+		if (quiz.getType() == 0 || quiz.getType() == 2) // 独立问卷 或 子问卷
+			ret = this.count(Cnd.where("segmentid", "=", segmentId).and(
+					"quizid", "=", quizId));
+		else if (quiz.getType() == 1) { // 父问卷
+			List<Quiz> quizList = quizService.fetchListByParentId(quizId);
+
+			boolean isFirst = true;
+			HashSet<Integer> userIDsFinished = new HashSet<Integer>();
+			for (Quiz q : quizList) {
+				List<QuizResult> resultList = this.getQuizResultList(segmentId,
+						q.getId());
+				if (isFirst) {	//首先将第一个子问卷中所有答完题的用户都插入hashset
+					isFirst = false; 
+					for (QuizResult qr : resultList) {
+						userIDsFinished.add((int) qr.getUserId());
+					}
+				}
+				else{ //遍历后面的子问卷答题完毕用户，如果元素没有出现，即在hashset中删除用户Id
+					HashSet<Integer> newUserIDsFinished = new HashSet<Integer>();
+					
+					for (QuizResult qr : resultList) {
+						int userId = (int) qr.getUserId();
+						if(userIDsFinished.contains(userId)){
+							newUserIDsFinished.add(userId);
+						}
+					}
+					userIDsFinished = newUserIDsFinished;
+				}
+			}
+			ret = userIDsFinished.size();
+		} else
+			ret = 0;
+		return ret;
+
 	}
 
 	/**
