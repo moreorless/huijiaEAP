@@ -231,15 +231,78 @@ body {
 		<p>从上图可以看出，${employeeParamSet.drivingLoyaltyEvaluation}</p>
 		<p>（4）员工忠诚度驱力因素细分</p>
 		<p>图8 员工忠诚度驱力因素细分</p>
+		<table class="table table table-bordered table-striped"
+			style="width: 50%">
+			<tr>
+				<th style="width: 40%"></th>
+				<th style="width: 20%">表扬</th>
+				<th style="width: 20%">留任</th>
+				<th style="width: 20%">差值</th>
+			</tr>
+			<c:forEach var="datalist"
+				items="${employeeParamSet.detailDrivingLoyaltyRatioList}">
+				<tr>
+					<c:forTokens items="${datalist }" delims="," var="name">
+						<td>${name}</td>
+					</c:forTokens>
+				</tr>
+			</c:forEach>
+		</table>
 		<p>在五大因素中共划分出17个二级因素。将员工的忠诚度从这17个细分二级因素中一一划分开，便于更加准确地找到企业管理中改进的方向。</p>
-		<p>从上图可以看出，**二级因素上，差异最大，为**%，其次为**、**二级因素。（表8中两列数据求差的绝对值，取绝对值高的1,2,3名）**二级因素上，差异最小，为**%/两者比重完全一致，其次为**、**二级因素。</p>
+		<p>从上图可以看出，${employeeParamSet.detailDrivingLoyaltyEvaluation}</p>
 		<h2>3.5 满意度、忠诚度综合分析</h2>
 		<p>图9 满意度、忠诚度综合分析</p>
+		<table class="table table table-bordered table-striped"
+			style="width: 50%">
+			<tr>
+				<th style="width: 30%"></th>
+				<th style="width: 20%">满意度得分</th>
+				<th style="width: 20%">忠诚度驱动力得分</th>
+				<th style="width: 30%">所属区域</th>
+			</tr>
+			<c:forEach var="datalist"
+				items="${employeeParamSet.compositeAnalysisAreaScoreList}">
+				<tr>
+					<c:forTokens items="${datalist }" delims="," var="name">
+						<td>${name}</td>
+					</c:forTokens>
+				</tr>
+			</c:forEach>
+		</table>
+		<p>满意度平均得分为${employeeParamSet.compositeAnalysisSatisfactionAverageScore},忠诚度平均得分为${employeeParamSet.compositeAnalysisLoyaltyAverageScore}。</p>
 		<p>根据员工满意度与忠诚度情况，可以将五大因素中的17个二级因素分为四大区域，分别为：</p>
-		<p>优势区域：员工满意度较高，不过忠诚度驱力较低的区域。落入该区域的因素有**、**、**。这表明，这部分已经做得不错，员工满意度较高，但是，因为这些二级因素对员工的忠诚度（特别是离职率）影响较小，所以属于优势区域，而非强势区域。</p>
-		<p>强势区域：员工满意度较高，忠诚度驱力也较高的区域。落入该区域的因素有**、**、**。这表明，这些二级因素属于企业的强势地带，因为这些因素不仅满意度高，而且对员工的忠诚度（特别是离职率）影响力较大。</p>
-		<p>忍痛区域：员工满意度较低，忠诚度驱力也较低的区域。落入该区域的因素有**、**、**。这表明，这些二级因素虽然满意度较低，但是其对员工的忠诚度（特别是离职率）影响较小，所以需要暂时忍痛，等改进区域因素调整得当后，再来改善的因素。</p>
-		<p>改进区域：员工满意度较低，不过忠诚度驱力较高的区域。落入该区域的因素有**、**、**。这表明，这些二级因素应该是我们将要重点改进的区域。因为这部分二级因素对员工的忠诚度（特别是离职率）影响力较大，一旦改进，可以大大降低员工的离职率，提高员工留任的概率。</p>
+		<p>
+			优势区域：员工满意度较高，不过忠诚度驱力较低的区域。落入该区域的因素有
+			<c:forEach var="name"
+				items="${employeeParamSet.compositeAnalysisCategoryNameListYoushi}">
+				${name }，
+				</c:forEach>
+			这表明，这部分已经做得不错，员工满意度较高，但是，因为这些二级因素对员工的忠诚度（特别是离职率）影响较小，所以属于优势区域，而非强势区域。
+		</p>
+		<p>
+			强势区域：员工满意度较高，忠诚度驱力也较高的区域。落入该区域的因素有
+			<c:forEach var="name"
+				items="${employeeParamSet.compositeAnalysisCategoryNameListQiangshi}">
+				${name }，
+				</c:forEach>
+			这表明，这些二级因素属于企业的强势地带，因为这些因素不仅满意度高，而且对员工的忠诚度（特别是离职率）影响力较大。
+		</p>
+		<p>
+			忍痛区域：员工满意度较低，忠诚度驱力也较低的区域。落入该区域的因素有
+			<c:forEach var="name"
+				items="${employeeParamSet.compositeAnalysisCategoryNameListRentong}">
+				${name }，
+				</c:forEach>
+			这表明，这些二级因素虽然满意度较低，但是其对员工的忠诚度（特别是离职率）影响较小，所以需要暂时忍痛，等改进区域因素调整得当后，再来改善的因素。
+		</p>
+		<p>
+			改进区域：员工满意度较低，不过忠诚度驱力较高的区域。落入该区域的因素有
+			<c:forEach var="name"
+				items="${employeeParamSet.compositeAnalysisCategoryNameListGaijin}">
+				${name }，
+				</c:forEach>
+			这表明，这些二级因素应该是我们将要重点改进的区域。因为这部分二级因素对员工的忠诚度（特别是离职率）影响力较大，一旦改进，可以大大降低员工的离职率，提高员工留任的概率。
+		</p>
 
 	</div>
 

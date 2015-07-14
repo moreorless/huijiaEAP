@@ -105,14 +105,51 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 	}
 
 	public List<QuizResult> getTestedQuizResultList(long segmentId, long quizId) {
-		List<QuizResult> resultList = ((QuizResultDao) this.dao())
-				.fetchTestedList(segmentId, quizId);
+		List<QuizResult> resultList = new LinkedList<QuizResult>();
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
+			for (Quiz _quiz : quiz.getChildList()) {
+				List<QuizResult> tmpList = this.dao().query(
+						getEntityClass(),
+						Cnd.where("quizId", "=", _quiz.getId()).and(
+								"segmentId", "=", segmentId));
+				resultList.addAll(tmpList);
+			}
+			return resultList;
+		}
+
+		// 如果同一用户 对同一问卷，回答了多次，取最近一次
+		List<QuizResult> tmpList = this.dao().query(
+				getEntityClass(),
+				Cnd.where("quizId", "=", quizId).and("segmentId", "=",
+						segmentId));
+		resultList.addAll(tmpList);
 		return resultList;
 	}
 
 	public List<QuizResult> getValidQuizResultList(long segmentId, long quizId) {
-		List<QuizResult> resultList = ((QuizResultDao) this.dao())
-				.fetchValidList(segmentId, quizId);
+		List<QuizResult> resultList = new LinkedList<QuizResult>();
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+
+		if (quiz.getType() == QuizConstant.QUIZ_TYPE_PARENT) {
+			for (Quiz _quiz : quiz.getChildList()) {
+				List<QuizResult> tmpList = this.dao().query(
+						getEntityClass(),
+						Cnd.where("quizId", "=", _quiz.getId())
+								.and("segmentId", "=", segmentId)
+								.and("valid", "=", 1));
+				resultList.addAll(tmpList);
+			}
+			return resultList;
+		}
+
+		// 如果同一用户 对同一问卷，回答了多次，取最近一次
+		List<QuizResult> tmpList = this.dao().query(
+				getEntityClass(),
+				Cnd.where("quizId", "=", quizId)
+						.and("segmentId", "=", segmentId).and("valid", "=", 1));
+		resultList.addAll(tmpList);
 		return resultList;
 	}
 
@@ -232,18 +269,17 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 			for (Quiz q : quizList) {
 				List<QuizResult> resultList = this.getQuizResultList(segmentId,
 						q.getId());
-				if (isFirst) {	//首先将第一个子问卷中所有答完题的用户都插入hashset
-					isFirst = false; 
+				if (isFirst) { // 首先将第一个子问卷中所有答完题的用户都插入hashset
+					isFirst = false;
 					for (QuizResult qr : resultList) {
 						userIDsFinished.add((int) qr.getUserId());
 					}
-				}
-				else{ //遍历后面的子问卷答题完毕用户，如果元素没有出现，即在hashset中删除用户Id
+				} else { // 遍历后面的子问卷答题完毕用户，如果元素没有出现，即在hashset中删除用户Id
 					HashSet<Integer> newUserIDsFinished = new HashSet<Integer>();
-					
+
 					for (QuizResult qr : resultList) {
 						int userId = (int) qr.getUserId();
-						if(userIDsFinished.contains(userId)){
+						if (userIDsFinished.contains(userId)) {
 							newUserIDsFinished.add(userId);
 						}
 					}

@@ -1,7 +1,9 @@
 package com.huijia.eap.quiz.data.report;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class TeamReportEmployeeSurveySet {
@@ -98,9 +100,24 @@ public class TeamReportEmployeeSurveySet {
 
 	// 3.4 员工忠诚度分析
 	// （4）员工忠诚度驱力因素细分
-	public Map<String, Double> detailDrivingLoyaltyPraiseRatioMap = new HashMap<String, Double>();
-	public Map<String, Double> detailDrivingLoyaltyRemainRatioMap = new HashMap<String, Double>();
+	public List<String> detailDrivingLoyaltyCategoryNameList = new ArrayList<String>();
+	public List<Double> detailDrivingLoyaltyPraiseRatioList = new ArrayList<Double>();
+	public List<Double> detailDrivingLoyaltyRemainRatioList = new ArrayList<Double>();
+	public List<String> detailDrivingLoyaltyRatioList = new ArrayList<String>();
 	public String detailDrivingLoyaltyEvaluation = "";
+
+	// 3.5 满意度、忠诚度综合分析
+	public List<String> compositeAnalysisCategoryNameList = new ArrayList<String>();
+	public List<Double> compositeAnalysisSatisfactionScoreList = new ArrayList<Double>();
+	public List<Double> compositeAnalysisLoyaltyScoreList = new ArrayList<Double>();
+	public List<String> compositeAnalysisAreaScoreList = new ArrayList<String>();
+	public String compositeAnalysisEvaluation = "";
+	public double compositeAnalysisSatisfactionAverageScore = 0.0;
+	public double compositeAnalysisLoyaltyAverageScore = 0.0;
+	public List<String> compositeAnalysisCategoryNameListQiangshi = new ArrayList<String>();
+	public List<String> compositeAnalysisCategoryNameListYoushi = new ArrayList<String>();
+	public List<String> compositeAnalysisCategoryNameListGaijin = new ArrayList<String>();
+	public List<String> compositeAnalysisCategoryNameListRentong = new ArrayList<String>();
 
 	public void init() {
 		top1QuestionIds = "";
@@ -199,14 +216,65 @@ public class TeamReportEmployeeSurveySet {
 		drivingLoyaltyRemainRatioXinchoufuli = "";
 		drivingLoyaltyRemainRatioZhiyefazhan = "";
 		drivingLoyaltyEvaluation = "";
-		
-		detailDrivingLoyaltyPraiseRatioMap = new HashMap<String, Double>();
-		detailDrivingLoyaltyRemainRatioMap = new HashMap<String, Double>();
+
+		detailDrivingLoyaltyCategoryNameList = new ArrayList<String>();
+		detailDrivingLoyaltyPraiseRatioList = new ArrayList<Double>();
+		detailDrivingLoyaltyRemainRatioList = new ArrayList<Double>();
+		detailDrivingLoyaltyRatioList = new ArrayList<String>();
 		detailDrivingLoyaltyEvaluation = "";
+
+		// 3.5 满意度、忠诚度综合分析
+		compositeAnalysisCategoryNameList = new ArrayList<String>();
+		compositeAnalysisSatisfactionScoreList = new ArrayList<Double>();
+		compositeAnalysisLoyaltyScoreList = new ArrayList<Double>();
+		compositeAnalysisAreaScoreList = new ArrayList<String>();
+		compositeAnalysisEvaluation = "";
+		compositeAnalysisCategoryNameListQiangshi = new ArrayList<String>();
+		compositeAnalysisCategoryNameListYoushi = new ArrayList<String>();
+		compositeAnalysisCategoryNameListGaijin = new ArrayList<String>();
+		compositeAnalysisCategoryNameListRentong = new ArrayList<String>();
+		compositeAnalysisSatisfactionAverageScore = 0.0;
+		compositeAnalysisLoyaltyAverageScore = 0.0;
 	}
 
 	public String getTop1QuestionIds() {
 		return top1QuestionIds;
+	}
+
+	public List<String> getDetailDrivingLoyaltyCategoryNameList() {
+		return detailDrivingLoyaltyCategoryNameList;
+	}
+
+	public void setDetailDrivingLoyaltyCategoryNameList(
+			List<String> detailDrivingLoyaltyCategoryNameList) {
+		this.detailDrivingLoyaltyCategoryNameList = detailDrivingLoyaltyCategoryNameList;
+	}
+
+	public List<Double> getDetailDrivingLoyaltyPraiseRatioList() {
+		return detailDrivingLoyaltyPraiseRatioList;
+	}
+
+	public void setDetailDrivingLoyaltyPraiseRatioList(
+			List<Double> detailDrivingLoyaltyPraiseRatioList) {
+		this.detailDrivingLoyaltyPraiseRatioList = detailDrivingLoyaltyPraiseRatioList;
+	}
+
+	public List<Double> getDetailDrivingLoyaltyRemainRatioList() {
+		return detailDrivingLoyaltyRemainRatioList;
+	}
+
+	public void setDetailDrivingLoyaltyRemainRatioList(
+			List<Double> detailDrivingLoyaltyRemainRatioList) {
+		this.detailDrivingLoyaltyRemainRatioList = detailDrivingLoyaltyRemainRatioList;
+	}
+
+	public List<String> getDetailDrivingLoyaltyRatioList() {
+		return detailDrivingLoyaltyRatioList;
+	}
+
+	public void setDetailDrivingLoyaltyRatioList(
+			List<String> detailDrivingLoyaltyRatioList) {
+		this.detailDrivingLoyaltyRatioList = detailDrivingLoyaltyRatioList;
 	}
 
 	public void setTop1QuestionIds(String top1QuestionIds) {
@@ -734,15 +802,6 @@ public class TeamReportEmployeeSurveySet {
 		this.drivingLoyaltyEvaluation = drivingLoyaltyEvaluation;
 	}
 
-	public Map<String, Double> getDetailDrivingLoyaltyPraiseRatioMap() {
-		return detailDrivingLoyaltyPraiseRatioMap;
-	}
-
-	public void setDetailDrivingLoyaltyPraiseRatioMap(
-			Map<String, Double> detailDrivingLoyaltyPraiseRatioMap) {
-		this.detailDrivingLoyaltyPraiseRatioMap = detailDrivingLoyaltyPraiseRatioMap;
-	}
-
 	public String getDetailDrivingLoyaltyEvaluation() {
 		return detailDrivingLoyaltyEvaluation;
 	}
@@ -750,6 +809,105 @@ public class TeamReportEmployeeSurveySet {
 	public void setDetailDrivingLoyaltyEvaluation(
 			String detailDrivingLoyaltyEvaluation) {
 		this.detailDrivingLoyaltyEvaluation = detailDrivingLoyaltyEvaluation;
+	}
+
+	public List<String> getCompositeAnalysisCategoryNameList() {
+		return compositeAnalysisCategoryNameList;
+	}
+
+	public void setCompositeAnalysisCategoryNameList(
+			List<String> compositeAnalysisCategoryNameList) {
+		this.compositeAnalysisCategoryNameList = compositeAnalysisCategoryNameList;
+	}
+
+	public List<Double> getCompositeAnalysisSatisfactionScoreList() {
+		return compositeAnalysisSatisfactionScoreList;
+	}
+
+	public void setCompositeAnalysisSatisfactionScoreList(
+			List<Double> compositeAnalysisSatisfactionScoreList) {
+		this.compositeAnalysisSatisfactionScoreList = compositeAnalysisSatisfactionScoreList;
+	}
+
+	public List<Double> getCompositeAnalysisLoyaltyScoreList() {
+		return compositeAnalysisLoyaltyScoreList;
+	}
+
+	public void setCompositeAnalysisLoyaltyScoreList(
+			List<Double> compositeAnalysisLoyaltyScoreList) {
+		this.compositeAnalysisLoyaltyScoreList = compositeAnalysisLoyaltyScoreList;
+	}
+
+	public List<String> getCompositeAnalysisAreaScoreList() {
+		return compositeAnalysisAreaScoreList;
+	}
+
+	public void setCompositeAnalysisAreaScoreList(
+			List<String> compositeAnalysisAreaScoreList) {
+		this.compositeAnalysisAreaScoreList = compositeAnalysisAreaScoreList;
+	}
+
+	public String getCompositeAnalysisEvaluation() {
+		return compositeAnalysisEvaluation;
+	}
+
+	public void setCompositeAnalysisEvaluation(
+			String compositeAnalysisEvaluation) {
+		this.compositeAnalysisEvaluation = compositeAnalysisEvaluation;
+	}
+
+	public double getCompositeAnalysisSatisfactionAverageScore() {
+		return compositeAnalysisSatisfactionAverageScore;
+	}
+
+	public void setCompositeAnalysisSatisfactionAverageScore(
+			double compositeAnalysisSatisfactionAverageScore) {
+		this.compositeAnalysisSatisfactionAverageScore = compositeAnalysisSatisfactionAverageScore;
+	}
+
+	public double getCompositeAnalysisLoyaltyAverageScore() {
+		return compositeAnalysisLoyaltyAverageScore;
+	}
+
+	public void setCompositeAnalysisLoyaltyAverageScore(
+			double compositeAnalysisLoyaltyAverageScore) {
+		this.compositeAnalysisLoyaltyAverageScore = compositeAnalysisLoyaltyAverageScore;
+	}
+
+	public List<String> getCompositeAnalysisCategoryNameListQiangshi() {
+		return compositeAnalysisCategoryNameListQiangshi;
+	}
+
+	public void setCompositeAnalysisCategoryNameListQiangshi(
+			List<String> compositeAnalysisCategoryNameListQiangshi) {
+		this.compositeAnalysisCategoryNameListQiangshi = compositeAnalysisCategoryNameListQiangshi;
+	}
+
+	public List<String> getCompositeAnalysisCategoryNameListYoushi() {
+		return compositeAnalysisCategoryNameListYoushi;
+	}
+
+	public void setCompositeAnalysisCategoryNameListYoushi(
+			List<String> compositeAnalysisCategoryNameListYoushi) {
+		this.compositeAnalysisCategoryNameListYoushi = compositeAnalysisCategoryNameListYoushi;
+	}
+
+	public List<String> getCompositeAnalysisCategoryNameListGaijin() {
+		return compositeAnalysisCategoryNameListGaijin;
+	}
+
+	public void setCompositeAnalysisCategoryNameListGaijin(
+			List<String> compositeAnalysisCategoryNameListGaijin) {
+		this.compositeAnalysisCategoryNameListGaijin = compositeAnalysisCategoryNameListGaijin;
+	}
+
+	public List<String> getCompositeAnalysisCategoryNameListRentong() {
+		return compositeAnalysisCategoryNameListRentong;
+	}
+
+	public void setCompositeAnalysisCategoryNameListRentong(
+			List<String> compositeAnalysisCategoryNameListRentong) {
+		this.compositeAnalysisCategoryNameListRentong = compositeAnalysisCategoryNameListRentong;
 	}
 
 }

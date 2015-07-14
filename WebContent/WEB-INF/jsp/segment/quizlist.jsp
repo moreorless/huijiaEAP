@@ -22,13 +22,14 @@ em {
 	<div class="container" id="wrap">
 		<%@ include file="/error/inline.jsp"%>
 
-		<h5>团体报告查看	-- (所属企业:${company.name}&nbsp;|&nbsp;号段范围:${segment.startId}-${segment.endId}&nbsp;|&nbsp;号段总人数:${segment.size})</h5>
+		<h5>团体报告查看 --
+			(所属企业:${company.name}&nbsp;|&nbsp;号段范围:${segment.startId}-${segment.endId}&nbsp;|&nbsp;号段总人数:${segment.size})</h5>
 
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
 				<tr>
 					<th>试卷名</th>
-					<th>已注册人数</th>					
+					<th>已注册人数</th>
 					<th>已答题人数</th>
 					<th>查看</th>
 				</tr>
@@ -39,10 +40,15 @@ em {
 						<td>${quiz.name }</td>
 						<td>${segment.userCountRegistered}</td>
 						<td>${quiz.userCountFinished}</td>
-						<td><a
-							href="${base}/segment/report?segmentId=${segment.id}&quizId=${quiz.id}"
-							target="_blank" title="查看报告"><img
-								src="${base}/images/report.png" /></a></td>
+						<td><c:choose>
+								<c:when test="${quiz.userCountFinished==0}">无团体报告   </c:when>
+								<c:otherwise>
+									<a
+										href="${base}/segment/report?segmentId=${segment.id}&quizId=${quiz.id}"
+										target="_blank" title="查看报告"><img
+										src="${base}/images/report.png" /></a>
+								</c:otherwise>
+							</c:choose></td>
 					</tr>
 				</c:forEach>
 			</tbody>
