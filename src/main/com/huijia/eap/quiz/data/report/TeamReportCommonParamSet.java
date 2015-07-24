@@ -1,5 +1,8 @@
 package com.huijia.eap.quiz.data.report;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 报告页面显示的通用变量集合
  * 
@@ -63,6 +66,13 @@ public class TeamReportCommonParamSet {
 	public String jobtitleGeneralRatio;
 	public String jobtitleMiddleRatio;
 	public String jobtitleSeniorRatio;
+	
+	/************** 报表生成  ****************/
+	public Map<String, String> chartDataGender = new HashMap<String, String>();
+	public Map<String, String> chartDataAge = new HashMap<String, String>();
+	public Map<String, String> chartDataEducation = new HashMap<String, String>();
+	public Map<String, String> chartDataWorkage = new HashMap<String, String>();
+	public Map<String, String> chartDataJobtitle = new HashMap<String, String>();
 
 	public void init() {
 		segmentUserCount = 0; // 号段总人数
@@ -109,6 +119,20 @@ public class TeamReportCommonParamSet {
 		jobtitleGeneralRatio = "";
 		jobtitleMiddleRatio = "";
 		jobtitleSeniorRatio = "";
+		
+		chartDataGender = new HashMap<String, String>();
+		chartDataAge = new HashMap<String, String>();
+		chartDataEducation = new HashMap<String, String>();
+		chartDataWorkage = new HashMap<String, String>();
+		chartDataJobtitle = new HashMap<String, String>();
+	}
+
+	public Map<String, String> getChartDataGender() {
+		return chartDataGender;
+	}
+
+	public void setChartDataGender(Map<String, String> chartDataGender) {
+		this.chartDataGender = chartDataGender;
 	}
 
 	public long getQuizId() {
@@ -469,5 +493,37 @@ public class TeamReportCommonParamSet {
 
 	public void setJobtitleSeniorRatio(String jobtitleSeniorRatio) {
 		this.jobtitleSeniorRatio = jobtitleSeniorRatio;
+	}
+
+	public Map<String, String> getChartDataAge() {
+		return chartDataAge;
+	}
+
+	public void setChartDataAge(Map<String, String> chartDataAge) {
+		this.chartDataAge = chartDataAge;
+	}
+
+	public Map<String, String> getChartDataEducation() {
+		return chartDataEducation;
+	}
+
+	public void setChartDataEducation(Map<String, String> chartDataEducation) {
+		this.chartDataEducation = chartDataEducation;
+	}
+
+	public Map<String, String> getChartDataWorkage() {
+		return chartDataWorkage;
+	}
+
+	public void setChartDataWorkage(Map<String, String> chartDataWorkage) {
+		this.chartDataWorkage = chartDataWorkage;
+	}
+
+	public Map<String, String> getChartDataJobtitle() {
+		return chartDataJobtitle;
+	}
+
+	public void setChartDataJobtitle(Map<String, String> chartDataJobtitle) {
+		this.chartDataJobtitle = chartDataJobtitle;
 	}
 }

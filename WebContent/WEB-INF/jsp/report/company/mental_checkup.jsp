@@ -8,11 +8,24 @@
 	href="${base}/css/bootstrap.min.css" />
 <link type="text/css" rel="stylesheet" href="${base}/css/common.css" />
 <link type="text/css" rel="stylesheet" href="${base}/css/quiz/quiz.css" />
+
+<script type="text/javascript" src="${base}/js/echarts/echarts-all.js"></script>
+<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+.chart {
+	width: 600px;
+	height: 400px;
+	margin: 0 auto
+}
+</style>
 <style type="text/css">
 body {
 	overflow: auto
 }
 </style>
+
 </head>
 <body>
 
@@ -24,20 +37,158 @@ body {
 		<h2>（二）心理健康体检结果分析</h2>
 		<h3>1．员工心理健康总体概况</h3>
 		<p>
-			此次参加测评的${commonParamSet.validUserCount}位员工的整体心理健康得分为${mentalParamSet.wholeScore} ，处于心理健康${mentalParamSet.wholeEvaluation}水平。心理体检结果显示，
+			此次参加测评的${commonParamSet.validUserCount}位员工的整体心理健康得分为${mentalParamSet.wholeScore}
+			，处于心理健康${mentalParamSet.wholeEvaluation}。心理体检结果显示，
 			<c:if test="${mentalParamSet.jiaoChaUserCount} >0}"> ${mentalParamSet.jiaoChaUserCount }名员工心理健康水平较差，占有效样本的${mentalParamSet.jiaoChaRatio }，其中最低得分为${mentalParamSet.jiaoChaLowestScore }分；</c:if>
 			<c:if test="${mentalParamSet.buLiangUserCount} >0}">${mentalParamSet.buLiangUserCount }人心理健康水平不良，占有效样本的${mentalParamSet.buLiangRatio }；</c:if>
 			<c:if test="${mentalParamSet.zhongDengUserCount} >0}">${mentalParamSet.zhongDengUserCount }人心理健康状况处于中等水平，占有效样本的${mentalParamSet.zhongDengRatio }；</c:if>
 			<c:if test="${mentalParamSet.jiaoHaoUserCount} >0}">${mentalParamSet.jiaoHaoUserCount }人心理健康水平较好，占有效样本的${mentalParamSet.jiaoHaoRatio }；</c:if>
-			<c:if test="${mentalParamSet.henHaoUserCount} >0}">${mentalParamSet.henHaoUserCount }人心理健康水平非常好，占有效样本的${mentalParamSet.henHaoRatio }</c:if>（如图6所示）。
+			<c:if test="${mentalParamSet.henHaoUserCount} >0}">${mentalParamSet.henHaoUserCount }人心理健康水平非常好，占有效样本的${mentalParamSet.henHaoRatio }</c:if>
+			（如图6所示）。
 		</p>
 
-		<p>这一结果显示：心理健康状况需要特别引起警惕的员工比例为${mentalParamSet.needJingTiRatio }，心理健康
-			水平有待提高的员工为${mentalParamSet.needTiGaoRatio }。</p>
+		<p>这一结果显示：心理健康状况需要特别引起警惕的员工比例为${mentalParamSet.needJingTiRatio
+			}，心理健康 水平有待提高的员工为${mentalParamSet.needTiGaoRatio }。</p>
+
+		<div id="mental_checkup_chart_whole_pie"
+			style="height: 500px; width: 800px"></div>
+		<script type="text/javascript">
+(function(){
+	var chart = echarts.init(document
+			.getElementById('mental_checkup_chart_whole_pie'));
+	var datas = [<c:forEach var="item" items="${mentalParamSet.chartDataWholePie}" varStatus="status">{value:<c:out value = "${item.value}"/>,name:'<c:out value = "${item.key}"/>'}<c:if test="${!status.last}">,</c:if></c:forEach>];
+
+	var option = {
+		title : {
+	        text: '员工心理健康水平人数分布状况',
+	        x:'center'
+	    },
+	    renderAsImage:true,
+	    color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+	    //color:['#21329d', '#959595'],
+		series : [ {
+			type : 'pie',
+			radius : '55%',
+	        center: ['50%', '50%'],
+			data : datas
+		} ]
+	};
+	chart.setOption(option);
+})();
+</script>
+
+		<div id="mental_checkup_chart_whole_bar"
+			style="height: 500px; width: 800px"></div>
+		<script type="text/javascript">
+(function(){
+	var chart = echarts.init(document
+			.getElementById('mental_checkup_chart_whole_bar'));
+	var datas = [<c:forEach var="item" items="${mentalParamSet.charDataWholeBar}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+
+	option = {
+		    title : {
+		    	x: "center",
+		        text: '员工心理健康水平人数分布状况'
+		    },
+		    renderAsImage:true,
+		    color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : ['较差','不良','中等','较好','非常好']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    series : [
+
+		         {
+		            name:'人数',
+		            type:'bar',
+		            barWidth: 50,
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas,
+		        }
+		  
+		    ]
+		};
+	chart.setOption(option);
+})();
+</script>
 
 		<p>
 			图7所示为本次参与测评的${commonParamSet.validUserCount}位员工的心理健康总分分布图。K-S正态性检验发现，整个分布为标准正态分布，与全国常模保持一致。即：心理健康处于中等程度的人最多，越往两端人数越少。（K-S正态性检验发现，整个分布不是标准正态分布，与全国常模不一致，可能是由于样本量太小导致。）
 		</p>
+
+		<div style="width: 800px; height: 500px; position: relative;">
+			<div
+				style="width:800px;height: 500px;background-image:url('${base}/images/report/gauss.png');repeat;position:absolute;z-index:1"></div>
+			<div id="mental_checkup_chart_distribution_bar"
+				style="height: 500px; width: 800px"></div>
+		</div>
+		<!-- 图7的解决方案  http://jingyan.baidu.com/article/7908e85c92f939af491ad240.html    -->
+		<script type="text/javascript">
+(function(){
+	var chart = echarts.init(document
+			.getElementById('mental_checkup_chart_distribution_bar'));
+	var datas = [<c:forEach var="item" items="${mentalParamSet.charDataWholeGauss}" varStatus="status">[<c:if test="${item>0}"><c:out value = "${item}"/></c:if>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+
+	//var datas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12,10, 10, 10, 10, 10, 10, 10, 10, 10,10, 10, 10,10];
+	
+	var max = datas[0];
+	for(var i=1;i<datas.length;i++){ 
+	  if(max<datas[i])max=datas[i];
+	}
+	if(max < 10) max = 10;	
+	else{
+		max = Math.round((Math.ceil(max*1.3)/10))*10;
+	}
+	
+	option = {
+		    title : {
+		    	x: "center",
+		    	y: "bottom",
+		        text: '员工心理健康水平人数分布状况'
+		    },
+		    renderAsImage:true,
+		    color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+		    xAxis : [
+		        {
+		            show : 'true',
+		        	type : 'category',
+		            name :'心理健康总分',
+		            position : 'bottom',
+		            data : ['','','100','','','','','150','','','','','200','','','','','250','','','','','300','','']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		        	show : 'true',
+		        	name:'频率',
+		        	min : 0,
+		        	max : max,
+		        	//splitNumber : 5,		        	
+		            //axisLabel:{formatter:'{value} 人数'},
+		        	type : 'value'
+		        },
+		        
+		    ],
+		    series : [
+		         {
+		            name:'人数',
+		            type:'bar',
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas,
+		        }
+		  
+		    ]
+		};
+	chart.setOption(option);
+})();
+</script>
 
 		<h3>2．心理健康各维度结果分析</h3>
 		<h4>（1）各维度得分的平均分</h4>
@@ -45,16 +196,163 @@ body {
 		<p>
 			体检结果显示，${commonParamSet.companyName}员工心理健康状况的六个维度——认知维度、情绪维度、意识行为维度、生理症状维度、社会交往维度和自我防御维度的各维度得分都处于中等范围，总体差异程度不大。如图8所示。
 		</p>
+
+		<div id="mental_checkup_chart_category_average"
+			style="height: 500px; width: 800px"></div>
+		<script type="text/javascript">
+(function(){
+	var chart = echarts.init(document
+			.getElementById('mental_checkup_chart_category_average'));
+	var datas = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryAverage}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+	
+	var datas_low = [31,24,24,26,25,24];
+	//var datas_middle = [6,11,10,11,10,9];
+	//var datas_high = [3,5,6,3,5,7];
+	var datas_middle = [6,11,10,11,10,9];
+	var datas_high = [3,5,6,3,5,7];
+
+	option = {
+		    title : {
+		    	x: "center",
+		        text: '员工心理健康各维度得分情况'
+		    },
+		    renderAsImage:true,
+		    //color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+		    color:['#FF7F50','#87CEFA','#E394E0','#21329d'],
+		    //color:['#ff7H50'],
+		    xAxis : [
+		        {
+		            type : 'category',
+		            name : '维度',
+		            data : ['积极心态','情绪管理','行为表现','生理症状','社会支持','自我防御']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value',
+		        	name:'分数',
+		        	min : 0,
+		        	max : 40,
+		        	splitNumber: 8
+		        }
+		    ],
+		    series : [
+				{
+				    name:'低分区',
+				    type:'line',
+				    stack: '总量',
+				    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				    data:datas_low
+				},
+				{
+				    name:'中分区',
+				    type:'line',
+				    stack: '总量',
+				    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				    data:datas_middle
+				},
+				{
+				    name:'高分区',
+				    type:'line',
+				    stack: '总量',
+				    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				    data:datas_high
+				},
+				{
+		            name:'平均分',
+		            type:'bar',
+		            barWidth: 40,
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas,
+		        }
+		    ]
+		};
+	chart.setOption(option);
+})();
+</script>
+
 		<p>
-			上图中，白色区域为高分区，灰色区域为低分区，天蓝色区域为中分区，并显示了各维度的高低分临界值。总体上心理健康的六个维度得到了均衡发展，各维度的得分都处于中等及以上的程度。
+			上图中，淡紫色区域为高分区，淡红色区域为低分区，淡蓝色区域为中分区，并显示了各维度的高低分临界值。总体上心理健康的六个维度得到了均衡发展，各维度的得分都处于中等及以上的程度。
 		</p>
 		<h4>（2）各维度得分高低程度的人数比较</h4>
 		<p>
 			六个维度中，社会支持是支持员工心理健康的主要因素，自我防御是影响员工心理健康水平的主要因素，生理症状是反映员工心理健康状况的重要指标，而积极心态、情绪管理和行为表现则是从“知、情、意”的三个角度全面评价当前员工的心理健康水平。
 		</p>
 		<p>维度高低分的具体人数如图9所示。</p>
+		
+		<div id="mental_checkup_chart_category_num"
+			style="height: 500px; width: 800px"></div>
+<script type="text/javascript">
+(function(){
+	var chart = echarts.init(document
+			.getElementById('mental_checkup_chart_category_num'));
+		
+	//var datas_low = [31,24,24,126,25,24];
+	//var datas_high = [3,5,6,3,5,7];
+	var datas_low = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryNumLow}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+	var datas_high = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryNumHigh}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+	
+	var datas = datas_low.concat(datas_high);
+	var max = datas[0];
+	for(var i=1;i<datas.length;i++){ 
+	  if(max<datas[i])max=datas[i];
+	}
+	if(max < 10) max = 10;	
+	else{
+		max = Math.round((Math.ceil(max*1.3)/10))*10;
+	}
+
+	option = {
+		    title : {
+		    	x: "center",
+		    	y: "bottom",
+		        text: '各维度高低分人数分布'
+		    },
+		    renderAsImage:true,
+		    legend: {
+		        data:['低分段人数', '高分段人数']
+		    },
+		    //color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+		    color:['#FF7F50','#87CEFA','#E394E0','#21329d'],
+		    //color:['#ff7H50'],
+		    xAxis : [
+		        {
+		            type : 'category',
+		            name : '维度',
+		            data : ['积极心态','情绪管理','行为表现','生理症状','社会支持','自我防御']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value',
+		            min : 0,
+		        	max : max,
+		        	name:'人数'
+		        }
+		    ],
+		    series : [
+				{
+		            name:'低分段人数',
+		            type:'bar',
+		            barWidth: 40,
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas_low,
+		        },
+		        {
+		            name:'高分段人数',
+		            type:'bar',
+		            barWidth: 40,
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas_high,
+		        }
+		    ]
+		};
+	chart.setOption(option);
+})();
+</script>
 		<p>
-			在心理健康的各个因素中，得分处于中等分数的员工占整个团体的多数部分。统计分析结果显示，所选样本员工在6个维度中，低分人数最多的是${mentalParamSet.lowScoreCategories}，而高分人数最多的是${mentalParamSet.highScoreCategories}。如图9所示。<c:if test="${mentalParamSet.percent30CategoryNum} >0}">其中，${mentalParamSet.percent30Categories}的低分人群均超过总有效样本的30%，这说明这${mentalParamSet.percent30CategoryCount}个维度是企业特别需要企业关注的部分。</c:if>
+			在心理健康的各个因素中，得分处于中等分数的员工占整个团体的多数部分。统计分析结果显示，所选样本员工在6个维度中，低分人数最多的是${mentalParamSet.lowScoreCategories}，而高分人数最多的是${mentalParamSet.highScoreCategories}。如图9所示。
+			<c:if test="${mentalParamSet.percent30CategoryNum} >0}">其中，${mentalParamSet.percent30Categories}的低分人群均超过总有效样本的30%，这说明这${mentalParamSet.percent30CategoryCount}个维度是企业特别需要企业关注的部分。</c:if>
 		</p>
 
 		<h1>二 员工关爱建议</h1>
@@ -115,8 +413,6 @@ body {
 		<p>《从容跨越—自我情绪管理》</p>
 		<p>《我爱我家—团队建设》</p>
 	</div>
-	<script type="text/javascript" src="${base}/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${base}/js/bootstrap.min.js"></script>
 
 </body>
 </html>

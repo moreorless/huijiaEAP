@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -175,7 +176,7 @@ public class CompanyReportModule {
 				}
 			}
 		} // end of for
-		
+
 		/**************************** 开始计算数量 ******************************/
 		currentCommonParameterSet.segmentId = segmentId;
 		currentCommonParameterSet.quizId = quizId;
@@ -251,28 +252,53 @@ public class CompanyReportModule {
 				/ totalUserCount;
 		currentCommonParameterSet.genderMaleRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.genderMaleUserCount > 0)
+			currentCommonParameterSet.chartDataGender.put("男性("
+					+ currentCommonParameterSet.genderMaleRatio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.genderFemaleUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.genderFemaleRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.genderFemaleUserCount > 0)
+			currentCommonParameterSet.chartDataGender.put("女性("
+					+ currentCommonParameterSet.genderFemaleRatio + ")",
+					formatRatio(ratio, precision));
 
 		// 2.年龄构成 ******************************/
 		ratio = currentCommonParameterSet.age0to30UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.age0to30Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.age0to30UserCount > 0)
+			currentCommonParameterSet.chartDataAge.put("30岁以下("
+					+ currentCommonParameterSet.age0to30Ratio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.age31to40UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.age31to40Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.age31to40UserCount > 0)
+			currentCommonParameterSet.chartDataAge.put("31-40岁("
+					+ currentCommonParameterSet.age31to40Ratio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.age41to50UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.age41to50Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.age41to50UserCount > 0)
+			currentCommonParameterSet.chartDataAge.put("41-50岁("
+					+ currentCommonParameterSet.age41to50Ratio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.age51to99UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.age51to99Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.age51to99UserCount > 0)
+			currentCommonParameterSet.chartDataAge.put("50岁以上("
+					+ currentCommonParameterSet.age51to99Ratio + ")",
+					formatRatio(ratio, precision));
+
 		currentCommonParameterSet.ageMaxName = generateAgeMaxName();
 
 		// 3.教育程度构成 ********************/
@@ -280,14 +306,27 @@ public class CompanyReportModule {
 				/ totalUserCount;
 		currentCommonParameterSet.educationDazhuanRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.educationDazhuanUserCount > 0)
+			currentCommonParameterSet.chartDataEducation.put("大专及以下("
+					+ currentCommonParameterSet.educationDazhuanRatio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.educationBenkeUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.educationBenkeRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.educationBenkeUserCount > 0)
+			currentCommonParameterSet.chartDataEducation.put("本科("
+					+ currentCommonParameterSet.educationBenkeRatio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.educationShuoshiUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.educationShuoshiRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.educationShuoshiUserCount > 0)
+			currentCommonParameterSet.chartDataEducation.put("硕士及以上("
+					+ currentCommonParameterSet.educationShuoshiRatio + ")",
+					formatRatio(ratio, precision));
+
 		ratio = (currentCommonParameterSet.educationDazhuanUserCount + currentCommonParameterSet.educationBenkeUserCount)
 				* 1.0 / totalUserCount;
 		currentCommonParameterSet.educationBenkeShuoshiRatio = formatRatio(
@@ -298,6 +337,10 @@ public class CompanyReportModule {
 				/ totalUserCount;
 		currentCommonParameterSet.workage1to3Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.workage1to3UserCount > 0)
+			currentCommonParameterSet.chartDataWorkage.put("1-3年("
+					+ currentCommonParameterSet.workage1to3Ratio + ")",
+					formatRatio(ratio, precision));
 
 		currentCommonParameterSet.workageComment = generateWorkageComment(ratio);// 此样本中，员工普遍工作经验较少,工作1-3年以上的员工接近七成
 
@@ -305,28 +348,54 @@ public class CompanyReportModule {
 				/ totalUserCount;
 		currentCommonParameterSet.workage3to5Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.workage3to5UserCount > 0)
+			currentCommonParameterSet.chartDataWorkage.put("3-5年("
+					+ currentCommonParameterSet.workage3to5Ratio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.workage5to10UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.workage5to10Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.workage5to10UserCount > 0)
+			currentCommonParameterSet.chartDataWorkage.put("5-10年("
+					+ currentCommonParameterSet.workage5to10Ratio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.workage10to99UserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.workage10to99Ratio = formatRatio(ratio * 100,
 				precision) + "%";
+		if (currentCommonParameterSet.workage10to99UserCount > 0)
+			currentCommonParameterSet.chartDataWorkage.put("10年以上("
+					+ currentCommonParameterSet.workage10to99Ratio + ")",
+					formatRatio(ratio, precision));
 
 		// 5．职位状况构成 ****************/
 		ratio = currentCommonParameterSet.jobtitleGeneralUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.jobtitleGeneralRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.jobtitleGeneralUserCount > 0)
+			currentCommonParameterSet.chartDataJobtitle.put("一般员工("
+					+ currentCommonParameterSet.jobtitleGeneralRatio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.jobtitleMiddleUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.jobtitleMiddleRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.jobtitleMiddleUserCount > 0)
+			currentCommonParameterSet.chartDataJobtitle.put("中层管理者("
+					+ currentCommonParameterSet.jobtitleMiddleRatio + ")",
+					formatRatio(ratio, precision));
 		ratio = currentCommonParameterSet.jobtitleSeniorUserCount * 1.0
 				/ totalUserCount;
 		currentCommonParameterSet.jobtitleSeniorRatio = formatRatio(
 				ratio * 100, precision) + "%";
+		if (currentCommonParameterSet.jobtitleSeniorUserCount > 0)
+			currentCommonParameterSet.chartDataJobtitle.put("高层管理者("
+					+ currentCommonParameterSet.jobtitleSeniorRatio + ")",
+					formatRatio(ratio, precision));
+
+		// 图表显示 ****************/
 
 	}
 
@@ -467,26 +536,56 @@ public class CompanyReportModule {
 				/ totalUserCount;
 		currentMentalCheckupParamSet.jiaoChaRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		currentMentalCheckupParamSet.chartDataWholeBar.add(String
+				.valueOf(currentMentalCheckupParamSet.jiaoChaUserCount));
+		if (currentMentalCheckupParamSet.jiaoChaUserCount > 0)
+			currentMentalCheckupParamSet.chartDataWholePie.put("较差("
+					+ currentMentalCheckupParamSet.jiaoChaRatio + ")",
+					formatRatio(ratio, precision));
 
 		ratio = currentMentalCheckupParamSet.buLiangUserCount * 1.0
 				/ totalUserCount;
 		currentMentalCheckupParamSet.buLiangRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		currentMentalCheckupParamSet.chartDataWholeBar.add(String
+				.valueOf(currentMentalCheckupParamSet.buLiangUserCount));
+		if (currentMentalCheckupParamSet.buLiangUserCount > 0)
+			currentMentalCheckupParamSet.chartDataWholePie.put("不良("
+					+ currentMentalCheckupParamSet.buLiangRatio + ")",
+					formatRatio(ratio, precision));
 
 		ratio = currentMentalCheckupParamSet.zhongDengUserCount * 1.0
 				/ totalUserCount;
 		currentMentalCheckupParamSet.zhongDengRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		currentMentalCheckupParamSet.chartDataWholeBar.add(String
+				.valueOf(currentMentalCheckupParamSet.zhongDengUserCount));
+		if (currentMentalCheckupParamSet.zhongDengUserCount > 0)
+			currentMentalCheckupParamSet.chartDataWholePie.put("中等("
+					+ currentMentalCheckupParamSet.zhongDengRatio + ")",
+					formatRatio(ratio, precision));
 
 		ratio = currentMentalCheckupParamSet.jiaoHaoUserCount * 1.0
 				/ totalUserCount;
 		currentMentalCheckupParamSet.jiaoHaoRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		currentMentalCheckupParamSet.chartDataWholeBar.add(String
+				.valueOf(currentMentalCheckupParamSet.jiaoHaoUserCount));
+		if (currentMentalCheckupParamSet.jiaoHaoUserCount > 0)
+			currentMentalCheckupParamSet.chartDataWholePie.put("较好("
+					+ currentMentalCheckupParamSet.jiaoHaoRatio + ")",
+					formatRatio(ratio, precision));
 
 		ratio = currentMentalCheckupParamSet.henHaoUserCount * 1.0
 				/ totalUserCount;
 		currentMentalCheckupParamSet.henHaoRatio = formatRatio(ratio * 100,
 				precision) + "%";
+		currentMentalCheckupParamSet.chartDataWholeBar.add(String
+				.valueOf(currentMentalCheckupParamSet.henHaoUserCount));
+		if (currentMentalCheckupParamSet.henHaoUserCount > 0)
+			currentMentalCheckupParamSet.chartDataWholePie.put("非常好("
+					+ currentMentalCheckupParamSet.henHaoRatio + ")",
+					formatRatio(ratio, precision));
 
 		currentMentalCheckupParamSet.needJingTiRatioUserCount = currentMentalCheckupParamSet.jiaoChaUserCount
 				+ currentMentalCheckupParamSet.buLiangUserCount;
@@ -496,6 +595,16 @@ public class CompanyReportModule {
 				precision) + "%";
 		currentMentalCheckupParamSet.needTiGaoUserCount = currentMentalCheckupParamSet.zhongDengUserCount;
 		currentMentalCheckupParamSet.needTiGaoRatio = currentMentalCheckupParamSet.zhongDengRatio;
+
+		// ------------设置高斯图
+		for (QuizResult result : resultList) {
+			if (result.getScore() < 80 || result.getScore() > 330)
+				continue;
+			int index = (result.getScore() - 80) / 10;
+			long n = currentMentalCheckupParamSet.chartDataWholeGauss
+					.get(index);
+			currentMentalCheckupParamSet.chartDataWholeGauss.set(index, n + 1);
+		}
 
 		/**
 		 * 维度顺序 0: 积极心态 1: 情绪管理 2: 行为表现 3: 生理症状 4: 社会支持 5: 自我防御
@@ -528,10 +637,13 @@ public class CompanyReportModule {
 
 		int[] lowScoreCategories = { 0, 0, 0, 0, 0, 0 };
 		int[] highScoreCategories = { 0, 0, 0, 0, 0, 0 };
+		int[] totalScoreCategories = { 0, 0, 0, 0, 0, 0 };
 
 		for (QuizResult result : resultList) {
 			Map<String, Integer> scoreMap = result.getScoreMap();
 			for (int i = 0; i < 6; i++) {
+				totalScoreCategories[i] += scoreMap.get(Integer
+						.toString(categoryIds[i]));
 				if (scoreMap.get(Integer.toString(categoryIds[i])) < categoryLowBorder[i])
 					lowScoreCategories[i]++;
 				if (scoreMap.get(Integer.toString(categoryIds[i])) > categoryHighBorder[i])
@@ -539,18 +651,29 @@ public class CompanyReportModule {
 			}
 		}
 
+		for (int i = 0; i < 6; i++) {
+			currentMentalCheckupParamSet.chartDataCategoryAverage
+					.add(formatRatio(
+							(totalScoreCategories[i] * 1.0 / resultList.size()),
+							1));
+			currentMentalCheckupParamSet.chartDataCategoryNumLow
+					.add((long) lowScoreCategories[i]);
+			currentMentalCheckupParamSet.chartDataCategoryNumHigh
+					.add((long) highScoreCategories[i]);
+		}
+
 		int lowestCategoryId = 0;
 		int highestCategoryId = 0;
-		int lowestScore = 40;
-		int highestScore = 0;
+		int lowestScoreNum = lowScoreCategories[0];
+		int highestScoreNum = highScoreCategories[0];
 		for (int i = 0; i < 6; i++) {
-			if (lowScoreCategories[i] < lowestScore) {
+			if (lowScoreCategories[i] > lowestScoreNum) {
 				lowestCategoryId = i;
-				lowestScore = lowScoreCategories[i];
+				lowestScoreNum = lowScoreCategories[i];
 			}
-			if (highScoreCategories[i] < highestScore) {
+			if (highScoreCategories[i] > highestScoreNum) {
 				highestCategoryId = i;
-				highestScore = highScoreCategories[i];
+				highestScoreNum = highScoreCategories[i];
 			}
 		}
 		currentMentalCheckupParamSet.lowScoreCategories = categoryNames[lowestCategoryId]

@@ -1,5 +1,11 @@
 package com.huijia.eap.quiz.data.report;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 问卷1的私有变量集合
  * 
@@ -49,8 +55,16 @@ public class TeamReportMentalCheckupParamSet {
 	public String percent30Categories; // [行为表现维度]的低分人群均超过总有效样本的30%，
 	public String percent30CategoryCount; // 这说明这[一]个维度是企业特别需要企业关注的部分。
 	public int percent30CategoryNum; // 用于判断界面要不要显示上一句话
-	
-	public void init(){
+
+	// 图表使用
+	public Map<String, String> chartDataWholePie = new HashMap<String, String>();
+	public List<String> chartDataWholeBar = new LinkedList<String>();
+	public List<Long> chartDataWholeGauss = new ArrayList<Long>();
+	public List<String> chartDataCategoryAverage = new ArrayList<String>();
+	public List<Long> chartDataCategoryNumLow = new ArrayList<Long>();
+	public List<Long> chartDataCategoryNumHigh = new ArrayList<Long>();
+
+	public void init() {
 		wholeScore = 0.0;// 整体心理健康得分
 		jiaoChaUserCount = 0; // 心理体检结果显示，[1]名员工心理健康水平较差
 		jiaoChaLowestScore = 0; // 其中最低得分为[133]分
@@ -74,6 +88,15 @@ public class TeamReportMentalCheckupParamSet {
 		highScoreCategories = ""; // 所选样本员工在6个维度都是低分人数多的是行为表现维度，而高分人数最多的是[积极心态维度]
 		percent30Categories = ""; // [行为表现维度]的低分人群均超过总有效样本的30%，
 		percent30CategoryCount = ""; // 这说明这[一]个维度是企业特别需要企业关注的部分。
+
+		chartDataWholePie = new HashMap<String, String>();
+		chartDataWholeBar = new LinkedList<String>();
+		chartDataWholeGauss = new ArrayList<Long>();
+		for (int i = 0; i < 25; i++)
+			chartDataWholeGauss.add((long) 0);
+		chartDataCategoryAverage = new ArrayList<String>();
+		chartDataCategoryNumLow = new ArrayList<Long>();
+		chartDataCategoryNumHigh = new ArrayList<Long>();
 	}
 
 	public double getWholeScore() {
@@ -234,6 +257,55 @@ public class TeamReportMentalCheckupParamSet {
 
 	public void setPercent30CategoryNum(int percent30CategoryNum) {
 		this.percent30CategoryNum = percent30CategoryNum;
+	}
+
+	public Map<String, String> getChartDataWholePie() {
+		return chartDataWholePie;
+	}
+
+	public void setChartDataWholePie(Map<String, String> chartDataWholePie) {
+		this.chartDataWholePie = chartDataWholePie;
+	}
+
+	public List<String> getCharDataWholeBar() {
+		return chartDataWholeBar;
+	}
+
+	public void setCharDataWholeBar(List<String> charDataWholeBar) {
+		this.chartDataWholeBar = charDataWholeBar;
+	}
+
+	public List<Long> getCharDataWholeGauss() {
+		return chartDataWholeGauss;
+	}
+
+	public void setCharDataWholeGauss(List<Long> charDataWholeGauss) {
+		this.chartDataWholeGauss = charDataWholeGauss;
+	}
+
+	public List<String> getChartDataCategoryAverage() {
+		return chartDataCategoryAverage;
+	}
+
+	public void setChartDataCategoryAverage(
+			List<String> chartDataCategoryAverage) {
+		this.chartDataCategoryAverage = chartDataCategoryAverage;
+	}
+
+	public List<Long> getChartDataCategoryNumLow() {
+		return chartDataCategoryNumLow;
+	}
+
+	public void setChartDataCategoryNumLow(List<Long> chartDataCategoryNumLow) {
+		this.chartDataCategoryNumLow = chartDataCategoryNumLow;
+	}
+
+	public List<Long> getChartDataCategoryNumHigh() {
+		return chartDataCategoryNumHigh;
+	}
+
+	public void setChartDataCategoryNumHigh(List<Long> chartDataCategoryNumHigh) {
+		this.chartDataCategoryNumHigh = chartDataCategoryNumHigh;
 	}
 
 }
