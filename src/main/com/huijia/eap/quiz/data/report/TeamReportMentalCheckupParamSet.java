@@ -63,6 +63,7 @@ public class TeamReportMentalCheckupParamSet {
 	public List<String> chartDataCategoryAverage = new ArrayList<String>();
 	public List<Long> chartDataCategoryNumLow = new ArrayList<Long>();
 	public List<Long> chartDataCategoryNumHigh = new ArrayList<Long>();
+	public List<Long> chartDataCategoryNumMiddle = new ArrayList<Long>();
 
 	public void init() {
 		wholeScore = 0.0;// 整体心理健康得分
@@ -97,6 +98,7 @@ public class TeamReportMentalCheckupParamSet {
 		chartDataCategoryAverage = new ArrayList<String>();
 		chartDataCategoryNumLow = new ArrayList<Long>();
 		chartDataCategoryNumHigh = new ArrayList<Long>();
+		chartDataCategoryNumMiddle = new ArrayList<Long>();
 	}
 
 	public double getWholeScore() {
@@ -306,6 +308,14 @@ public class TeamReportMentalCheckupParamSet {
 
 	public void setChartDataCategoryNumHigh(List<Long> chartDataCategoryNumHigh) {
 		this.chartDataCategoryNumHigh = chartDataCategoryNumHigh;
+	}
+
+	public List<Long> getChartDataCategoryNumMiddle() {
+		return chartDataCategoryNumMiddle;
+	}
+
+	public void setChartDataCategoryNumMiddle(List<Long> chartDataCategoryNumMiddle) {
+		this.chartDataCategoryNumMiddle = chartDataCategoryNumMiddle;
 	}
 
 }

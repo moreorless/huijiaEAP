@@ -272,17 +272,17 @@ body {
 </script>
 
 		<p>
-			上图中，淡紫色区域为高分区，淡红色区域为低分区，淡蓝色区域为中分区，并显示了各维度的高低分临界值。总体上心理健康的六个维度得到了均衡发展，各维度的得分都处于中等及以上的程度。
+			上图中，淡紫色区域为高分区，淡红色区域为低分区，淡蓝色区域为中分区，并显示了各维度的高低分临界值。<font color="red">总体上心理健康的六个维度得到了均衡发展，各维度的得分都处于中等及以上的程度。</font>
 		</p>
 		<h4>（2）各维度得分高低程度的人数比较</h4>
 		<p>
 			六个维度中，社会支持是支持员工心理健康的主要因素，自我防御是影响员工心理健康水平的主要因素，生理症状是反映员工心理健康状况的重要指标，而积极心态、情绪管理和行为表现则是从“知、情、意”的三个角度全面评价当前员工的心理健康水平。
 		</p>
 		<p>维度高低分的具体人数如图9所示。</p>
-		
+
 		<div id="mental_checkup_chart_category_num"
 			style="height: 500px; width: 800px"></div>
-<script type="text/javascript">
+		<script type="text/javascript">
 (function(){
 	var chart = echarts.init(document
 			.getElementById('mental_checkup_chart_category_num'));
@@ -291,8 +291,9 @@ body {
 	//var datas_high = [3,5,6,3,5,7];
 	var datas_low = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryNumLow}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
 	var datas_high = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryNumHigh}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
+	var datas_middle = [<c:forEach var="item" items="${mentalParamSet.chartDataCategoryNumMiddle}" varStatus="status">[<c:out value = "${item}"/>]<c:if test="${!status.last}">,</c:if></c:forEach>];
 	
-	var datas = datas_low.concat(datas_high);
+	var datas = datas_low.concat(datas_high).concat(datas_middle);
 	var max = datas[0];
 	for(var i=1;i<datas.length;i++){ 
 	  if(max<datas[i])max=datas[i];
@@ -310,10 +311,10 @@ body {
 		    },
 		    renderAsImage:true,
 		    legend: {
-		        data:['低分段人数', '高分段人数']
+		        data:['低分段人数','中分段人数', '高分段人数']
 		    },
-		    //color:['#21329d', '#959595','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
-		    color:['#FF7F50','#87CEFA','#E394E0','#21329d'],
+		    color:['#959595','#21329d', '#FF7F50','#ffcc3e', '#9bc45a','#dedede', '#9edfff', 'cc99cc'],
+		    //color:['#FF7F50','#87CEFA','#E394E0','#21329d'],
 		    //color:['#ff7H50'],
 		    xAxis : [
 		        {
@@ -339,20 +340,29 @@ body {
 		            data:datas_low,
 		        },
 		        {
+		            name:'中分段人数',
+		            type:'bar',
+		            barWidth: 40,
+		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
+		            data:datas_middle,
+		        },
+		        {
 		            name:'高分段人数',
 		            type:'bar',
 		            barWidth: 40,
 		            itemStyle : { normal: {label : {show: true, position: 'top'}}},
 		            data:datas_high,
 		        }
+		        
 		    ]
 		};
 	chart.setOption(option);
 })();
 </script>
 		<p>
-			在心理健康的各个因素中，得分处于中等分数的员工占整个团体的多数部分。统计分析结果显示，所选样本员工在6个维度中，低分人数最多的是${mentalParamSet.lowScoreCategories}，而高分人数最多的是${mentalParamSet.highScoreCategories}。如图9所示。
-			<c:if test="${mentalParamSet.percent30CategoryNum} >0}">其中，${mentalParamSet.percent30Categories}的低分人群均超过总有效样本的30%，这说明这${mentalParamSet.percent30CategoryCount}个维度是企业特别需要企业关注的部分。</c:if>
+			<font color="red">在心理健康的各个因素中，得分处于中等分数的员工占整个团体的多数部分。统计分析结果显示，所选样本员工在6个维度中，低分人数最多的是${mentalParamSet.lowScoreCategories}，而高分人数最多的是${mentalParamSet.highScoreCategories}。如图9所示。
+				<c:if test="${mentalParamSet.percent30CategoryNum} >0}">其中，${mentalParamSet.percent30Categories}的低分人群均超过总有效样本的30%，这说明这${mentalParamSet.percent30CategoryCount}个维度是企业特别需要企业关注的部分。</c:if>
+			</font>
 		</p>
 
 		<h1>二 员工关爱建议</h1>

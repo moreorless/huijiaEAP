@@ -637,6 +637,7 @@ public class CompanyReportModule {
 
 		int[] lowScoreCategories = { 0, 0, 0, 0, 0, 0 };
 		int[] highScoreCategories = { 0, 0, 0, 0, 0, 0 };
+		int[] middleScoreCategories = { 0, 0, 0, 0, 0, 0 };
 		int[] totalScoreCategories = { 0, 0, 0, 0, 0, 0 };
 
 		for (QuizResult result : resultList) {
@@ -646,8 +647,10 @@ public class CompanyReportModule {
 						.toString(categoryIds[i]));
 				if (scoreMap.get(Integer.toString(categoryIds[i])) < categoryLowBorder[i])
 					lowScoreCategories[i]++;
-				if (scoreMap.get(Integer.toString(categoryIds[i])) > categoryHighBorder[i])
+				else if (scoreMap.get(Integer.toString(categoryIds[i])) > categoryHighBorder[i])
 					highScoreCategories[i]++;
+				else
+					middleScoreCategories[i]++;
 			}
 		}
 
@@ -660,6 +663,8 @@ public class CompanyReportModule {
 					.add((long) lowScoreCategories[i]);
 			currentMentalCheckupParamSet.chartDataCategoryNumHigh
 					.add((long) highScoreCategories[i]);
+			currentMentalCheckupParamSet.chartDataCategoryNumMiddle
+					.add((long) middleScoreCategories[i]);
 		}
 
 		int lowestCategoryId = 0;
@@ -2385,7 +2390,7 @@ public class CompanyReportModule {
 
 		averageScoreSatisfaction = totalScoreSatisfaction * 1.0 * 20
 				/ resultList.size() / categoryNameList.size();
-		averageScoreLoyalty = 1.0 / 17 / 50 * 27;
+		averageScoreLoyalty = 1.0 / 17 / 50 * 50;
 
 		for (int i = 0; i < categoryNameList.size(); i++) {
 			String _name = categoryNameList.get(i);
