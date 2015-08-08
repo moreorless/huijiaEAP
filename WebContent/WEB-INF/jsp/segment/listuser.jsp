@@ -40,7 +40,7 @@
 						<td>${user.realname }</td>
 						<td>${user.email }</td>
 						<td>${user.phone }</td>
-						<td><a href="#">个人报告</a></td>
+						<td><a href="${base}/segment/personreport?userId=${user.userId}">个人报告</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

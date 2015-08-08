@@ -3,8 +3,12 @@ package com.huijia.eap.quiz.module;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,10 +27,12 @@ import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.commons.mvc.Pager;
 import com.huijia.eap.quiz.data.Company;
 import com.huijia.eap.quiz.data.Quiz;
+import com.huijia.eap.quiz.data.QuizAnswerLog;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.data.UserTemp;
 import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.QuizAnswerLogService;
 import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 import com.huijia.eap.quiz.service.SegmentQuizRelationService;
@@ -56,6 +62,9 @@ public class SegmentModule {
 
 	@Inject
 	private QuizResultService quizResultService;
+	
+	@Inject
+	private QuizAnswerLogService quizAnswerLogService;
 
 	@Inject
 	private UserService userService;
@@ -128,6 +137,32 @@ public class SegmentModule {
 		request.setAttribute("segment", segment);
 		request.setAttribute("company", company);
 	}
+	
+	@At
+	@Ok("jsp:jsp.segment.personreport")
+	public void personreport(HttpServletRequest request, @Param("userId") long userId) {
+		List<QuizAnswerLog> answerlogList = quizAnswerLogService.getHistory(userId);
+		
+		List<Quiz> quizList = new ArrayList<>();
+		Set<Long> quizIdSet = new HashSet<>();
+		if(answerlogList != null){
+			Iterator<QuizAnswerLog> iter = answerlogList.iterator();
+			while(iter.hasNext()){
+				long quizId = iter.next().getQuizId();
+				if(quizIdSet.contains(quizId)){
+					continue;
+				}
+				
+				quizIdSet.add(quizId);
+				Quiz quiz = quizService.fetch(quizId);
+				quizList.add(quiz);
+			}
+		}
+		request.setAttribute("quizlist", quizList);
+		User user = userService.fetch(userId);
+		request.setAttribute("user", user);
+	}
+	
 
 	@At
 	@Ok("jsp:jsp.segment.edit")

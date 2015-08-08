@@ -746,9 +746,16 @@ public class QuizModule {
 	@At
 	@Ok("raw")
 	public File reportexport(HttpServletRequest request, HttpServletResponse response, Ioc ioc,
-			@Param("quizId") long quizId) throws IOException {
+			@Param("quizId") long quizId, @Param("userId") long userId) throws IOException {
 
-		User user = Auths.getUser(request);
+		User user = null;
+		if(userId > 0){		// 生成指定用户的报表
+			user = userService.fetch(userId);
+		}
+		else{
+			user = Auths.getUser(request);
+		}
+		
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 
 		String ctxPath = request.getContextPath();
@@ -761,7 +768,7 @@ public class QuizModule {
 		String url = rootUrl + "/report/person/" + reporttpl + "?quizId=" + quizId + "&userId=" + user.getUserId();
 		String filePath = GlobalConfig.getContextValueAs(String.class, "web.dir")
 				+ File.separator + "download" + File.separator + "report_"
-				+ quizId + "_" + user.getUserId() + File.separator + quiz.getName() + ".pdf";
+				+ quizId + "_" + user.getUserId() + File.separator + quiz.getName() + "_" + user.getRealname() + ".pdf";
 		File reportFile = PdfUtil.renderPdf(url, filePath);
 		return reportFile;
 	}

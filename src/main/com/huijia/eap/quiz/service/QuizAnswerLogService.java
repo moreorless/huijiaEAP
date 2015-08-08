@@ -26,6 +26,16 @@ public class QuizAnswerLogService extends TblIdsEntityService<QuizAnswerLog>{
 		return list;
 	}
 	
+	/**
+	 * 根据用户id获取答题历史记录
+	 * @param userId
+	 * @return
+	 */
+	public List<QuizAnswerLog> getHistory(long userId){
+		List<QuizAnswerLog> list = this.query(Cnd.where("userId", "=", userId), null);
+		return list;
+	}
+	
 	public int deleteByQuizId(long quizId){
 		return this.dao().clear(this.getEntityClass(), Cnd.where("quizId", "=", quizId));
 	}
