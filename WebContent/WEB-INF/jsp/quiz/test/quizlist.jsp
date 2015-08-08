@@ -31,10 +31,19 @@
 		</div>
 		<div class="col-md-2">
 			<div style="margin-bottom: 10px;">
-			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-primary" role="button">
+			<c:if test="${quiz.tag == 'emotion_management'}">
+			<a href="${base}/quiz/forcedChoiceTest?quizId=${quiz.id}" class="btn btn-primary" role="button">
 				<c:if test="${fn:length(quizHistoryMap[quiz.id]) == 0}">开始测试</c:if>
 				<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">重新测试</c:if>
 				</a>
+			</c:if>
+			<c:if test="${quiz.tag != 'emotion_management'}">
+			<a href="${base}/quiz/test?quizId=${quiz.id}" class="btn btn-primary" role="button">
+				<c:if test="${fn:length(quizHistoryMap[quiz.id]) == 0}">开始测试</c:if>
+				<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">重新测试</c:if>
+				</a>	
+			</c:if>
+			
 			</div>
 			<c:if test="${fn:length(quizHistoryMap[quiz.id]) > 0}">
 			<div style="margin-bottom: 10px;">

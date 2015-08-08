@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -628,6 +630,24 @@ public class QuizModule {
 		}
 		request.setAttribute("quizlist", quizList);
 	}
+	
+	/**
+	 * 迫选题答题页面
+	 * @param request
+	 * @param quizId
+	 */
+	@At
+	@Ok("jsp:jsp.quiz.test.forced_test")
+	public void forcedChoiceTest(HttpServletRequest request, @Param("quizId") long quizId){
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+		request.setAttribute("quiz", quiz);
+		
+		Set<Long> groupIdSet = new HashSet<>();
+		for(QuizItem item : quiz.getItems()){
+			groupIdSet.add(item.getGroupId());
+		}
+		request.setAttribute("groupSize", groupIdSet.size());
+	}
 
 	/**
 	 * 提交答案
@@ -696,6 +716,8 @@ public class QuizModule {
 		return new JspView("jsp.quiz.test.answerok");
 	}
 
+
+	
 	/**
 	 * 报表页面
 	 */

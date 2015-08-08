@@ -99,7 +99,7 @@ public class User extends BaseTimedObject implements Serializable {
 	// 年龄
 	@Validations(rules = {
 			@ValidateType(type = Type.required, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
-			@ValidateType(type = Type.min, parameters = { "10" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
+			@ValidateType(type = Type.min, parameters = { "1" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth"),
 			@ValidateType(type = Type.max, parameters = { "100" }, errorMsg = "user.add.age.span", resource = true, bundle = "auth") })
 	@Column
 	private long age;

@@ -18,13 +18,14 @@
 <c:import url="/includes/header_huijia.jsp"></c:import>
 
 <div class="container quiz_wrapper">
-	<p>您已完成测试题《${quiz.name}》的作答。您可以点击下面的“查看报告”按钮查看测试结果。</p>
-	<p style="text-align:center">
-		<a href="${base}/quiz/enquizlist" class="btn primary btn-lg btn-block"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
-	</p>
-	<p style="text-align:center">
-		<a href="${base}/quiz/reportexport?quizId=${param.quizId}" target="_blank" class="btn primary btn-lg btn-block" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;查看报告</a>
-	</p>
+	<h3 style="color:green;">恭喜您已完成答题。</h3>
+	<p>您可以点击下面的“查看报告”按钮查看测试结果。</p>
+	<div style="text-align:center">
+		<a href="${base}/quiz/enquizlist" class="btn primary btn-lg"><img src="${base}/images/quiz/go_home.png" />&nbsp;返回首页</a>
+	</div>
+	<div style="text-align:center">
+		<a href="${base}/quiz/reportexport?quizId=${param.quizId}" target="_blank" class="btn primary btn-lg" id="btn-export" target="_blank"><img src="${base}/images/quiz/pdf.png" />&nbsp;查看报告</a>
+	</div>
             
 </div>
 

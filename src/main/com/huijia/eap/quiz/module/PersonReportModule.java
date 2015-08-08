@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.json.Json;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
@@ -25,9 +26,12 @@ import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizConstant;
 import com.huijia.eap.quiz.data.QuizEvaluation;
+import com.huijia.eap.quiz.data.QuizItem;
+import com.huijia.eap.quiz.data.QuizItemOption;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
+import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
 import com.huijia.eap.quiz.service.QuizService;
 
@@ -48,6 +52,9 @@ public class PersonReportModule {
 	
 	@Inject
 	private UserService userService;
+	
+	@Inject
+	private QuizItemService quizItemService;
 	
 	@Inject
 	private QuizResultService quizResultService;
@@ -156,6 +163,67 @@ public class PersonReportModule {
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		preProcess(request, user, quiz);
 	}
+	
+	/**
+	 * 儿童归因形态风格分析
+	 */
+	@At("/child_attribution")
+	@Ok("jsp:jsp.report.person.child_attribution")
+	public void childAttribution(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId){
+		User user = userService.fetch(userId);
+		Quiz quiz = QuizCache.me().getQuiz(quizId);
+		preProcess(request, user, quiz);
+		
+		QuizResult result = quizResultService.getQuizResult(userId, quizId).get(0);
+		String answerStr = result.getAnswer();
+		Map<String, String> answerMap = (Map<String, String>)Json.fromJson(answerStr);
+		
+		double pmb = 0.0, pmg = 0.0, psb = 0.0, psg = 0.0, pvb = 0.0, pvg = 0.0;
+		List<QuizCategory> categoryList = quizCategoryService.getCategoryList(quizId);
+		for(String quizItemId : answerMap.keySet()){
+			QuizItem quizItem = quizItemService.fetch(Long.parseLong(quizItemId));
+			String answer = answerMap.get(quizItemId);
+			QuizItemOption option = quizItem.getOption(answer);
+			switch (option.getCategoryName()) {
+			case "PMB":
+				pmb += option.getValue();
+				break;
+			case "PMG":
+				pmg += option.getValue();
+				break;
+			case "PSB":
+				psb += option.getValue();
+				break;
+			case "PSG":
+				psg += option.getValue();
+				break;
+			case "PVB":
+				pvb += option.getValue();
+				break;
+			case "PVG":
+				pvg += option.getValue();
+				break;
+			default:
+				break;
+			}
+		}
+		
+		double scoreB = pmb + pvb + psb;
+		double scoreG = pmg + pvg + psg;
+		double scoreG_B = scoreG - scoreB;
+		request.setAttribute("PMB", pmb);
+		request.setAttribute("PVB", pvb);
+		request.setAttribute("PSB", psb);
+		request.setAttribute("PMG", pmg);
+		request.setAttribute("PVG", pvg);
+		request.setAttribute("PSG", psg);
+		request.setAttribute("scoreB", scoreB);
+		request.setAttribute("scoreG", scoreG);
+		request.setAttribute("scoreG_B", scoreG_B);
+		request.setAttribute("HoB", pmb + pvb);
+		
+	}
+	
 	
 	/**
 	 * 预处理报告中使用的一些通用数据，如姓名、年龄等
