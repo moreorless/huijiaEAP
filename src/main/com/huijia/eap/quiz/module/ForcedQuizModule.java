@@ -29,11 +29,13 @@ import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.quiz.data.AnswerBean;
 import com.huijia.eap.quiz.data.NormResultBean;
 import com.huijia.eap.quiz.data.NormalScoreConfig;
+import com.huijia.eap.quiz.data.QuizAnswerLog;
 import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizResult;
 import com.huijia.eap.quiz.service.ForcedQuizService;
 import com.huijia.eap.quiz.service.NormalScoreConfigService;
+import com.huijia.eap.quiz.service.QuizAnswerLogService;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
@@ -69,6 +71,9 @@ public class ForcedQuizModule {
 	
 	@Inject
 	private ForcedQuizService forcedQuizService;
+	
+	@Inject
+	private QuizAnswerLogService quizAnswerLogService;
 	
 	/**
 	 * 提交答案(迫选题)
@@ -189,6 +194,8 @@ public class ForcedQuizModule {
 		// 删除历史数据
 		quizResultService.deleteByX(user.getUserId(), quizId);
 		
+		
+		long currentTime = System.currentTimeMillis();
 		// 存储计算结果 (存入quiz_result表)
 		QuizResult quizResult = new QuizResult();
 		quizResult.setQuizId(quizId);
@@ -198,8 +205,15 @@ public class ForcedQuizModule {
 		quizResult.setSegmentId(user.getSegmentId());
 		quizResult.setAnswer(answerJson);
 		quizResult.setScoreJson(Json.toJson(categoryScore));
-		quizResult.setTimestamp(System.currentTimeMillis());
+		quizResult.setTimestamp(currentTime);
 		quizResultService.insert(quizResult);
+		
+		QuizAnswerLog history = new QuizAnswerLog();
+		history.setQuizId(quizId);
+		history.setUserId(user.getUserId());
+		history.setCompanyId(user.getCompanyId());
+		history.setTimestamp(currentTime);
+		quizAnswerLogService.insert(history);
 	}
 	
 	@At
