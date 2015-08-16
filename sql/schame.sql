@@ -183,12 +183,12 @@ CREATE TABLE `quiz_result` (
 	`quizid` INT(11) NOT NULL COMMENT '试卷id',
 	`timestamp` BIGINT(20) NOT NULL COMMENT '答题时间',
 	`answer` Text NOT NULL COMMENT '答案明细',
-	`lieScore` INT(10) NOT NULL COMMENT '总分',
+	`lieScore` INT(10) COMMENT '总分',
 	`score` INT(10) NOT NULL COMMENT '总分',
-	`scoreJson` VARCHAR(512) NOT NULL COMMENT '各类型得分',
+	`scoreJson` Text NOT NULL COMMENT '各类型得分',
 	`valid` TINYINT(1) NOT NULL COMMENT '是否有效',
-	`categoryId` INT(10) NOT NULL COMMENT '评定类型id',
-	`categoryName` VARCHAR(128) NOT NULL COMMENT '评定类型名称'
+	`categoryId` INT(10) COMMENT '评定类型id',
+	`categoryName` VARCHAR(128) COMMENT '评定类型名称'
 )
 COMMENT='测试结果'
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -203,6 +203,16 @@ CREATE TABLE `quiz_answer_log` (
 COMMENT='答题记录'
 ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS `quiz_normal_config`;
+CREATE TABLE `quiz_normal_config` (
+	`categoryName` VARCHAR(256) NOT NULL,
+	`averageScore` DOUBLE NOT NULL,
+	`sd` DOUBLE NOT NULL
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
+
 # Dumping structure for table sys_tblids
 DROP TABLE IF EXISTS `sys_tblids`;
 CREATE TABLE IF NOT EXISTS `sys_tblids` (
@@ -216,3 +226,21 @@ CREATE TABLE IF NOT EXISTS `sys_tblids` (
 # admin / admin
 INSERT INTO auth_user VALUES (0,'admin','超级管理员','d033e22ae348aeb5660fc2140aec35850c4da997',0,NULL,NULL,NULL,1,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0);
 INSERT INTO sys_tblids VALUES ('auth_user', 1);
+
+# 常模得分数据
+INSERT INTO quiz_normal_config VALUES ('自我情绪感知', 7.0000, 0.943310658);
+INSERT INTO quiz_normal_config VALUES ('他人情绪感知', 6.9841, 0.727639204);
+INSERT INTO quiz_normal_config VALUES ('稳定性', 6.4286, 0.984126984);
+INSERT INTO quiz_normal_config VALUES ('控制力', 6.6667, 1.233560091);
+INSERT INTO quiz_normal_config VALUES ('自我激励', 6.9046, 1.723356009);
+INSERT INTO quiz_normal_config VALUES ('表达', 6.8175, 2.098765432);
+INSERT INTO quiz_normal_config VALUES ('适应力', 6.3333, 1.287981859);
+INSERT INTO quiz_normal_config VALUES ('感染力', 5.9524, 2.099773243);
+INSERT INTO quiz_normal_config VALUES ('问题解决', 6.6250, 1.760416667);
+		
+		
+		
+	
+		
+		
+		

@@ -1,12 +1,12 @@
-// 迫选后的各题目得分
-var forcedScore = {}
 
 var ForchChoise = {
 	currentPageAnswer : {},
 	judge : function(){
-		if(!this.answerAll()) return;  // 若未答完题，返回
+		if(!this.answerAll()) {
+			return;  // 若未答完题，返回
+		}
 		
-
+		// 进入迫选模式
 
 
 	},
@@ -20,8 +20,6 @@ var ForchChoise = {
 					_answered = true;
 					var	qtId = $(this).attr('question');
 					
-					// for debug
-					forcedScore[qtId] = $(this).attr('score');
 					ForchChoise.currentPageAnswer[qtId] = $(this).attr('answer');
 					return false;
 				}
