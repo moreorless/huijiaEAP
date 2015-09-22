@@ -65,4 +65,17 @@ public class QuizCategoryService extends TblIdsEntityService<QuizCategory> {
 				.and("name", "<>", "总分"), null);
 		return list;
 	}
+	
+	/**
+	 * 根据父维度id获取维度列表
+	 * @param quizId
+	 * @param parentLevel
+	 * @return
+	 */
+	public List<QuizCategory> getBypLevel(long quizId, int parentLevel){
+		List<QuizCategory> list = super.query(Cnd.where("quizId", "=", quizId).and("parentid", "=", parentLevel)
+				.and("name", "<>", "总分"), null);
+		return list;
+	}
+	
 }

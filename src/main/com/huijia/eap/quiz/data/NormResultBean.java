@@ -28,9 +28,20 @@ public class NormResultBean {
 	private int averageScore;
 	
 	/**
+	 * 常模均分
+	 */
+	private int normalAver;
+	
+	/**
 	 * 常模得分
 	 */
 	private int normalScore;
+	
+	
+	/**
+	 *倾向指数(1 - 5)
+	 */
+	private int index;
 	
 	/**
 	 * 总体标准差
@@ -99,11 +110,29 @@ public class NormResultBean {
 		this.originalAver = originalAver;
 	}
 
+	
+	public int getNormalAver() {
+		return normalAver;
+	}
+
+	public void setNormalAver(int normalAver) {
+		this.normalAver = normalAver;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	@Override
 	public String toString(){
 		return "维度 id " + categoryId + "\t 名称 : " + categoryName
-				+ "\t原始平均分=" + originalAver + "\t总体标准差=" + varp
+				+ "\t原始平均分=" + originalAver + "\t常模均分=" + normalAver + "\t总体标准差=" + varp + "\t倾向指数=" + index
 				+ "\t累计概率值 =" + normdist + "\t得分=" + averageScore + "\t常模得分=" + normalScore;
 	}
 	
+
 }

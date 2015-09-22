@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.module;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,9 @@ import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.quiz.cache.QuizCache;
+import com.huijia.eap.quiz.data.EmotionFeatureBean;
+import com.huijia.eap.quiz.data.NormResultBean;
+import com.huijia.eap.quiz.data.NormalScoreConfig;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizConstant;
@@ -29,6 +33,8 @@ import com.huijia.eap.quiz.data.QuizEvaluation;
 import com.huijia.eap.quiz.data.QuizItem;
 import com.huijia.eap.quiz.data.QuizItemOption;
 import com.huijia.eap.quiz.data.QuizResult;
+import com.huijia.eap.quiz.service.ForcedQuizService;
+import com.huijia.eap.quiz.service.NormalScoreConfigService;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizEvaluationService;
 import com.huijia.eap.quiz.service.QuizItemService;
@@ -64,6 +70,11 @@ public class PersonReportModule {
 	
 	@Inject
 	private QuizEvaluationService quizEvaluationService;
+	
+	@Inject
+	private ForcedQuizService forcedQuizService;
+	@Inject
+	private NormalScoreConfigService normalScoreConfigService;
 	/**
 	 * 个人心理分析报告
 	 */
@@ -162,6 +173,65 @@ public class PersonReportModule {
 		User user = userService.fetch(userId);
 		Quiz quiz = QuizCache.me().getQuiz(quizId);
 		preProcess(request, user, quiz);
+		
+		List<NormResultBean> resultList = forcedQuizService.getAnswerResult(userId, quizId);
+		
+		// 计算情绪管理倾向指数 和 一级维度得分
+		double emotionIndexSum = 0;
+		Map<Long, NormResultBean> resultMap = new HashMap<Long, NormResultBean>();
+		for(NormResultBean rBean : resultList){
+			resultMap.put(rBean.getCategoryId(), rBean);
+			emotionIndexSum += rBean.getIndex();
+		}
+		int emotionIndex = (int)Math.round(emotionIndexSum / resultList.size());
+		request.setAttribute("emotionIndex", emotionIndex);
+		
+		List<EmotionFeatureBean> featureList = new ArrayList<>();
+		
+		// 常模得分配置
+		List<NormalScoreConfig> normalConfigList = normalScoreConfigService.getConfigList();
+		// to Map
+		Map<String, NormalScoreConfig> normalConfigMap = new HashMap<>();
+		for(NormalScoreConfig _config : normalConfigList){
+			normalConfigMap.put(_config.getCategoryName(), _config);
+		}
+		
+		// 获取试题的一级维度
+		List<QuizCategory> categoryLevel1 = quizCategoryService.getBypLevel(quizId, 0);
+		for(QuizCategory cateL1 : categoryLevel1){
+			
+			double _averLevel1 = 0;  // 一级维度得分均值
+			double _totalLevel1 = 0;
+			
+			double _normalAverLevel1 = 0;   // 常模均分
+			double _normalTotalLevel1 = 0;
+			// 获取二级维度
+			List<QuizCategory> categoryLevel2 = quizCategoryService.getBypLevel(quizId, cateL1.getId());
+			for(QuizCategory cateL2 : categoryLevel2){
+				NormResultBean rBean = resultMap.get((long)cateL2.getId());
+				_totalLevel1 += rBean.getAverageScore();
+				
+				String _cateName = cateL2.getName();
+				double _normalAver = normalConfigMap.get(_cateName).getAverageScore();
+				_normalTotalLevel1 += _normalAver;
+			}
+			_averLevel1 = _totalLevel1 / categoryLevel2.size();
+			_normalAverLevel1 = _normalTotalLevel1 / categoryLevel2.size();
+			
+			EmotionFeatureBean feature = new EmotionFeatureBean();
+			feature.setCategoryId(cateL1.getId());
+			feature.setCategoryName(cateL1.getName());
+			feature.setAverageScore(_averLevel1);
+			feature.setNormalScore(_normalAverLevel1);
+			featureList.add(feature);
+		}
+		
+		
+		request.setAttribute("featureList", featureList);
+		request.setAttribute("anwerResultList", resultList);
+		
+		
+		
 	}
 	
 	/**

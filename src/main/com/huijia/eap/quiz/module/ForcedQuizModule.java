@@ -166,6 +166,24 @@ public class ForcedQuizModule {
 				logger.error("常模数据未配置， 维度 " + category.getName());
 				continue;
 			}
+			
+			// 计算该维度的倾向指数
+			// 计算方法 1分(<=2各标准差) 2分(<=1个标准差) 3分(正负1个标准差) 4分(>=1个标准差) 5分(>=2个标准差)
+			int level = 0;
+			double dValue = _avg - _config.getAverageScore(); 
+			if(dValue <= -2 * _config.getSd()){
+				level = 1;
+			}else if(dValue > -2 * _config.getSd() && dValue <= -_config.getSd()){
+				level = 2;
+			}else if(dValue > -_config.getSd() && dValue < _config.getSd()){
+				level = 3;
+			}else if(dValue >= _config.getSd() && dValue < 2 * _config.getSd()){
+				level = 4;
+			}else {
+				level = 5;
+			}
+			resultBean.setIndex(level);
+			
 			NormalDistribution normdist = new NormalDistribution(_config.getAverageScore(), _config.getSd());
 			// 计算累积概率值
 			double normdistValue = normdist.cumulativeProbability(_avg); 
@@ -184,6 +202,7 @@ public class ForcedQuizModule {
 				}
 			}
 			resultBean.setNormalScore(normalScore);
+			resultBean.setNormalAver((int)Math.round(_config.getAverageScore() * 10));
 			
 			// 输出得分信息
 			logger.debug(resultBean);

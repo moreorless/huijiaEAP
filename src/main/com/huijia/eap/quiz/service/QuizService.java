@@ -46,7 +46,7 @@ public class QuizService extends TblIdsEntityService<Quiz> {
 	}
 
 	public Quiz insert(Quiz quiz) {
-		quiz.setId(getTblMaxIdWithUpdate() + 1);
+		quiz.setId(getTblMaxIdWithUpdate());
 		return this.dao().insert(quiz);
 	}
 

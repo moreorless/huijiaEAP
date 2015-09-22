@@ -44,7 +44,7 @@ public class QuizResultService extends TblIdsEntityService<QuizResult> {
 	}
 
 	public QuizResult insert(QuizResult quizResult) {
-		quizResult.setId(getTblMaxIdWithUpdate() + 1);
+		quizResult.setId(getTblMaxIdWithUpdate());
 		return this.dao().insert(quizResult);
 	}
 

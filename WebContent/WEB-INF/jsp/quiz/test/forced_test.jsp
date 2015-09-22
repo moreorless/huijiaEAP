@@ -57,7 +57,7 @@
 
 			<div style="text-align: center;height: 60px;line-height: 60px;">
 				<a type="button" id="btn-nextpage" class="btn btn-success">下一组</a>
-		      	<a type="button" id="btn-submit" class="btn btn-success" <%--disabled style="display:none" --%>>提交</a>
+		      	<a type="button" id="btn-submit" class="btn btn-success" style="display:none">提交</a>
 		      	<a type="button" id="btn-cancel" class="btn btn-danger" style="float:right;margin-top:10px;margin-right:50px">退出答题</a>
     		</div>
 
