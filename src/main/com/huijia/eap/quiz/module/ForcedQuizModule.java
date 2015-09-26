@@ -1,6 +1,7 @@
 package com.huijia.eap.quiz.module;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,12 +87,12 @@ public class ForcedQuizModule {
 			@Param("quizId") long quizId, @Param("answerJson") String answerJson) {
 		User user = Auths.getUser(request);
 
-		boolean _debug = true;
-		// 加载调试数据
-		if(_debug){
-			answerJson = Files.read(GlobalConfig.getContextValue("conf.dir")
-					+ File.separator + "test" + File.separator + "forcedanswer.txt");
-		}
+//		boolean _debug = false;
+//		// 加载调试数据
+//		if(_debug){
+//			answerJson = Files.read(GlobalConfig.getContextValue("conf.dir")
+//					+ File.separator + "test" + File.separator + "forcedanswer.txt");
+//		}
 		
 		
 		// 计算并存储答题结果
@@ -150,9 +151,14 @@ public class ForcedQuizModule {
 				
 				values[i] = _score;
 			}
-			float _avg = total / scoreList.size();
+			double _avg = total / scoreList.size();
+			
+			// 保留4位小数
+			BigDecimal bd1 = new BigDecimal(_avg);
+			_avg = bd1.setScale(4,  BigDecimal.ROUND_HALF_UP).doubleValue();
+			
 			resultBean.setOriginalAver(_avg);
-			resultBean.setAverageScore(Math.round(_avg * 10));
+			resultBean.setAverageScore((int)Math.round(_avg * 10));
 			
 			// 计算总体标准差
 			Variance variance = new Variance();
@@ -186,7 +192,11 @@ public class ForcedQuizModule {
 			
 			NormalDistribution normdist = new NormalDistribution(_config.getAverageScore(), _config.getSd());
 			// 计算累积概率值
-			double normdistValue = normdist.cumulativeProbability(_avg); 
+			double normdistValue = normdist.cumulativeProbability(_avg);
+			
+			BigDecimal bd2 = new BigDecimal(normdistValue);
+			// 保留4位小数
+			normdistValue = bd2.setScale(4,  BigDecimal.ROUND_HALF_UP).doubleValue();
 			resultBean.setNormdist(normdistValue);
 			
 			// 根据概率分布配置文件，转换成常模得分
