@@ -237,7 +237,7 @@ public class PersonReportModule {
 			featureList.add(feature);
 			
 			
-			if(_averLevel1 < _normalAverLevel1){
+			if(_averLevel1 < _normalAverLevel1 * 10){
 				badFeatureNames.add(cateL1.getName());
 			}else{
 				goodFeatureNames.add(cateL1.getName());
