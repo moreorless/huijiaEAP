@@ -178,15 +178,22 @@ public class PersonReportModule {
 		
 		// 计算情绪管理倾向指数 和 一级维度得分
 		double emotionIndexSum = 0;
+		
 		Map<Long, NormResultBean> resultMap = new HashMap<Long, NormResultBean>();
+		Map<String, NormResultBean> resultMapbyName = new HashMap<>();
 		for(NormResultBean rBean : resultList){
 			resultMap.put(rBean.getCategoryId(), rBean);
+			resultMapbyName.put(rBean.getCategoryName(), rBean);
+			
 			emotionIndexSum += rBean.getIndex();
 		}
 		int emotionIndex = (int)Math.round(emotionIndexSum / resultList.size());
 		request.setAttribute("emotionIndex", emotionIndex);
 		
 		List<EmotionFeatureBean> featureList = new ArrayList<>();
+		List<String> goodFeatureNames = new ArrayList<>();
+		List<String> badFeatureNames = new ArrayList<>();
+		List<String> badCategoryNames = new ArrayList<>();
 		
 		// 常模得分配置
 		List<NormalScoreConfig> normalConfigList = normalScoreConfigService.getConfigList();
@@ -214,6 +221,10 @@ public class PersonReportModule {
 				String _cateName = cateL2.getName();
 				double _normalAver = normalConfigMap.get(_cateName).getAverageScore();
 				_normalTotalLevel1 += _normalAver;
+				
+				if(rBean.getAverageScore() < _normalAver) {
+					badCategoryNames.add(cateL2.getName());
+				}
 			}
 			_averLevel1 = _totalLevel1 / categoryLevel2.size();
 			_normalAverLevel1 = _normalTotalLevel1 / categoryLevel2.size();
@@ -224,14 +235,27 @@ public class PersonReportModule {
 			feature.setAverageScore(_averLevel1);
 			feature.setNormalScore(_normalAverLevel1);
 			featureList.add(feature);
+			
+			
+			if(_averLevel1 < _normalAverLevel1){
+				badFeatureNames.add(cateL1.getName());
+			}else{
+				goodFeatureNames.add(cateL1.getName());
+			}
 		}
 		
 		
 		request.setAttribute("featureList", featureList);
 		request.setAttribute("anwerResultList", resultList);
+		request.setAttribute("resultMapbyName", resultMapbyName);
 		
+		request.setAttribute("goodFeatureNames", goodFeatureNames);
+		request.setAttribute("badFeatureNames", badFeatureNames);
+		request.setAttribute("badCategoryNames", badCategoryNames);
 		
-		
+		// 社会赞许性
+		double approvalAverScore = forcedQuizService.getApprovalAverScore(userId, quizId);
+		request.setAttribute("approvalAverScore", approvalAverScore);
 	}
 	
 	/**

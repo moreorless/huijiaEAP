@@ -6,31 +6,25 @@
     <title><fmt:message key="index.product.name" /></title>
     <link type="text/css" rel="stylesheet" href="${base}/css/quiz/person.css" />
     <style type="text/css">
-        .chart{width: 600px; height: 400px; margin: 0 auto}
-        .progress {
-            height: 20px;
+      .chart{width: 600px; height: 400px; margin: 0 auto}
+      .progress {
+        
         margin-bottom: 20px;
         overflow: hidden;
         background-color: #f5f5f5;
-        border-radius: 4px;
-        -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-        box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+        border: 1px solid #333;
       }
       .progress-bar-info { background-color: #5bc0de;}
       .progress-bar {
         float: left;
         width: 0;
-        height: 100%;
-        font-size: 12px;
-        line-height: 20px;
+        /*height: 100%;*/
+        font-size: 16px;
+        height: 24px;
+        line-height: 24px;
         color: #fff;
         text-align: center;
-        background-color: #337ab7;
-        -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
-        box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
-        -webkit-transition: width .6s ease;
-        -o-transition: width .6s ease;
-        transition: width .6s ease;
+        background-color: #21329d;
       }
       .annotation {font-size: 12px; color: #666}
 
@@ -110,7 +104,7 @@
       
       <h2>特征</h2>
       <p>如下图所示</p>
-      
+      <div class="chart" id="score-by-category" style="height:300px"></div>
     
       </div>
         <div class="pdf-footer"></div>
@@ -119,16 +113,22 @@
     <div class="pdf-page">
         <div class="pdf-header"><img src="${base}/images/report/logo.png" width="100px" ></img></div>
         <div class="pdf-body">
-        <div class="chart" id="score-by-category"></div>
-      <p>上图中，红色柱状图表示你本人在各个大维度上的平均分，而蓝色柱状图表示的是数据常模中各大维度的均值。由上图可知，**维度比常模得分高，**维度比常模得分低。也就是说，您在**、**（维度名称）方面比一般人要强，而在**方面（维度名称）比较一般人要弱一些。</p>
+      
+      <p>上图中，黄色柱状图表示你本人在各个大维度上的平均分，而蓝色柱状图表示的是数据常模中各大维度的均值。由上图可知，
+      <c:if test="${fn:length(goodFeatureNames) > 0}">
+      <c:forEach var="featureName" items="${goodFeatureNames}" varStatus="status">${featureName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分高，也就是说，比一般人要强。</c:if><c:if test="${fn:length(badFeatureNames) > 0}">
+      <c:forEach var="featureName" items="${badFeatureNames}" varStatus="status">${featureName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分低，也就是说，比较一般人要弱一些。</c:if></p>
        
       <h2>重点关注</h2>
       <div class="chart" id="radar-chart"></div>
-      <p>上图中，红色雷达图表示的您在各个二级维度上的得分，而蓝色雷达图表示的数据常模中各个维度的均值。由上图可知，**维度比常模得分低，属于重点关注区域。</p>
+      <p>上图中，黄色雷达图表示的您在各个二级维度上的得分，而蓝色雷达图表示的数据常模中各个维度的均值。
+      <c:if test="${fn:length(badCategoryNames) > 0}">由上图可知，<c:forEach var="categoryName" items="${badCategoryNames}" varStatus="status">${categoryName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分低，属于重点关注区域。</c:if></p>
       
       <h1>Ⅲ 作答可靠性评估</h1>
       <h2>社会赞许性</h2>
-      <p>社会赞许性处于正常水平。测试的可靠性较强。</p>
+      <p><c:if test="${approvalAverScore <= 7}">社会赞许性处于正常水平。测试的可靠性较强。</c:if>
+      <c:if test="${approvalAverScore > 7}">社会赞许性超过一般水平。对自己的评价大部分比较正面，更倾向于迎合社会的需要。</c:if>
+      </p>
       
       <h2>评分一致性</h2>
       <p>评分一致性的得分：3分</p>
@@ -158,32 +158,127 @@
         <thead>
           <tr>
             <th></th>
-            <th></th>
-            <th>得分</th>
-            <th>常模得分</th>
+            <th width="50"></th>
+            <th width="40">得分</th>
+            <th width="120">常模得分</th>
             <th>低分倾向的人的特征</th>
-            <th></th>
             <th>高分倾向的人的特征</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td></td>
+            <td rowspan="2">情绪感知</td>
             <td>自我情绪感知</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>${resultMapbyName['自我情绪感知'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['自我情绪感知'].normalScore*10}%;">${resultMapbyName['自我情绪感知'].normalScore}</div>
+              </div>
+            </td>
+            <td>对自己的情绪关注不够，而且了解程度不够，行动时也较少考虑到情绪感受。</td>
+            <td>能够很清楚认识自身情绪，并依此作为行动的依据。</td>
           </tr>
           <tr>
-            <td></td>
-            <td>自我情绪感知</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            
+            <td>他人情绪感知</td>
+            <td>${resultMapbyName['他人情绪感知'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['他人情绪感知'].normalScore*10}%;">${resultMapbyName['他人情绪感知'].normalScore}</div>
+              </div>
+            </td>
+            <td>在人际交往中，对他人情绪状态状态及情绪变化比较迟钝，不能站在别人角度体察别人的心情。</td>
+            <td>能够清楚认识他人情绪，能“设身处地”的站在他人角度看待问题，容易与别人产生共情。</td>
+          </tr>
+          <tr>
+            <td  rowspan="3">情绪控制</td>
+            <td>稳定性</td>
+            <td>${resultMapbyName['稳定性'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['稳定性'].normalScore*10}%;">${resultMapbyName['稳定性'].normalScore}</div>
+              </div>
+            </td>
+            <td>情绪容易波动，参加大型场合容易紧张，遇到事情也容易慌张失措。</td>
+            
+            <td>情绪弹性大，不容易大喜大悲，遇事沉着冷静，参加大型活动也不容易紧张。</td>
+          </tr>
+          <tr>
+            
+            <td>控制力</td>
+            <td>${resultMapbyName['控制力'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['控制力'].normalScore*10}%;">${resultMapbyName['控制力'].normalScore}</div>
+              </div>
+            </td>
+            <td>不能根据自己的需要延长或者摆脱某些情绪状态，调节情绪的能力比较弱。</td>
+            
+            <td>能够根据情绪状态对自己的有利程度，能动性的调节自己的情绪，使得自己能从高航和压抑的情绪中恢复过来。</td>
+          </tr>
+          <tr>
+            
+            <td>自我激励</td>
+            <td>${resultMapbyName['自我激励'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['自我激励'].normalScore*10}%;">${resultMapbyName['自我激励'].normalScore}</div>
+              </div>
+            </td>
+            <td>当遇到挑战和挫折时，没有办法进行有效的自我鞭策、自我说服，达不到自我激励的效果。</td>
+          
+            <td>面对自己的目标，能够随时进行有效的自我鞭策和自我说服，以此来保持自己对目标的热情、专注和自制。</td>
+          </tr>
+          <tr>
+            <td rowspan="3">社交技巧</td>
+            <td>表达</td>
+            <td>${resultMapbyName['表达'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['表达'].normalScore*10}%;">${resultMapbyName['表达'].normalScore}</div>
+              </div>
+            </td>
+            <td>与别人相处时，表达情绪不适宜，不注意表达情绪的场合和时机，面部表情和肢体语言不够丰富，不能适时对别人表示赞扬。</td>            
+            <td>能够根据时机和场所表达合适的情绪，也不吝啬对别人的夸赞。别人与之相处比较愉快。</td>
+          </tr>
+          <tr>
+            
+            <td>适应力</td>
+            <td>${resultMapbyName['适应力'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['适应力'].normalScore*10}%;">${resultMapbyName['适应力'].normalScore}</div>
+              </div>
+            </td>
+            <td>不善于处理人际关系，情绪改变不够灵活，对待别人糟糕的情绪经常束手无策。</td>
+            
+            <td>善于处理人际关系，能够灵活调整和改变自己的情绪，能够适应各种情况下遇到的别人的情绪状态。</td>
+          </tr>
+          <tr>
+            
+            <td>感染力</td>
+            <td>${resultMapbyName['感染力'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['感染力'].normalScore*10}%;">${resultMapbyName['感染力'].normalScore}</div>
+              </div>
+            </td>
+            <td>自己的情绪对别人的情绪几乎没有影响的能力，无法调动周围人的情绪，也不擅长鼓励别人。</td>
+            
+            <td>自己很容易赢得别人的信任，很容易影响和调动周围人的情绪，也非常擅长鼓励他人。</td>
+          </tr>
+          <tr>
+            <td>情绪利用</td>
+            <td>问题解决</td>
+            <td>${resultMapbyName['问题解决'].averageScore}</td>
+            <td>
+            <div class="progress">
+                 <div class="progress-bar" style="width: ${resultMapbyName['问题解决'].normalScore*10}%;">${resultMapbyName['问题解决'].normalScore}</div>
+              </div>
+            </td>
+            <td>无法利用情绪帮助问题的解决，面对情绪的问题也不知道如何处理。</td>
+            
+            <td>根据与事件相关的情绪体验改变思维方向和事件轻重缓急的能力很强。很会利用情绪促进问题的解决。</td>
           </tr>
         </tbody>
       </table>
@@ -212,18 +307,24 @@
                 ],
                 xAxis: {
                     categories:categoryNames
-          },
-          plotOptions: {
+                },
+                yAxis: {
+                   min: 0,
+                  title: {
+                     text: ''
+                   }
+               },
+              plotOptions: {
                   column: {
                   animation: false,
                   shadow: false,
                   enableMouseTracking: false
-                }
-              },
-          title: {
+                 }
+               },
+             title: {
                 text: '',
                 x: -80
-            },
+              },
           
               legend: {
                 align: 'right',
