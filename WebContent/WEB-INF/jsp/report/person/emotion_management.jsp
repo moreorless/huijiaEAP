@@ -116,7 +116,8 @@
       
       <p>上图中，黄色柱状图表示你本人在各个大维度上的平均分，而蓝色柱状图表示的是数据常模中各大维度的均值。由上图可知，
       <c:if test="${fn:length(goodFeatureNames) > 0}">
-      <c:forEach var="featureName" items="${goodFeatureNames}" varStatus="status">${featureName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分高，也就是说，比一般人要强。</c:if><c:if test="${fn:length(badFeatureNames) > 0}">
+      <c:forEach var="featureName" items="${goodFeatureNames}" varStatus="status">${featureName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分高，也就是说，比一般人要强。</c:if>
+      <c:if test="${fn:length(badFeatureNames) > 0}">
       <c:forEach var="featureName" items="${badFeatureNames}" varStatus="status">${featureName}<c:if test="${!status.last}">、</c:if></c:forEach>维度比常模得分低，也就是说，比较一般人要弱一些。</c:if></p>
        
       <h2>重点关注</h2>
