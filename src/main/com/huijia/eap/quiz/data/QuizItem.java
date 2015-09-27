@@ -34,7 +34,8 @@ public class QuizItem {
 	/**
 	 * add by jianglei
 	 * 
-	 * EXCEL中的题目编号
+	 * EXCEL中的题目编号 
+	 * 因第三套问卷题目编号与维度之间具有相关性，需要对题目进行编号
 	 * 用于第三套问卷团体报告生成
 	 */
 	private long index;

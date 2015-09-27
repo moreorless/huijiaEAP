@@ -10,13 +10,21 @@ import com.huijia.eap.quiz.data.QuizItem;
 
 @IocBean(name = "quizItemDao", fields = { "dataSource" })
 public class QuizItemDao extends NutDao {
-	
+
 	public List<QuizItem> fetchListByQuizId(long quizId) {
-		return this.query(QuizItem.class, Cnd.where("quizid", "=", quizId).asc("id"));
+		return this.query(QuizItem.class,
+				Cnd.where("quizid", "=", quizId).asc("id"));
 	}
 
 	public void deleteByQuizId(long quizId) {
 
 		this.clear(QuizItem.class, Cnd.where("quizid", "=", quizId));
+	}
+
+	public long fetchMaxIdByQuizId(long quizId) {
+		// TODO Auto-generated method stub
+		List<QuizItem> list = this.query(QuizItem.class,
+				Cnd.where("quizid", "=", quizId).asc("id"));
+		return list.get(0).getId();
 	}
 }

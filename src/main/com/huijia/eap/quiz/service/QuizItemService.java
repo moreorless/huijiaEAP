@@ -37,6 +37,10 @@ public class QuizItemService extends TblIdsEntityService<QuizItem> {
 		return ((QuizItemDao) this.dao()).fetchListByQuizId(quizId);
 	}
 	
+	public long fetchMaxIdByQuizId(long quizId){
+		return ((QuizItemDao) this.dao()).fetchMaxIdByQuizId(quizId);
+	}
+	
 	public void deleteByQuizId(long quizId) {
 		((QuizItemDao) this.dao()).deleteByQuizId(quizId);
 	}

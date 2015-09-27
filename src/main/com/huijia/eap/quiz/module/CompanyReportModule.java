@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,8 @@ import com.huijia.eap.annotation.AuthBy;
 import com.huijia.eap.auth.bean.User;
 import com.huijia.eap.auth.user.service.UserService;
 import com.huijia.eap.quiz.data.Company;
+import com.huijia.eap.quiz.data.NormResultBean;
+import com.huijia.eap.quiz.data.NormalScoreConfig;
 import com.huijia.eap.quiz.data.Quiz;
 import com.huijia.eap.quiz.data.QuizCategory;
 import com.huijia.eap.quiz.data.QuizItem;
@@ -38,9 +39,12 @@ import com.huijia.eap.quiz.data.Segment;
 import com.huijia.eap.quiz.data.report.TeamReportCommonParamSet;
 import com.huijia.eap.quiz.data.report.TeamReportCommunicationSet;
 import com.huijia.eap.quiz.data.report.TeamReportConflictSet;
+import com.huijia.eap.quiz.data.report.TeamReportEmotionManagementSet;
 import com.huijia.eap.quiz.data.report.TeamReportEmployeeSurveySet;
 import com.huijia.eap.quiz.data.report.TeamReportMentalCheckupParamSet;
 import com.huijia.eap.quiz.service.CompanyService;
+import com.huijia.eap.quiz.service.ForcedQuizService;
+import com.huijia.eap.quiz.service.NormalScoreConfigService;
 import com.huijia.eap.quiz.service.QuizCategoryService;
 import com.huijia.eap.quiz.service.QuizItemService;
 import com.huijia.eap.quiz.service.QuizResultService;
@@ -73,6 +77,12 @@ public class CompanyReportModule {
 
 	@Inject
 	private QuizItemService quizItemService;
+
+	@Inject
+	private NormalScoreConfigService normalScoreConfigService;
+
+	@Inject
+	private ForcedQuizService forcedQuizService;
 
 	/**
 	 * 当前查询操作对应的quizresult结果
@@ -118,6 +128,11 @@ public class CompanyReportModule {
 	 * 第三套问卷
 	 */
 	private TeamReportEmployeeSurveySet currentEmployeeSurveySet = new TeamReportEmployeeSurveySet();
+
+	/**
+	 * 第四套问卷
+	 */
+	private TeamReportEmotionManagementSet currentEmotionManagementSet = new TeamReportEmotionManagementSet();
 
 	private int _getScoreByAnswer(String answer, String quizName) {
 		int ret = 0;
@@ -1308,6 +1323,7 @@ public class CompanyReportModule {
 		int totalScore = 0;
 
 		for (QuizResult result : resultList) {
+
 			Map<String, String> answerMap = (Map<String, String>) Json
 					.fromJson(result.getAnswer());
 			for (Entry<String, String> answer : answerMap.entrySet()) {
@@ -2455,13 +2471,1190 @@ public class CompanyReportModule {
 	}
 
 	/**
-	 * 情绪管理倾向
+	 * 情绪管理倾向 问卷四
 	 */
 	@At
 	@Ok("jsp:jsp.report.company.emotion_management")
 	public void emotionManagement(HttpServletRequest request,
-			@Param("segmentId") long segementId, @Param("quizId") long quizId) {
-		preProcess(request, segementId, quizId);
+			@Param("segmentId") long segmentId, @Param("quizId") long quizId) {
+		preProcess(request, segmentId, quizId);
 		request.setAttribute("commonParamSet", currentCommonParameterSet);
+
+		emotionManagementProcess(segmentId, quizId);
+		request.setAttribute("emotionManagementSet",
+				currentEmotionManagementSet);
+	}
+
+	/**
+	 * 初始化 问卷四 类别与题目序号 的映射关系
+	 * 
+	 * @param categoryAndItemsMap
+	 */
+	private void initCategoryAndItemsMap(
+			Map<String, List<Long>> categoryAndItemsMap, long quizId) {
+		List<Long> tmpList = new ArrayList<Long>();
+		String items;
+		String[] strArray;
+
+		long firstItemId = quizItemService.fetchMaxIdByQuizId(quizId);
+		// long firstItemId = 0;
+
+		// lv1CategoryAndItemsMap.put("情绪感知",
+		// "0,6,12,18,24,30,36,1,7,19,25,31,54,66");
+		tmpList.clear();
+		items = "0,6,12,18,24,30,36,1,7,19,25,31,54,66";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("情绪感知", new ArrayList<Long>(tmpList));
+
+		// lv1CategoryAndItemsMap.put("情绪控制",
+		// "3,14,32,43,55,61,68,2,8,13,20,26,37,4,15,27,38,44,56,62");
+		tmpList.clear();
+		items = "3,14,32,43,55,61,68,2,8,13,20,26,37,4,15,27,38,44,56,62";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("情绪控制", new ArrayList<Long>(tmpList));
+
+		// lv1CategoryAndItemsMap
+		// .put("社交技巧",
+		// "5,33,39,45,50,57,63,69,9,22,40,51,58,64,70,10,28,34,46,52,65,71");
+		tmpList.clear();
+		items = "5,33,39,45,50,57,63,69,9,22,40,51,58,64,70,10,28,34,46,52,65,71";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("社交技巧", new ArrayList<Long>(tmpList));
+
+		// lv1CategoryAndItemsMap.put("情绪利用", "11,17,29,35,41,47,53");
+		tmpList.clear();
+		items = "11,17,29,35,41,47,53";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("情绪利用", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("自我情绪感知", "0,6,12,18,24,30,36");
+		tmpList.clear();
+		items = "0,6,12,18,24,30,36";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("自我情绪感知", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("他人情绪感知", "1,7,19,25,31,54,66");
+		tmpList.clear();
+		items = "1,7,19,25,31,54,66";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("他人情绪感知", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("控制力", "3,14,32,43,55,61,68");
+		tmpList.clear();
+		items = "3,14,32,43,55,61,68";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("控制力", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("稳定性", "2,8,13,20,26,37");
+		tmpList.clear();
+		items = "2,8,13,20,26,37";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("稳定性", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("自我激励 ", "4,15,27,38,44,56,62");
+		tmpList.clear();
+		items = "4,15,27,38,44,56,62";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("自我激励", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("表达", "5,33,39,45,50,57,63,69");
+		tmpList.clear();
+		items = "5,33,39,45,50,57,63,69";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("表达", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("适应力", "9,22,40,51,58,64,70");
+		tmpList.clear();
+		items = "9,22,40,51,58,64,70";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("适应力", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("感染力", "10,28,34,46,52,65,71");
+		tmpList.clear();
+		items = "10,28,34,46,52,65,71";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("感染力", new ArrayList<Long>(tmpList));
+
+		// lv2CategoryAndItemsMap.put("问题解决", "11,17,29,35,41,47,53");
+		tmpList.clear();
+		items = "11,17,29,35,41,47,53";
+		strArray = items.split(",");
+		for (int i = 0; i < strArray.length; i++) {
+			tmpList.add(firstItemId + Long.valueOf(strArray[i]));
+		}
+		categoryAndItemsMap.put("问题解决", new ArrayList<Long>(tmpList));
+	}
+
+	private void emotionManagementProcess(long segmentId, long quizId) {
+
+		int precision = 2;
+		double ratio;
+
+		String subNames = "自我情绪感知,他人情绪感知,稳定性,控制力,自我激励,表达,适应力,感染力,问题解决";
+		String[] _names = subNames.split(",");
+		// 情绪感知-自我情绪感知 1-1；2-1；3-1；4-1；5-1；6-1；7-1；
+		// 0,6,12,18,24,30,36
+		// 情绪感知-他人情绪感知 1-2；2-2；4-2；5-2；6-2；10-1；12-1；
+		// 1,7,19,25,31,54,66
+		// 情绪控制-控制力 1-4；3-3；6-3；8-2；10-2；11-2；12-3；
+		// 3,14,32,43,55,61,68
+		// 情绪控制-稳定性 1-3；2-3；3-2；4-3；5-3；7-2；
+		// 2,8,13,20,26,37
+		// 情绪控制-自我激励 1-5；3-4；5-4；7-3；8-3；10-3；11-3；
+		// 4,15,27,38,44,56,62
+		// 社交技巧-表达 1-6；6-4；7-4；8-4；9-3；10-4；11-4；12-4；
+		// 5,33,39,45,50,57,63,69
+		// 社交技巧-适应力 2-4；4-5；7-5；9-4；10-5；11-5；12-5；
+		// 9,22,40,51,58,64,70
+		// 社交技巧-感染力 2-5；5-5；6-5；8-5；9-5；11-6；12-6；
+		// 10,28,34,46,52,65,71
+		// 情绪利用-问题解决 2-6；3-6；5-6；6-6；7-6；8-6；9-6；
+		// 11,17,29,35,41,47,53
+
+		/*
+		 * Map<String, String> lv1CategoryAndItemsMap = new HashMap<String,
+		 * String>(); Map<String, String> lv2CategoryAndItemsMap = new
+		 * HashMap<String, String>(); lv1CategoryAndItemsMap.put("情绪感知",
+		 * "0,6,12,18,24,30,36,1,7,19,25,31,54,66");
+		 * lv1CategoryAndItemsMap.put("情绪控制",
+		 * "3,14,32,43,55,61,68,2,8,13,20,26,37,4,15,27,38,44,56,62");
+		 * lv1CategoryAndItemsMap .put("社交技巧",
+		 * "5,33,39,45,50,57,63,69,9,22,40,51,58,64,70,10,28,34,46,52,65,71");
+		 * lv1CategoryAndItemsMap.put("情绪利用", "11,17,29,35,41,47,53");
+		 * lv2CategoryAndItemsMap.put("自我情绪感知", "0,6,12,18,24,30,36");
+		 * lv2CategoryAndItemsMap.put("他人情绪感知", "1,7,19,25,31,54,66");
+		 * lv2CategoryAndItemsMap.put("控制力", "3,14,32,43,55,61,68");
+		 * lv2CategoryAndItemsMap.put("稳定性", "2,8,13,20,26,37");
+		 * lv2CategoryAndItemsMap.put("自我激励 ", "4,15,27,38,44,56,62");
+		 * lv2CategoryAndItemsMap.put("表达", "5,33,39,45,50,57,63,69");
+		 * lv2CategoryAndItemsMap.put("适应力", "9,22,40,51,58,64,70");
+		 * lv2CategoryAndItemsMap.put("感染力", "10,28,34,46,52,65,71");
+		 * lv2CategoryAndItemsMap.put("问题解决", "11,17,29,35,41,47,53");
+		 */
+		// 储存 维度与题目Id 映射关系
+		Map<String, List<Long>> categoryAndItemsMap = new HashMap<String, List<Long>>();
+		initCategoryAndItemsMap(categoryAndItemsMap, quizId);
+
+		// 初始化JspBean
+		currentEmotionManagementSet.init();
+
+		// 初始化常模分数
+		List<NormalScoreConfig> normalScoreList = normalScoreConfigService
+				.getConfigList();
+		// 添加常模分数的主维度柱状图数据信息
+		double stdScoreQingxuganzhi = 0.0;
+		double stdScoreQingxukongzhi = 0.0;
+		double stdScoreShejiaojiqiao = 0.0;
+		double stdScoreQingxuliyong = 0.0;
+		for (NormalScoreConfig nsf : normalScoreList) {
+			if (nsf.getCategoryName().equals("自我情绪感知"))
+				stdScoreQingxuganzhi += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("他人情绪感知"))
+				stdScoreQingxuganzhi += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("控制力"))
+				stdScoreQingxukongzhi += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("稳定性"))
+				stdScoreQingxukongzhi += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("自我激励"))
+				stdScoreQingxukongzhi += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("表达"))
+				stdScoreShejiaojiqiao += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("适应力"))
+				stdScoreShejiaojiqiao += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("感染力"))
+				stdScoreShejiaojiqiao += nsf.getAverageScore();
+			if (nsf.getCategoryName().equals("问题解决"))
+				stdScoreQingxuliyong += nsf.getAverageScore();
+		}
+		currentEmotionManagementSet.topLevelStandardScoreList.add(formatRatio(
+				stdScoreQingxuganzhi * 1.0 / 2 * 10, precision));
+		currentEmotionManagementSet.topLevelStandardScoreList.add(formatRatio(
+				stdScoreQingxukongzhi * 1.0 / 3 * 10, precision));
+		currentEmotionManagementSet.topLevelStandardScoreList.add(formatRatio(
+				stdScoreShejiaojiqiao * 1.0 / 3 * 10, precision));
+		currentEmotionManagementSet.topLevelStandardScoreList.add(formatRatio(
+				stdScoreQingxuliyong * 1.0 * 10, precision));
+
+		// 添加常模分数的子维度雷达图数据信息
+		for (NormalScoreConfig nsf : normalScoreList) {
+			currentEmotionManagementSet.subLevelStandardScoreList
+					.add(formatRatio(nsf.getAverageScore() * 10, precision));
+		}
+
+		Quiz quiz = quizService.fetch(quizId);
+		List<QuizResult> allResultList = quizResultService
+				.getTestedQuizResultList(segmentId, quizId);
+		List<QuizResult> resultList = new LinkedList<QuizResult>();
+		for (QuizResult result : allResultList) {
+			if (result.getLieScore() <= quiz.getLieBorder())
+				resultList.add(result);
+		}
+
+		// 3.2 四大维度整体概述
+
+		List<QuizItem> questionList = quizItemService.fetchListByQuizId(quizId);
+		ArrayList<QuizItem> sortedQuestionList = new ArrayList<QuizItem>(
+				questionList);
+		sortQuestionListById(sortedQuestionList);
+
+		/**
+		 * 添加题目编号 从0开始
+		 */
+		int index = 0;
+		for (QuizItem qi : questionList) {
+			qi.setIndex(index);
+			index++;
+		}
+
+		// 遍历所有答案，计算所有每个一级维度获得的总分
+		// 一级维度包括：情绪感知、情绪控制、社交技巧、情绪利用
+		long totalScoreTopLevelQingxuganzhi = 0;
+		long totalScoreTopLevelQingxukongzhi = 0;
+		long totalScoreTopLevelShejiaojiqiao = 0;
+		long totalScoreTopLevelQingxuliyong = 0;
+		double averageScoreTopLevelQingxuganzhi = 0.0;
+		double averageScoreTopLevelQingxukongzhi = 0.0;
+		double averageScoreTopLevelShejiaojiqiao = 0.0;
+		double averageScoreTopLevelQingxuliyong = 0.0;
+
+		for (QuizResult result : resultList) {
+			List<Map<String, String>> _answerMapList = (List<Map<String, String>>) Json
+					.fromJson(result.getAnswer());
+			for (Map<String, String> _answerMap : _answerMapList) {
+				Long questionId = Long.valueOf(_answerMap.get("questionId"));
+				Long score = Long.valueOf(_answerMap.get("score"));
+				if (categoryAndItemsMap.get("情绪感知").contains(questionId))
+					totalScoreTopLevelQingxuganzhi += score;
+				if (categoryAndItemsMap.get("情绪控制").contains(questionId))
+					totalScoreTopLevelQingxukongzhi += score;
+				if (categoryAndItemsMap.get("社交技巧").contains(questionId))
+					totalScoreTopLevelShejiaojiqiao += score;
+				if (categoryAndItemsMap.get("情绪利用").contains(questionId))
+					totalScoreTopLevelQingxuliyong += score;
+			}
+		}
+		averageScoreTopLevelQingxuganzhi = totalScoreTopLevelQingxuganzhi * 1.0
+				/ categoryAndItemsMap.get("情绪感知").size() / resultList.size();
+		averageScoreTopLevelQingxukongzhi = totalScoreTopLevelQingxukongzhi
+				* 1.0 / categoryAndItemsMap.get("情绪控制").size()
+				/ resultList.size();
+		averageScoreTopLevelShejiaojiqiao = totalScoreTopLevelShejiaojiqiao
+				* 1.0 / categoryAndItemsMap.get("社交技巧").size()
+				/ resultList.size();
+		averageScoreTopLevelQingxuliyong = totalScoreTopLevelQingxuliyong * 1.0
+				/ categoryAndItemsMap.get("情绪利用").size() / resultList.size();
+
+		currentEmotionManagementSet.topLevelAverageScoreList.add(formatRatio(
+				averageScoreTopLevelQingxuganzhi * 10, precision));
+		currentEmotionManagementSet.topLevelAverageScoreList.add(formatRatio(
+				averageScoreTopLevelQingxukongzhi * 10, precision));
+		currentEmotionManagementSet.topLevelAverageScoreList.add(formatRatio(
+				averageScoreTopLevelShejiaojiqiao * 10, precision));
+		currentEmotionManagementSet.topLevelAverageScoreList.add(formatRatio(
+				averageScoreTopLevelQingxuliyong * 10, precision));
+
+		// 一级维度评价内容
+		// 由上图可知，**维度比常模得分高，**维度比常模得分低。
+		String higherCategories = "";
+		String lowerCategories = "";
+
+		if (averageScoreTopLevelQingxuganzhi > stdScoreQingxuganzhi)
+			higherCategories += "情绪感知，";
+		else
+			lowerCategories += "情绪感知，";
+		if (averageScoreTopLevelQingxukongzhi > stdScoreQingxukongzhi)
+			higherCategories += "情绪控制，";
+		else
+			lowerCategories += "情绪控制，";
+		if (averageScoreTopLevelShejiaojiqiao > stdScoreShejiaojiqiao)
+			higherCategories += "社交技巧，";
+		else
+			lowerCategories += "社交技巧，";
+		if (averageScoreTopLevelQingxuliyong > stdScoreQingxuliyong)
+			higherCategories += "情绪利用，";
+		else
+			lowerCategories += "情绪利用，";
+		if (higherCategories.equals("") == false)
+			higherCategories += "维度比常模得分高，";
+		if (lowerCategories.equals("") == false)
+			lowerCategories += "维度比常模得分低";
+
+		currentEmotionManagementSet.topLevelAverageScoreEvaluation += "由上图可知，"
+				+ higherCategories + lowerCategories;
+
+		// 遍历所有答案，计算所有每个二级维度获得的总分及平均分
+		class SubCategoryObject {
+			public String name = "";
+			public long itemNum = 0;
+			public double totalScore = 0.0;
+			public double averageScore = 0.0;
+		}
+		Map<String, SubCategoryObject> subCategoryMap = new HashMap<String, SubCategoryObject>();
+		for (QuizResult result : resultList) {
+			List<Map<String, String>> _answerMapList = (List<Map<String, String>>) Json
+					.fromJson(result.getAnswer());
+			for (Map<String, String> _answerMap : _answerMapList) {
+				Long questionId = Long.valueOf(_answerMap.get("questionId"));
+				Long score = Long.valueOf(_answerMap.get("score"));
+				if (categoryAndItemsMap.get("自我情绪感知").contains(questionId)) {
+					if (subCategoryMap.containsKey("自我情绪感知")) {
+
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("自我情绪感知");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("自我情绪感知", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "自我情绪感知";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("自我情绪感知", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("他人情绪感知").contains(questionId)) {
+					if (subCategoryMap.containsKey("他人情绪感知")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("他人情绪感知");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("他人情绪感知", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "他人情绪感知";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("他人情绪感知", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("控制力").contains(questionId)) {
+					if (subCategoryMap.containsKey("控制力")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("控制力");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("控制力", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "控制力";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("控制力", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("稳定性").contains(questionId)) {
+					if (subCategoryMap.containsKey("稳定性")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("稳定性");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("稳定性", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "稳定性";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("稳定性", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("自我激励").contains(questionId)) {
+					if (subCategoryMap.containsKey("自我激励")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("自我激励");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("自我激励", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "自我激励";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("自我激励", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("表达").contains(questionId)) {
+					if (subCategoryMap.containsKey("表达")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("表达");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("表达", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "表达";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("表达", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("适应力").contains(questionId)) {
+					if (subCategoryMap.containsKey("适应力")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("适应力");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("适应力", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "适应力";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("适应力", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("感染力").contains(questionId)) {
+					if (subCategoryMap.containsKey("感染力")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("感染力");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("感染力", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "感染力";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("感染力", subCategoryObject);
+					}
+				}
+				if (categoryAndItemsMap.get("问题解决").contains(questionId)) {
+					if (subCategoryMap.containsKey("问题解决")) {
+						SubCategoryObject subCategoryObject = subCategoryMap
+								.get("问题解决");
+						subCategoryObject.totalScore += score;
+						subCategoryObject.itemNum = subCategoryObject.itemNum + 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("问题解决", subCategoryObject);
+
+					} else {
+						SubCategoryObject subCategoryObject = new SubCategoryObject();
+						subCategoryObject.name = "问题解决";
+						subCategoryObject.totalScore = score;
+						subCategoryObject.itemNum = 1;
+						subCategoryObject.averageScore = subCategoryObject.totalScore
+								/ subCategoryObject.itemNum;
+						subCategoryMap.put("问题解决", subCategoryObject);
+					}
+				}
+			}
+		}
+
+		List<String> higherSubCategoryList = new LinkedList<String>();
+		List<String> lowerSubCategoryList = new LinkedList<String>();
+		for (NormalScoreConfig nsf : normalScoreList) {
+			String name = nsf.getCategoryName();
+			double nsfScore = nsf.getAverageScore();
+			if (nsfScore < subCategoryMap.get(name).averageScore)
+				higherSubCategoryList.add(name);
+			else
+				lowerSubCategoryList.add(name);
+		}
+
+		// 添加子维度平均分数的雷达图数据信息
+
+		for (int i = 0; i < _names.length; i++) {
+			currentEmotionManagementSet.subLevelAverageScoreList
+					.add(formatRatio(
+							subCategoryMap.get(_names[i]).averageScore * 10,
+							precision));
+		}
+
+		// for (Map.Entry<String, SubCategoryObject> entry : subCategoryMap
+		// .entrySet()) {
+		// currentEmotionManagementSet.subLevelAverageScoreList
+		// .add(formatRatio(entry.getValue().averageScore, precision));
+		// }
+
+		// 由上图可知，**维度比常模得分高，**维度比常模得分低，属于重点关注区域。
+		currentEmotionManagementSet.subLevelAverageScoreEvaluation += "由上图可知，";
+		if (higherSubCategoryList.size() > 0) {
+			for (String s : higherSubCategoryList)
+				currentEmotionManagementSet.subLevelAverageScoreEvaluation += s
+						+ ",";
+			currentEmotionManagementSet.subLevelAverageScoreEvaluation += "维度比常模得分高，";
+		}
+		if (lowerSubCategoryList.size() > 0) {
+			for (String s : lowerSubCategoryList)
+				currentEmotionManagementSet.subLevelAverageScoreEvaluation += s
+						+ ",";
+			currentEmotionManagementSet.subLevelAverageScoreEvaluation += "维度比常模得分低，属于重点关注区域。";
+		}
+
+		// 3.3 九个子维度的对比分析
+		// 超高分是指个人报告中此维度常模得分大于等于9分的人数百分比，
+		// 高分为7、8分人数百分比，
+		// 中等为5、6分人数百分比，
+		// 其余为低分。
+		class SubCategoryNum {
+			public String name = "";
+			public long userNumberChaogao = 0;
+			public long userNumberJiaogao = 0;
+			public long userNumberZhongdeng = 0;
+			public long userNumberJiaodi = 0;
+		}
+		Map<String, SubCategoryNum> subCategoryNumMap = new HashMap<String, SubCategoryNum>();
+		SubCategoryNum subCategoryNum;
+
+		for (int i = 0; i < _names.length; i++) {
+			subCategoryNum = new SubCategoryNum();
+			subCategoryNum.name = _names[i];
+			subCategoryNum.userNumberChaogao = 0;
+			subCategoryNum.userNumberJiaogao = 0;
+			subCategoryNum.userNumberZhongdeng = 0;
+			subCategoryNum.userNumberJiaodi = 0; //
+			subCategoryNumMap.put(_names[i], subCategoryNum);
+		}
+
+		// 存储用户某阶段分数的个数，依次存储 超高、高分、中等、低分
+		// 遍历所有答案，计算所有每个二级维度获得的总分及平均分
+		for (QuizResult result : resultList) {
+			List<NormResultBean> normResults = forcedQuizService
+					.getAnswerResult(result.getUserId(), quizId);
+			for (NormResultBean nrb : normResults) {
+				SubCategoryNum scn = subCategoryNumMap.get(nrb
+						.getCategoryName());
+				if (nrb.getOriginalAver() >= 9.0)
+					scn.userNumberChaogao++;
+				else if (nrb.getOriginalAver() >= 7.0)
+					scn.userNumberJiaogao++;
+				else if (nrb.getOriginalAver() >= 5.0)
+					scn.userNumberZhongdeng++;
+				else
+					scn.userNumberJiaodi++;
+				subCategoryNumMap.put(nrb.getCategoryName(), scn);
+			}
+		}
+
+		// 填充JavaBean中二级维度的雷达图数据
+		for (Map.Entry<String, SubCategoryNum> entry : subCategoryNumMap
+				.entrySet()) {
+			if (entry.getKey().equals("自我情绪感知")) {
+				currentEmotionManagementSet.dataZiwoqingxuganzhi = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataZiwoqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataZiwoqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataZiwoqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataZiwoqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataZiwoqingxuganzhi += "]";
+
+				currentEmotionManagementSet.evaluationZiwoqingxuganzhi = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于情绪自我感知能力很强的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工自我情绪感知能力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("他人情绪感知")) {
+				currentEmotionManagementSet.dataTarenqingxuganzhi = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataTarenqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataTarenqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataTarenqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataTarenqingxuganzhi += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataTarenqingxuganzhi += "]";
+				currentEmotionManagementSet.evaluationTarenqingxuganzhi = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于情绪他人感知能力很强的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工他人情绪感知能力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("稳定性")) {
+				currentEmotionManagementSet.dataWendingxing = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataWendingxing += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataWendingxing += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataWendingxing += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataWendingxing += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataWendingxing += "]";
+				currentEmotionManagementSet.evaluationWendingxing = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于情绪非常稳定的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工情绪稳定性较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+
+			}
+			if (entry.getKey().equals("控制力")) {
+				currentEmotionManagementSet.dataKongzhili = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataKongzhili += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataKongzhili += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataKongzhili += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataKongzhili += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataKongzhili += "]";
+				currentEmotionManagementSet.evaluationKongzhili = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于很会控制情绪的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工情绪控制能力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("自我激励")) {
+				currentEmotionManagementSet.dataZiwojili = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataZiwojili += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataZiwojili += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataZiwojili += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataZiwojili += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataZiwojili += "]";
+				currentEmotionManagementSet.evaluationZiwojili = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于非常会给自己鼓劲儿的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工自我激励能力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("表达")) {
+				currentEmotionManagementSet.dataBiaoda = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataBiaoda += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataBiaoda += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataBiaoda += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataBiaoda += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataBiaoda += "]";
+				currentEmotionManagementSet.evaluationBiaoda = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于非常善于表达情绪的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工情绪表达能力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("适应力")) {
+				currentEmotionManagementSet.dataShiyingli = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataShiyingli += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataShiyingli += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataShiyingli += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataShiyingli += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataShiyingli += "]";
+				currentEmotionManagementSet.evaluationShiyingli = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于适应力超强的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工适应力较差("
+						+ entry.getValue().userNumberJiaodi
+						+ "人)。";
+			}
+			if (entry.getKey().equals("感染力")) {
+				currentEmotionManagementSet.dataGanranli = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataGanranli += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataGanranli += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataGanranli += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataGanranli += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataGanranli += "]";
+				currentEmotionManagementSet.evaluationGanranli = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于很会调动周围人情绪的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工情绪感染能力较差，不太会调动他人情绪("
+						+ entry.getValue().userNumberJiaodi + "人)。";
+			}
+			if (entry.getKey().equals("问题解决")) {
+				currentEmotionManagementSet.dataWentijiejue = "[";
+				if (entry.getValue().userNumberChaogao > 0) {
+					currentEmotionManagementSet.dataWentijiejue += "{value:"
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分超高("
+							+ formatRatio(entry.getValue().userNumberChaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaogao > 0) {
+					currentEmotionManagementSet.dataWentijiejue += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较高("
+							+ formatRatio(entry.getValue().userNumberJiaogao
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberZhongdeng > 0) {
+					currentEmotionManagementSet.dataWentijiejue += "{value:"
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分中等("
+							+ formatRatio(entry.getValue().userNumberZhongdeng
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				if (entry.getValue().userNumberJiaodi > 0) {
+					currentEmotionManagementSet.dataWentijiejue += "{value:"
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 / resultList.size(), precision)
+							+ ",name:'得分较低("
+							+ formatRatio(entry.getValue().userNumberJiaodi
+									* 1.0 * 100 / resultList.size(), precision)
+							+ "%)'},";
+				}
+				currentEmotionManagementSet.dataWentijiejue += "]";
+				currentEmotionManagementSet.evaluationWentijiejue = formatRatio(
+						entry.getValue().userNumberChaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分超高("
+						+ entry.getValue().userNumberChaogao
+						+ "人)，属于善于利用情绪解决问题的人，"
+						+ formatRatio(entry.getValue().userNumberJiaogao * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%员工的得分属于高分("
+						+ entry.getValue().userNumberJiaogao
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberZhongdeng
+								* 1.0 / resultList.size() * 100, precision)
+						+ "%员工的分数属于中等("
+						+ entry.getValue().userNumberZhongdeng
+						+ "人)，"
+						+ formatRatio(entry.getValue().userNumberJiaodi * 1.0
+								/ resultList.size() * 100, precision)
+						+ "%的员工不能利用情绪促进问题解决("
+						+ entry.getValue().userNumberJiaodi + "人)。";
+			}
+		}
+
 	}
 }
