@@ -46,12 +46,14 @@ public class NormResultBean {
 	/**
 	 * 总体标准差
 	 */
-	private double varp;
+	private Number varp;
 
 	/**
 	 * 正态分布下的累积概率值
+	 * 使用Number类型，防止转换为Json时，解析成科学计数法形式。
+	 * 注意不能直接使用BigDecimal类型，因为Json.fromJson不支持Double -> Bigdecimal
 	 */
-	private double normdist;
+	private Number normdist;
 	
 	public long getCategoryId() {
 		return categoryId;
@@ -77,19 +79,19 @@ public class NormResultBean {
 		this.normalScore = normalScore;
 	}
 
-	public double getVarp() {
+	public Number getVarp() {
 		return varp;
 	}
 
-	public void setVarp(double varp) {
+	public void setVarp(Number varp) {
 		this.varp = varp;
 	}
 
-	public double getNormdist() {
+	public Number getNormdist() {
 		return normdist;
 	}
 
-	public void setNormdist(double normdist) {
+	public void setNormdist(Number normdist) {
 		this.normdist = normdist;
 	}
 	

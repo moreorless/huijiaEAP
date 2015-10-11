@@ -2,6 +2,7 @@ package com.huijia.eap.quiz.module;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -164,7 +165,7 @@ public class ForcedQuizModule {
 			Variance variance = new Variance();
 			variance.setBiasCorrected(false);	// 计算总体方差，设置为true时，表示计算抽样方差
 			double varp = variance.evaluate(values);
-			resultBean.setVarp(varp);
+			resultBean.setVarp((Number)new BigDecimal(varp).setScale(4, BigDecimal.ROUND_HALF_UP));
 			
 			// 计算常模得分
 			NormalScoreConfig _config = normalConfigMap.get(category.getName());
@@ -194,10 +195,8 @@ public class ForcedQuizModule {
 			// 计算累积概率值
 			double normdistValue = normdist.cumulativeProbability(_avg);
 			
-			BigDecimal bd2 = new BigDecimal(normdistValue);
 			// 保留4位小数
-			normdistValue = bd2.setScale(4,  BigDecimal.ROUND_HALF_UP).doubleValue();
-			resultBean.setNormdist(normdistValue);
+			resultBean.setNormdist((Number)new BigDecimal(normdistValue).setScale(4, BigDecimal.ROUND_HALF_UP));
 			
 			// 根据概率分布配置文件，转换成常模得分
 			int[] thresholdArray = new int[]{

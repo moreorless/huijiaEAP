@@ -1,5 +1,6 @@
 package com.huijia.eap.quiz.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
+
 
 
 
@@ -41,7 +43,21 @@ public class ForcedQuizService {
 		Map _map = Json.fromJson(Map.class, scoreJson);
 		Iterator<Map> iter = _map.values().iterator();
 		while(iter.hasNext()){
-			String _json = Json.toJson(iter.next());
+			Map _answerMap = iter.next();
+			
+			// 特殊处理两个double类型
+			String[] _keys = new String[]{
+					"varp", "normdist"
+			};
+			for(String _key : _keys){
+				if(_answerMap.containsKey(_key)){
+					double _v = (double)_answerMap.get(_key);
+					_answerMap.put(_key, new BigDecimal(_v).setScale(4, BigDecimal.ROUND_HALF_UP));
+				}
+				
+			}
+				
+			String _json = Json.toJson(_answerMap);
 			NormResultBean bean = Json.fromJson(NormResultBean.class, _json);
 			result.add(bean);
 		}
