@@ -318,6 +318,16 @@ public class PersonReportModule {
 		
 	}
 	
+	/**
+	 * 青少年归因形态风格分析
+	 */
+	@At("/youth_attribution")
+	@Ok("jsp:jsp.report.person.youth_attribution")
+	public void youthAttribution(HttpServletRequest request, @Param("quizId") long quizId, @Param("userId") long userId){
+		// 数据处理过程与儿童归因形态一致
+		childAttribution(request, quizId, userId);
+	}
+	
 	
 	/**
 	 * 预处理报告中使用的一些通用数据，如姓名、年龄等
